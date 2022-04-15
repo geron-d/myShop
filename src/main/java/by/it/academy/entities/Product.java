@@ -1,5 +1,6 @@
 package by.it.academy.entities;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Product {
@@ -8,13 +9,23 @@ public class Product {
     private String type;
     private String name;
     private String image_path;
+    private LocalDate localDate = LocalDate.now();
 
-    public Product(int id, String category, String type, String name, String image_path) {
+    public Product(int id, String category, String type, String name, String image_path, LocalDate localDate) {
         this.id = id;
         this.category = category;
         this.type = type;
         this.name = name;
         this.image_path = image_path;
+        this.localDate = localDate;
+    }
+
+    public Product(String category, String type, String name, String image_path, LocalDate localDate) {
+        this.category = category;
+        this.type = type;
+        this.name = name;
+        this.image_path = image_path;
+        this.localDate = localDate;
     }
 
     public int getId() {
@@ -57,17 +68,25 @@ public class Product {
         this.image_path = image_path;
     }
 
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Objects.equals(category, product.category) && Objects.equals(type, product.type) && Objects.equals(name, product.name) && Objects.equals(image_path, product.image_path);
+        return id == product.id && Objects.equals(category, product.category) && Objects.equals(type, product.type) && Objects.equals(name, product.name) && Objects.equals(image_path, product.image_path) && Objects.equals(localDate, product.localDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, category, type, name, image_path);
+        return Objects.hash(id, category, type, name, image_path, localDate);
     }
 
     @Override
@@ -78,6 +97,7 @@ public class Product {
                 ", type='" + type + '\'' +
                 ", name='" + name + '\'' +
                 ", image_path='" + image_path + '\'' +
+                ", localDate=" + localDate +
                 '}';
     }
 }

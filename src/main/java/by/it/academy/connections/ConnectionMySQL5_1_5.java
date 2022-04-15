@@ -12,7 +12,7 @@ public class ConnectionMySQL5_1_5 implements ConnectionSQL{
     String DB_DRIVER = "com.mysql.jdbc.Driver";
 
     public ConnectionMySQL5_1_5() {
-        this.url = "jdbc:mysql://127.0.0.1:3307/cinema";
+        this.url = "jdbc:mysql://127.0.0.1:3307/myShop";
         this.username = "root";
         this.password = "";
     }
