@@ -1,4 +1,4 @@
-package by.it.academy.repository;
+package by.it.academy.repository.product;
 
 import by.it.academy.connections.ConnectionSQL;
 import by.it.academy.entities.Product;
@@ -78,7 +78,6 @@ public class ProductAPIRepository implements ProductRepository<Product> {
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             return false;
         }
     }

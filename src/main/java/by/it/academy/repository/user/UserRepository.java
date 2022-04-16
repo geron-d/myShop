@@ -1,9 +1,9 @@
-package by.it.academy.repository;
+package by.it.academy.repository.user;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository<T> {
+public interface UserRepository<T> {
     boolean create(T t);
 
     Optional<T> get(T t);
