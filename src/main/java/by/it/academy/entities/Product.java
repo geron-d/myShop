@@ -10,22 +10,31 @@ public class Product {
     private String name;
     private String image_path;
     private LocalDate localDate = LocalDate.now();
+    private String producer;
+    private int amount;
+    private double price;
 
-    public Product(int id, String category, String type, String name, String image_path, LocalDate localDate) {
+    public Product(int id, String category, String type, String name, String image_path, LocalDate localDate, String producer, int amount, double price) {
         this.id = id;
         this.category = category;
         this.type = type;
         this.name = name;
         this.image_path = image_path;
         this.localDate = localDate;
+        this.producer = producer;
+        this.amount = amount;
+        this.price = price;
     }
 
-    public Product(String category, String type, String name, String image_path, LocalDate localDate) {
+    public Product(String category, String type, String name, String image_path, LocalDate localDate, String producer, int amount, double price) {
         this.category = category;
         this.type = type;
         this.name = name;
         this.image_path = image_path;
         this.localDate = localDate;
+        this.producer = producer;
+        this.amount = amount;
+        this.price = price;
     }
 
     public int getId() {
@@ -76,17 +85,41 @@ public class Product {
         this.localDate = localDate;
     }
 
+    public String getProducer() {
+        return producer;
+    }
+
+    public void setProducer(String producer) {
+        this.producer = producer;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Objects.equals(category, product.category) && Objects.equals(type, product.type) && Objects.equals(name, product.name) && Objects.equals(image_path, product.image_path) && Objects.equals(localDate, product.localDate);
+        return id == product.id && amount == product.amount && Double.compare(product.price, price) == 0 && Objects.equals(category, product.category) && Objects.equals(type, product.type) && Objects.equals(name, product.name) && Objects.equals(image_path, product.image_path) && Objects.equals(localDate, product.localDate) && Objects.equals(producer, product.producer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, category, type, name, image_path, localDate);
+        return Objects.hash(id, category, type, name, image_path, localDate, producer, amount, price);
     }
 
     @Override
@@ -98,6 +131,9 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", image_path='" + image_path + '\'' +
                 ", localDate=" + localDate +
+                ", producer='" + producer + '\'' +
+                ", amount=" + amount +
+                ", price=" + price +
                 '}';
     }
 }
