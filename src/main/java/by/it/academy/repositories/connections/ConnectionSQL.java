@@ -1,4 +1,4 @@
-package by.it.academy.connections;
+package by.it.academy.repositories.connections;
 
 import java.sql.Connection;
 import java.sql.SQLException;

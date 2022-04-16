@@ -1,6 +1,6 @@
-package by.it.academy.repository.product;
+package by.it.academy.repositories.product;
 
-import by.it.academy.connections.ConnectionSQL;
+import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.entities.Product;
 
 import java.sql.*;

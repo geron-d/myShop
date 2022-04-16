@@ -1,6 +1,6 @@
-package by.it.academy.repository.user;
+package by.it.academy.repositories.user;
 
-import by.it.academy.connections.ConnectionSQL;
+import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.entities.AccessLevel;
 import by.it.academy.entities.User;
 
