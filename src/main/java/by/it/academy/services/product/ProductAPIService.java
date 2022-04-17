@@ -19,7 +19,7 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public Optional<Product> get(Product product) {
+    public Product get(Product product) {
         return repository.get(product);
     }
 
@@ -36,5 +36,10 @@ public class ProductAPIService implements ProductService<Product> {
     @Override
     public List<Product> readAll() {
         return repository.readAll();
+    }
+
+    public Product getByID(int id) {
+        Product product = new Product(id);
+        return get(product);
     }
 }

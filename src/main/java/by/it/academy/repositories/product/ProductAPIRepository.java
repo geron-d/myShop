@@ -35,7 +35,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public Optional<Product> get(Product product) {
+    public Product get(Product product) {
         Product thisProduct;
         try (Connection conn = connection.connect()) {
             Statement statement = conn.createStatement();
@@ -53,13 +53,13 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                     double price = resultSet.getDouble("price");
                     thisProduct = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
                     connection.close();
-                    return Optional.of(thisProduct);
+                    return thisProduct;
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
-            return Optional.empty();
+            return null;
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
