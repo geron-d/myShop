@@ -15,38 +15,36 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 
-@WebServlet(urlPatterns = "/product")
-public class ProductController extends HttpServlet {
+@WebServlet(urlPatterns = "/addProduct")
+public class AddProductController extends HttpServlet {
     ConnectionSQL connection = new ConnectionMySQL5_1_5();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    private static final String PRODUCT_PATH = "/pages/Product.jsp";
-    private static final String PRODUCT_ADDED_TO_BUCKET_PATH = "/pages/ProductAddedToBucket.jsp";
-    private static final String NO_PRODUCTS_PATH = "/pages/NoProducts.jsp";
+    private static final String ADD_PRODUCT_PATH = "/pages/AddProduct.jsp";
+    private static final String PRODUCT_ADDED_PATH = "/pages/ProductAdded.jsp";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        Product product = productService.getByID(id);
-        req.setAttribute("product", product);
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(PRODUCT_PATH);
+        final RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(ADD_PRODUCT_PATH);
         requestDispatcher.forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        Product product = productService.getByID(id);
-        boolean isProductHas = productService.isProductHas(product);
-        if (isProductHas) {
-            product = productService.buyProduct(product);
-            req.setAttribute("product", product);
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(PRODUCT_ADDED_TO_BUCKET_PATH);
-            requestDispatcher.forward(req, resp);
-        } else {
-            req.setAttribute("product", product);
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(NO_PRODUCTS_PATH);
+        final String category = req.getParameter("category");
+        final String type = req.getParameter("type");
+        final String name = req.getParameter("name");
+        final String image = req.getParameter("image");
+        final String producer = req.getParameter("producer");
+        final int amount = Integer.parseInt(req.getParameter("amount"));
+        final double price = Double.parseDouble(req.getParameter("price"));
+        final Product product = new Product(category, type, name, image, LocalDate.now(), producer, amount, price);
+
+        boolean isCreated = productService.create(product);
+        if (isCreated) {
+            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(PRODUCT_ADDED_PATH);
             requestDispatcher.forward(req, resp);
         }
     }

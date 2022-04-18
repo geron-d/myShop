@@ -16,17 +16,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/products")
-public class AllProductsController extends HttpServlet {
+@WebServlet(urlPatterns = "/", loadOnStartup = 1)
+public class IndexController extends HttpServlet {
     ConnectionSQL connection = new ConnectionMySQL5_1_5();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    private static final String ALL_PRODUCTS_PATH = "/pages/AllProducts.jsp";
+    private static final String INDEX_PATH = "/index.jsp";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(ALL_PRODUCTS_PATH);
-        req.setAttribute("products", productService.readAll());
+        req.setAttribute("products", productService.getLastFour());
+        final RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(INDEX_PATH);
         requestDispatcher.forward(req, resp);
     }
 }

@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionMySQL5_1_5 implements ConnectionSQL{
+public class ConnectionMySQL5_1_5 implements ConnectionSQL {
     private final String url;
     private final String username;
     private final String password;
@@ -30,7 +30,7 @@ public class ConnectionMySQL5_1_5 implements ConnectionSQL{
     }
 
     public boolean close() throws SQLException {
-            connection.close();
-            return true;
+        connection.close();
+        return true;
     }
 }

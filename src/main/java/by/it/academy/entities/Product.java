@@ -14,6 +14,19 @@ public class Product {
     private int amount;
     private double price;
 
+    public Product(Product product) {
+        this.id = product.getId();
+        this.category = product.getCategory();
+        this.type = product.getType();
+        this.name = product.getName();
+        this.image_path = product.getImage_path();
+        this.localDate = product.getLocalDate();
+        this.producer = product.getProducer();
+        this.amount = product.getAmount();
+        this.price = product.getPrice();
+    }
+
+
     public Product(int id, String category, String type, String name, String image_path, LocalDate localDate, String producer, int amount, double price) {
         this.id = id;
         this.category = category;

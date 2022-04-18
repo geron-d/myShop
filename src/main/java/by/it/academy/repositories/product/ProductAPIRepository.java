@@ -1,12 +1,11 @@
 package by.it.academy.repositories.product;
 
-import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.entities.Product;
+import by.it.academy.repositories.connections.ConnectionSQL;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ProductAPIRepository implements ProductRepository<Product> {
     private final ConnectionSQL connection;
@@ -72,7 +71,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
             statement.setString(4, newProduct.getImage_path());
             statement.setDate(5, Date.valueOf(newProduct.getLocalDate()));
             statement.setString(6, newProduct.getProducer());
-            statement.setInt(7,newProduct.getAmount());
+            statement.setInt(7, newProduct.getAmount());
             statement.setDouble(8, newProduct.getPrice());
             statement.setInt(9, product.getId());
             statement.executeUpdate();

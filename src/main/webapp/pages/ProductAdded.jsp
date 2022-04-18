@@ -1,19 +1,16 @@
-<%@ page import="java.util.List" %>
-<%@ page import="by.it.academy.entities.Product" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: geron
-  Date: 16.04.2022
-  Time: 19:50
+  Date: 18.04.2022
+  Time: 19:06
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>All Products</title>
+    <title>ProductAdded</title>
 </head>
 <body>
-
 <nav class="top-menu">
     <a href="${pageContext.request.contextPath}/index.jsp"><img src="img/my_logo.jpg"></a>
     <ul class="menu-main">
@@ -25,11 +22,19 @@
     </ul>
 </nav>
 
-<ul>
-    <li><h1>All products</h1></li>
-    <c:forEach var="product" items="${products}">
-        <li><a href="${pageContext.request.contextPath}/product?id=${product.id}">${product.name}</a></li>
-    </c:forEach>
-</ul>
+<form action="/myShop/addProduct" method="post">
+    <input type="text" name="category" placeholder="category">
+    <input type="text" name="type" placeholder="type">
+    <input type="text" name="name" placeholder="name">
+    <input type="text" name="image" placeholder="image">
+    <input type="text" name="producer" placeholder="producer">
+    <input type="text" name="amount" placeholder="amount">
+    <input type="text" name="price" placeholder="price">
+    <input type="submit" value="Create">
+</form>
+
+<h1>Product added</h1>
+
+
 </body>
 </html>

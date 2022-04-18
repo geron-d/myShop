@@ -6,7 +6,7 @@ import by.it.academy.repositories.user.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
-public class UserAPIService implements UserService<User>{
+public class UserAPIService implements UserService<User> {
     private final UserRepository<User> repository;
 
     public UserAPIService(UserRepository<User> repository) {
@@ -25,7 +25,7 @@ public class UserAPIService implements UserService<User>{
 
     @Override
     public boolean update(User user, User newUser) {
-        return repository.update(user,newUser);
+        return repository.update(user, newUser);
     }
 
     @Override

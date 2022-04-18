@@ -1,15 +1,15 @@
 package by.it.academy.repositories.user;
 
-import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.entities.AccessLevel;
 import by.it.academy.entities.User;
+import by.it.academy.repositories.connections.ConnectionSQL;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserAPIRepository implements UserRepository<User>{
+public class UserAPIRepository implements UserRepository<User> {
     private final ConnectionSQL connection;
 
     public UserAPIRepository(ConnectionSQL connection) {
