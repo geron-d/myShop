@@ -34,17 +34,19 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> readAll() {
-        return repository.readAll();
+    public List<Product> getAll() {
+        return repository.getAll();
     }
 
+    @Override
     public Product getByID(int id) {
         Product product = new Product(id);
         return get(product);
     }
 
+    @Override
     public List<Product> getLastFour() {
-        List<Product> products = readAll();
+        List<Product> products = getAll();
         List<Product> lastFour = new ArrayList<>();
         if (products.size() >= 4) {
             lastFour.addAll(products.size()-4, products);
@@ -54,6 +56,7 @@ public class ProductAPIService implements ProductService<Product> {
         return lastFour;
     }
 
+    @Override
     public Product buyProduct(Product product) {
         Product buyingProduct;
          if (isProductHas(product)) {
@@ -64,6 +67,7 @@ public class ProductAPIService implements ProductService<Product> {
          return null;
     }
 
+    @Override
     public boolean isProductHas(Product product) {
         if (product.getAmount() > 0) {
             return true;

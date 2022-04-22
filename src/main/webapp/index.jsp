@@ -11,16 +11,16 @@
 </head>
 
 <body>
-<nav class="top-menu">
-    <p><a href="${pageContext.request.contextPath}/index.jsp"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
-    <ul class="menu-main">
-        <li><a href="${pageContext.request.contextPath}/index.jsp">Start Page</a></li>
-        <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
-        <li><a href="${pageContext.request.contextPath}/addProduct">Add product</a></li>
-        <li><a href="">Bucket</a></li>
-        <li><a href="">Private room</a></li>
-    </ul>
-</nav>
+
+<ul>
+        <form action="${pageContext.request.contextPath}/user/login" method="get">
+            <li><p5>Login </p5><input type="text" name="login" placeholder="login"></li>
+            <li><p5>Password </p5><input type="text" name="password" placeholder="password"></li>
+            <li><input type="submit" value="LogIn"></li>
+        </form>
+    <li>If you don't register click <a href="${pageContext.request.contextPath}/pages/user/Register.jsp">Register</a> </li>
+</ul>
+
 </body>
 
 </html>

@@ -31,8 +31,8 @@ public class UserAPIRepository implements UserRepository<User> {
     }
 
     @Override
-    public Optional<User> get(User user) {
-        User thisUser;
+    public User get(User user) {
+        User thisUser = new User();
         try (Connection conn = connection.connect()) {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
@@ -43,22 +43,23 @@ public class UserAPIRepository implements UserRepository<User> {
                     String password = resultSet.getString("password");
                     AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
                     thisUser = new User(id, login, password, accessLevel);
-                    return Optional.of(thisUser);
+                    return thisUser;
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
-            return Optional.empty();
+            return thisUser;
         }
-        return Optional.empty();
+        return thisUser;
     }
 
     @Override
     public boolean update(User user, User newUser) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("UPDATE users SET login=?, password=? WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement("UPDATE users SET login=?, password=?, accessLevel=? WHERE id=?");
             statement.setString(1, newUser.getLogin());
             statement.setString(2, newUser.getPassword());
-            statement.setInt(3, user.getId());
+            statement.setInt(3, (user.getAccessLevel().ordinal() + 1));
+            statement.setInt(4, user.getId());
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
@@ -79,7 +80,7 @@ public class UserAPIRepository implements UserRepository<User> {
     }
 
     @Override
-    public List<User> readAll() {
+    public List<User> getAll() {
         List<User> users = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             Statement statement = conn.createStatement();

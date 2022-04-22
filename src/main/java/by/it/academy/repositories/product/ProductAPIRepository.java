@@ -35,7 +35,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
 
     @Override
     public Product get(Product product) {
-        Product thisProduct;
+        Product thisProduct = new Product();
         try (Connection conn = connection.connect()) {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM products");
@@ -56,9 +56,9 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
-            return null;
+            return thisProduct;
         }
-        return null;
+        return thisProduct;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public List<Product> readAll() {
+    public List<Product> getAll() {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             Statement statement = conn.createStatement();

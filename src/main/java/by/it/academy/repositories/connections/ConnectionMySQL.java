@@ -4,20 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionMySQL5_1_5 implements ConnectionSQL {
+public class ConnectionMySQL implements ConnectionSQL {
     private final String url;
     private final String username;
     private final String password;
     private Connection connection;
     String DB_DRIVER = "com.mysql.jdbc.Driver";
 
-    public ConnectionMySQL5_1_5() {
+    public ConnectionMySQL() {
         this.url = "jdbc:mysql://127.0.0.1:3307/myShop";
         this.username = "root";
         this.password = "";
     }
 
-    public ConnectionMySQL5_1_5(String url, String username, String password) {
+    public ConnectionMySQL(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;

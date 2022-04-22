@@ -6,7 +6,7 @@ public class User {
     private int id;
     private String login;
     private String password;
-    private AccessLevel accessLevel;
+    private AccessLevel accessLevel = AccessLevel.USER;
 
     public User(int id, String login, String password, AccessLevel accessLevel) {
         this.id = id;
@@ -19,6 +19,14 @@ public class User {
         this.login = login;
         this.password = password;
         this.accessLevel = accessLevel;
+    }
+
+    public User(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
+    public User() {
     }
 
     public int getId() {

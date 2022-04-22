@@ -19,7 +19,7 @@ public class UserAPIService implements UserService<User> {
     }
 
     @Override
-    public Optional<User> get(User user) {
+    public User get(User user) {
         return repository.get(user);
     }
 
@@ -34,7 +34,23 @@ public class UserAPIService implements UserService<User> {
     }
 
     @Override
-    public List<User> readAll() {
-        return repository.readAll();
+    public List<User> getAll() {
+        return repository.getAll();
     }
+
+    @Override
+    public User getByLoginPassword(String login, String password) {
+        List<User> users = getAll();
+        User user = new User();
+
+        for (User value : users) {
+            if ((value.getLogin().equals(login)) && (value.getPassword().equals(password))) {
+                user = value;
+                return user;
+            }
+        }
+        return user;
+    }
+
+
 }

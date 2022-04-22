@@ -1,7 +1,7 @@
 package by.it.academy.controllers;
 
 import by.it.academy.entities.Product;
-import by.it.academy.repositories.connections.ConnectionMySQL5_1_5;
+import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.repositories.product.ProductAPIRepository;
 import by.it.academy.repositories.product.ProductRepository;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/products")
 public class AllProductsController extends HttpServlet {
-    ConnectionSQL connection = new ConnectionMySQL5_1_5();
+    ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
     private static final String ALL_PRODUCTS_PATH = "/pages/AllProducts.jsp";
@@ -26,7 +26,7 @@ public class AllProductsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher(ALL_PRODUCTS_PATH);
-        req.setAttribute("products", productService.readAll());
+        req.setAttribute("products", productService.getAll());
         requestDispatcher.forward(req, resp);
     }
 }

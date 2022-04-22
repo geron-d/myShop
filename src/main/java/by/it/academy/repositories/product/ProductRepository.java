@@ -13,5 +13,5 @@ public interface ProductRepository<T> {
 
     boolean delete(T t);
 
-    List<T> readAll();
+    List<T> getAll();
 }

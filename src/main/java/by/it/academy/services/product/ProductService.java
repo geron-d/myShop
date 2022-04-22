@@ -13,7 +13,7 @@ public interface ProductService<T> {
 
     boolean delete(T t);
 
-    List<T> readAll();
+    List<T> getAll();
 
     Product getByID(int id);
 
