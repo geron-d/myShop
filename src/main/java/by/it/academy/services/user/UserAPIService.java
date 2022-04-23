@@ -52,5 +52,16 @@ public class UserAPIService implements UserService<User> {
         return user;
     }
 
+    @Override
+    public boolean checkLogin(String login) {
+        List<User> users = getAll();
+        for (User value : users) {
+            if (value.getLogin().equals(login)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

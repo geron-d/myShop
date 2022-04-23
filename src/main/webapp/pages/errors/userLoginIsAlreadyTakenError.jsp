@@ -2,7 +2,7 @@
   Created by IntelliJ IDEA.
   User: geron
   Date: 22.04.2022
-  Time: 17:32
+  Time: 18:40
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -13,6 +13,7 @@
 </head>
 <body>
 <ul>
+    <li><p2>This login is already taken. Please choose another login.</p2></li>
     <form action="${pageContext.request.contextPath}/user/create" method="post">
         <li><p5>Login </p5><input type="text" name="login" placeholder="login"></li>
         <li><p5>Password</p5><input type="text" name="password" placeholder="password"></li>

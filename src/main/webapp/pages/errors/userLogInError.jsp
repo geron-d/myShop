@@ -20,7 +20,7 @@
 <body>
 
 <ul>
-    <li>You input wrong login or password</li>
+    <li><p2>You input wrong login or password</p2></li>
     <form action="${pageContext.request.contextPath}/user/login" method="get">
         <li><p5>Login </p5><input type="text" name="login" placeholder="login"></li>
         <li><p5>Password </p5><input type="text" name="password" placeholder="password"></li>
