@@ -2,6 +2,7 @@ package by.it.academy.controllers.user;
 
 import by.it.academy.Paths;
 import by.it.academy.entities.AccessLevel;
+import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @WebServlet(urlPatterns = "/user/login")
@@ -39,12 +42,12 @@ public class UserLogInController extends HttpServlet {
         if (Objects.nonNull(req.getSession()) && (user.getId() > 0)) {
             final HttpSession session = req.getSession();
             session.setAttribute("user", user);
-            final RequestDispatcher requestDispatcher;
-            if (user.getAccessLevel().equals(AccessLevel.USER)) {
-                requestDispatcher = req.getRequestDispatcher(Paths.START_PAGE_USER_PATH);
-            } else {
-                requestDispatcher = req.getRequestDispatcher(Paths.START_PAGE_ADMIN_PATH);
-            }
+
+            List<ProductInBucket> bucket = new ArrayList<>();
+            log.info(bucket);
+            session.setAttribute("bucket", bucket);
+
+            final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/start");
             requestDispatcher.forward(req, resp);
 
         } else {

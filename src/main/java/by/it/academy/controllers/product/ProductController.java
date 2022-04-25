@@ -1,12 +1,17 @@
-package by.it.academy.controllers;
+package by.it.academy.controllers.product;
 
+import by.it.academy.Paths;
 import by.it.academy.entities.Product;
+import by.it.academy.entities.ProductInBucket;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.repositories.product.ProductAPIRepository;
 import by.it.academy.repositories.product.ProductRepository;
+import by.it.academy.services.bucket.BucketAPIService;
+import by.it.academy.services.bucket.BucketService;
 import by.it.academy.services.product.ProductAPIService;
 import by.it.academy.services.product.ProductService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,39 +19,52 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(urlPatterns = "/product")
 public class ProductController extends HttpServlet {
+    Logger log = Logger.getLogger(ProductController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    private static final String PRODUCT_PATH = "/pages/Product.jsp";
-    private static final String PRODUCT_ADDED_TO_BUCKET_PATH = "/pages/ProductAddedToBucket.jsp";
-    private static final String NO_PRODUCTS_PATH = "/pages/NoProducts.jsp";
+    BucketService bucketService = new BucketAPIService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final HttpSession session = req.getSession();
+
         int id = Integer.parseInt(req.getParameter("id"));
         Product product = productService.getByID(id);
-        req.setAttribute("product", product);
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(PRODUCT_PATH);
+        session.setAttribute("product", product);
+        log.info(product);
+
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_PATH);
         requestDispatcher.forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final HttpSession session = req.getSession();
+
         int id = Integer.parseInt(req.getParameter("id"));
         Product product = productService.getByID(id);
-        boolean isProductHas = productService.isProductHas(product);
-        if (isProductHas) {
-            product = productService.buyProduct(product);
-            req.setAttribute("product", product);
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(PRODUCT_ADDED_TO_BUCKET_PATH);
+        session.setAttribute("product", product);
+        log.info(product);
+
+        boolean isProductGetAmount = productService.isProductGetAmount(product);
+        if (isProductGetAmount) {
+            ProductInBucket productInBucket = new ProductInBucket(product, 1);
+            List<ProductInBucket> bucket = (List<ProductInBucket>) session.getAttribute("bucket");
+            bucket = bucketService.addProduct(bucket, product);
+            session.setAttribute("bucket", bucket);
+            log.info(bucket);
+
+            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
             requestDispatcher.forward(req, resp);
         } else {
-            req.setAttribute("product", product);
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(NO_PRODUCTS_PATH);
+            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.NO_PRODUCTS_PATH);
             requestDispatcher.forward(req, resp);
         }
     }

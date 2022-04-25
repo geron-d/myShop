@@ -15,12 +15,17 @@
 <body>
 
 <nav class="top-menu">
-    <a href="${pageContext.request.contextPath}/index.jsp"><img src="img/my_logo.jpg"></a>
+    <p><a href="${pageContext.request.contextPath}/pages/startPageUser.jsp"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
     <ul class="menu-main">
-        <li><a href="${pageContext.request.contextPath}/index.jsp">Start Page</a></li>
-        <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
-        <li><a href="${pageContext.request.contextPath}/addProduct">Add product</a></li>
-        <li><a href="">Bucket</a></li>
+        <li><a href="${pageContext.request.contextPath}/pages/startPageUser.jsp">Start Page</a></li>
+        <li>
+            <a href="${pageContext.request.contextPath}/products">Products</a>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/products">All products</a></li>
+                <li><a href="${pageContext.request.contextPath}/headphones">Headphones</a></li>
+            </ul>
+        </li>
+        <li><a href="${pageContext.request.contextPath}/bucket">Bucket</a></li>
         <li><a href="">Private room</a></li>
     </ul>
 </nav>

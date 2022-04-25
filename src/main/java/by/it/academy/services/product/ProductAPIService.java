@@ -1,5 +1,6 @@
 package by.it.academy.services.product;
 
+import by.it.academy.Paths;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.product.ProductRepository;
 
@@ -45,30 +46,33 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> getLastFour() {
+    public List<Product> getLastProducts(int amount) {
         List<Product> products = getAll();
-        List<Product> lastFour = new ArrayList<>();
-        if (products.size() >= 4) {
-            lastFour.addAll(products.size()-4, products);
+        List<Product> lastProducts = new ArrayList<>();
+        if (products.size() >= amount) {
+            for (int i = products.size() - 1; i > products.size()-amount-1 ; i--) {
+                lastProducts.add(products.get(i));
+            }
         } else {
-            lastFour.addAll(products);
+            lastProducts.addAll(products);
         }
-        return lastFour;
+        return lastProducts;
     }
 
     @Override
-    public Product buyProduct(Product product) {
-        Product buyingProduct;
-         if (isProductHas(product)) {
-            buyingProduct =new Product(product);
-            buyingProduct.setAmount(buyingProduct.getAmount() - 1);
-            return buyingProduct;
+    public List<Product> getHeadphones() {
+        List<Product> products = getAll();
+        List<Product> headphones = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getCategory().equals(Paths.PRODUCT_TYPE_HEADPHONES)) {
+                headphones.add(product);
+            }
         }
-         return null;
+        return headphones;
     }
 
     @Override
-    public boolean isProductHas(Product product) {
+    public boolean isProductGetAmount(Product product) {
         if (product.getAmount() > 0) {
             return true;
         }

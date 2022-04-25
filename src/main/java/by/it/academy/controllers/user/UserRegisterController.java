@@ -23,7 +23,7 @@ import java.util.Objects;
 
 @WebServlet(urlPatterns = "/user/create")
 public class UserRegisterController extends HttpServlet {
-    Logger log = Logger.getLogger(UserLogInController.class);
+    Logger log = Logger.getLogger(UserRegisterController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     UserRepository<User> userRepository = new UserAPIRepository(connection);
     UserService<User> userService = new UserAPIService(userRepository);

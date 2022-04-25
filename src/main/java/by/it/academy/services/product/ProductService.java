@@ -17,9 +17,9 @@ public interface ProductService<T> {
 
     Product getByID(int id);
 
-    List<Product> getLastFour();
+    List<Product> getLastProducts(int amount);
 
-    Product buyProduct(Product product);
+    List<Product> getHeadphones();
 
-    boolean isProductHas(Product product);
+    boolean isProductGetAmount(Product product);
 }
