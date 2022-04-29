@@ -43,9 +43,9 @@ public class UserLogInController extends HttpServlet {
             final HttpSession session = req.getSession();
             session.setAttribute("user", user);
 
-            List<ProductInBucket> bucket = new ArrayList<>();
-            log.info(bucket);
-            session.setAttribute("bucket", bucket);
+//            List<ProductInBucket> bucket = new ArrayList<>();
+//            log.info(bucket);
+//            session.setAttribute("bucket", bucket);
 
             final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/start");
             requestDispatcher.forward(req, resp);

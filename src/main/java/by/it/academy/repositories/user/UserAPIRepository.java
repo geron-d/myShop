@@ -35,16 +35,15 @@ public class UserAPIRepository implements UserRepository<User> {
         User thisUser = new User();
         try (Connection conn = connection.connect()) {
             Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM users " +
+                    "WHERE id = " + user.getId());
             while (resultSet.next()) {
-                if (resultSet.getInt("id") == user.getId()) {
                     int id = resultSet.getInt("id");
                     String login = resultSet.getString("login");
                     String password = resultSet.getString("password");
                     AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
                     thisUser = new User(id, login, password, accessLevel);
                     return thisUser;
-                }
             }
         } catch (SQLException | ClassNotFoundException e) {
             return thisUser;
@@ -55,7 +54,8 @@ public class UserAPIRepository implements UserRepository<User> {
     @Override
     public boolean update(User user, User newUser) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("UPDATE users SET login=?, password=?, accessLevel=? WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement("UPDATE users SET login=?, password=?, accessLevel=? " +
+                    "WHERE id=?");
             statement.setString(1, newUser.getLogin());
             statement.setString(2, newUser.getPassword());
             statement.setInt(3, (user.getAccessLevel().ordinal() + 1));
@@ -70,7 +70,8 @@ public class UserAPIRepository implements UserRepository<User> {
     @Override
     public boolean delete(User user) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM users WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement("DELETE FROM users " +
+                    "WHERE id=?");
             statement.setInt(1, user.getId());
             statement.executeUpdate();
             return true;
@@ -96,5 +97,41 @@ public class UserAPIRepository implements UserRepository<User> {
             e.printStackTrace();
         }
         return users;
+    }
+
+    @Override
+    public User getByLoginPassword(String login, String password) {
+        User thisUser = new User();
+        try (Connection conn = connection.connect()) {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM users " +
+                    "WHERE login = '" + login + "' " +
+                    "AND password = '" + password + "'");
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String thisLogin = resultSet.getString("login");
+                String thisPassword = resultSet.getString("password");
+                AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
+                thisUser = new User(id, thisLogin, thisPassword, accessLevel);
+                return thisUser;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return thisUser;
+        }
+        return thisUser;
+    }
+
+    public boolean checkLogin(String login) {
+        try (Connection conn = connection.connect()) {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM users " +
+                    "WHERE login = '" + login + "'");
+            while (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return false;
+        }
+        return false;
     }
 }

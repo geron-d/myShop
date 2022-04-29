@@ -9,14 +9,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Product</title>
+    <title>NoProduct</title>
 </head>
 <body>
 
 <nav class="top-menu">
-    <p><a href="${pageContext.request.contextPath}/pages/startPageUser.jsp"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
+    <p><a href="${pageContext.request.contextPath}/start"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
     <ul class="menu-main">
-        <li><a href="${pageContext.request.contextPath}/pages/startPageUser.jsp">Start Page</a></li>
+        <li><a href="${pageContext.request.contextPath}/start">Start Page</a></li>
         <li>
             <a href="${pageContext.request.contextPath}/products">Products</a>
             <ul>

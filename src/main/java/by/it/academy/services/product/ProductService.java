@@ -15,11 +15,11 @@ public interface ProductService<T> {
 
     List<T> getAll();
 
-    Product getByID(int id);
+    T getByID(int id);
 
-    List<Product> getLastProducts(int amount);
+    List<T> getLastProducts(int amount);
 
-    List<Product> getHeadphones();
+    List<T> getHeadphones();
 
-    boolean isProductGetAmount(Product product);
+    boolean isProductGetAmount(T t);
 }

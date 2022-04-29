@@ -41,9 +41,8 @@ public class StartPageController extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         List<Product> lastProducts = productService.getLastProducts(Paths.AMOUNT_PRODUCTS_ON_START_PAGE);
-        session.setAttribute("lastProducts", lastProducts);
+        req.setAttribute("lastProducts", lastProducts);
         log.info(lastProducts);
-
 
         final RequestDispatcher requestDispatcher;
         if (user.getAccessLevel().equals(AccessLevel.USER)) {
@@ -52,5 +51,10 @@ public class StartPageController extends HttpServlet {
             requestDispatcher = req.getRequestDispatcher(Paths.START_PAGE_ADMIN_PATH);
         }
         requestDispatcher.forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req,resp);
     }
 }

@@ -15,7 +15,7 @@ public interface UserService<T> {
 
     List<T> getAll();
 
-    User getByLoginPassword(String login, String password);
+    T getByLoginPassword(String login, String password);
 
     boolean checkLogin(String login);
 }

@@ -1,8 +1,12 @@
 package by.it.academy.controllers.product;
 
 import by.it.academy.Paths;
+import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.ProductInBucket;
+import by.it.academy.entities.User;
+import by.it.academy.repositories.bucket.BucketAPIRepository;
+import by.it.academy.repositories.bucket.BucketRepository;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.repositories.product.ProductAPIRepository;
@@ -29,7 +33,8 @@ public class ProductController extends HttpServlet {
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    BucketService bucketService = new BucketAPIService();
+    BucketRepository<Bucket> bucketRepository = new BucketAPIRepository(connection);
+    BucketService<Bucket> bucketService = new BucketAPIService(bucketRepository);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,6 +53,9 @@ public class ProductController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
 
+        User user = (User) session.getAttribute("user");
+        log.info(user);
+
         int id = Integer.parseInt(req.getParameter("id"));
         Product product = productService.getByID(id);
         session.setAttribute("product", product);
@@ -55,14 +63,19 @@ public class ProductController extends HttpServlet {
 
         boolean isProductGetAmount = productService.isProductGetAmount(product);
         if (isProductGetAmount) {
-            ProductInBucket productInBucket = new ProductInBucket(product, 1);
-            List<ProductInBucket> bucket = (List<ProductInBucket>) session.getAttribute("bucket");
-            bucket = bucketService.addProduct(bucket, product);
-            session.setAttribute("bucket", bucket);
-            log.info(bucket);
-
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
-            requestDispatcher.forward(req, resp);
+//            ProductInBucket productInBucket = new ProductInBucket(product, 1);
+//            List<ProductInBucket> bucket = (List<ProductInBucket>) session.getAttribute("bucket");
+            boolean isAdded = bucketService.add(user, product);
+//            session.setAttribute("bucket", bucket);
+//            log.info(bucket);
+            if (isAdded) {
+                final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
+                requestDispatcher.forward(req, resp);
+            }
+            else {
+                final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.NO_PRODUCTS_PATH);
+                requestDispatcher.forward(req, resp);
+            }
         } else {
             final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.NO_PRODUCTS_PATH);
             requestDispatcher.forward(req, resp);

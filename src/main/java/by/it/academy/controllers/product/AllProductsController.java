@@ -30,10 +30,8 @@ public class AllProductsController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final HttpSession session = req.getSession();
-
         List<Product> products = productService.getAll();
-        session.setAttribute("products", products);
+        req.setAttribute("products", products);
         log.info(products);
 
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.ALL_PRODUCTS_PATH);

@@ -19,9 +19,9 @@
 
 <body>
 <nav class="top-menu">
-    <p><a href="${pageContext.request.contextPath}/pages/startPageUser.jsp"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
+    <p><a href="${pageContext.request.contextPath}/start"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
     <ul class="menu-main">
-        <li><a href="${pageContext.request.contextPath}/pages/startPageUser.jsp">Start Page</a></li>
+        <li><a href="${pageContext.request.contextPath}/start">Start Page</a></li>
         <li>
             <a href="${pageContext.request.contextPath}/products">Products</a>
             <ul>

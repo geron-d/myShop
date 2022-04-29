@@ -40,28 +40,12 @@ public class UserAPIService implements UserService<User> {
 
     @Override
     public User getByLoginPassword(String login, String password) {
-        List<User> users = getAll();
-        User user = new User();
-
-        for (User value : users) {
-            if ((value.getLogin().equals(login)) && (value.getPassword().equals(password))) {
-                user = value;
-                return user;
-            }
-        }
-        return user;
+        return repository.getByLoginPassword(login, password);
     }
 
     @Override
     public boolean checkLogin(String login) {
-        List<User> users = getAll();
-        for (User value : users) {
-            if (value.getLogin().equals(login)) {
-                return true;
-            }
-        }
-        return false;
+        return repository.checkLogin(login);
     }
-
-
+    
 }

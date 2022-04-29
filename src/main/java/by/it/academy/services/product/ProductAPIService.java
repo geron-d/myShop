@@ -41,34 +41,17 @@ public class ProductAPIService implements ProductService<Product> {
 
     @Override
     public Product getByID(int id) {
-        Product product = new Product(id);
-        return get(product);
+        return repository.getByID(id);
     }
 
     @Override
     public List<Product> getLastProducts(int amount) {
-        List<Product> products = getAll();
-        List<Product> lastProducts = new ArrayList<>();
-        if (products.size() >= amount) {
-            for (int i = products.size() - 1; i > products.size()-amount-1 ; i--) {
-                lastProducts.add(products.get(i));
-            }
-        } else {
-            lastProducts.addAll(products);
-        }
-        return lastProducts;
+        return repository.getLastProducts(amount);
     }
 
     @Override
     public List<Product> getHeadphones() {
-        List<Product> products = getAll();
-        List<Product> headphones = new ArrayList<>();
-        for (Product product : products) {
-            if (product.getCategory().equals(Paths.PRODUCT_TYPE_HEADPHONES)) {
-                headphones.add(product);
-            }
-        }
-        return headphones;
+        return repository.getHeadphones();
     }
 
     @Override

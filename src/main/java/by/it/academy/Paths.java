@@ -18,5 +18,6 @@ public class Paths {
     public static final String DATA_BASE_ERROR = "/pages/errors/dataBaseError.jsp";
 
     public static final int AMOUNT_PRODUCTS_ON_START_PAGE = 4;
-    public static final String PRODUCT_TYPE_HEADPHONES = "headphones";
+
+    public static final int AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET = 1;
 }

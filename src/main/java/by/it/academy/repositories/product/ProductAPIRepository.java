@@ -51,7 +51,6 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                     int amount = resultSet.getInt("amount");
                     double price = resultSet.getDouble("price");
                     thisProduct = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
-                    connection.close();
                     return thisProduct;
                 }
             }
@@ -113,8 +112,85 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {
-            return null;
+            return products;
         }
         return products;
     }
+
+    @Override
+    public List<Product> getLastProducts(int amount) {
+        List<Product> products = new ArrayList<>();
+        try (Connection conn = connection.connect()) {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM products ORDER BY id DESC LIMIT " + amount);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String category = resultSet.getString("category");
+                String type = resultSet.getString("type");
+                String name = resultSet.getString("name");
+                String image = resultSet.getString("image");
+                Date date = resultSet.getDate("date");
+                String producer = resultSet.getString("producer");
+                int thisAmount = resultSet.getInt("amount");
+                double price = resultSet.getDouble("price");
+                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, thisAmount, price);
+                products.add(product);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return products;
+        }
+        return products;
+    }
+
+    public List<Product> getHeadphones() {
+        List<Product> products = new ArrayList<>();
+        try (Connection conn = connection.connect()) {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM products WHERE category = 'headphones'");
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String category = resultSet.getString("category");
+                String type = resultSet.getString("type");
+                String name = resultSet.getString("name");
+                String image = resultSet.getString("image");
+                Date date = resultSet.getDate("date");
+                String producer = resultSet.getString("producer");
+                int thisAmount = resultSet.getInt("amount");
+                double price = resultSet.getDouble("price");
+                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, thisAmount, price);
+                products.add(product);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return products;
+        }
+        return products;
+    }
+
+    public Product getByID(int id) {
+        Product thisProduct = new Product();
+        try (Connection conn = connection.connect()) {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM products WHERE id=" + id);
+            while (resultSet.next()) {
+                int thisId = resultSet.getInt("id");
+                String category = resultSet.getString("category");
+                String type = resultSet.getString("type");
+                String name = resultSet.getString("name");
+                String image = resultSet.getString("image");
+                Date date = resultSet.getDate("date");
+                String producer = resultSet.getString("producer");
+                int amount = resultSet.getInt("amount");
+                double price = resultSet.getDouble("price");
+                thisProduct = new Product(thisId, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                connection.close();
+                return thisProduct;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return thisProduct;
+        }
+        return thisProduct;
+    }
+
+
+
 }

@@ -30,10 +30,8 @@ public class HeadphonesController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final HttpSession session = req.getSession();
-
         List<Product> headphones = productService.getHeadphones();
-        session.setAttribute("headphones", headphones);
+        req.setAttribute("headphones", headphones);
         log.info(headphones);
 
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.HEADPHONES_PATH);

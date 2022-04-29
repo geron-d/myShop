@@ -29,7 +29,7 @@ public class DeleteProductFromBucket extends HttpServlet {
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    BucketService bucketService = new BucketAPIService();
+//    BucketService bucketService = new BucketAPIService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,7 +42,7 @@ public class DeleteProductFromBucket extends HttpServlet {
         Product product = productService.getByID(id);
         log.info(product);
 
-        bucket = bucketService.deleteProduct(bucket,product);
+//        bucket = bucketService.deleteProduct(bucket,product);
         session.setAttribute("bucket", bucket);
         log.info(bucket);
 
