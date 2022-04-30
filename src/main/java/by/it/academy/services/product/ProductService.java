@@ -19,7 +19,9 @@ public interface ProductService<T> {
 
     List<T> getLastProducts(int amount);
 
-    List<T> getHeadphones();
+    List<T> getCategoryDesc(String category);
 
     boolean isProductGetAmount(T t);
+
+    List<T> getAllDesc();
 }

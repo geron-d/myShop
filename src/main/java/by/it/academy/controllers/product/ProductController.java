@@ -58,24 +58,20 @@ public class ProductController extends HttpServlet {
 
         int id = Integer.parseInt(req.getParameter("id"));
         Product product = productService.getByID(id);
-        session.setAttribute("product", product);
+        req.setAttribute("product", product);
         log.info(product);
 
         boolean isProductGetAmount = productService.isProductGetAmount(product);
         if (isProductGetAmount) {
-//            ProductInBucket productInBucket = new ProductInBucket(product, 1);
-//            List<ProductInBucket> bucket = (List<ProductInBucket>) session.getAttribute("bucket");
             boolean isAdded = bucketService.add(user, product);
-//            session.setAttribute("bucket", bucket);
-//            log.info(bucket);
+            final RequestDispatcher requestDispatcher;
             if (isAdded) {
-                final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
-                requestDispatcher.forward(req, resp);
+                requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
             }
             else {
-                final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.NO_PRODUCTS_PATH);
-                requestDispatcher.forward(req, resp);
+                requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_IS_NOT_ADDED_TO_BUCKET_PATH);
             }
+            requestDispatcher.forward(req, resp);
         } else {
             final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.NO_PRODUCTS_PATH);
             requestDispatcher.forward(req, resp);

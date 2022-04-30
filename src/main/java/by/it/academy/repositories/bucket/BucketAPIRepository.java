@@ -34,8 +34,9 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     public Bucket get(Bucket bucket) {
         Bucket thisBucket = new Bucket();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM bucket WHERE id=" + bucket.getId());
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM bucket WHERE id = ?");
+            statement.setInt(1, bucket.getId());
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int thisId = resultSet.getInt("id");
                 int userId = resultSet.getInt("userId");
@@ -81,8 +82,8 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     public List<Bucket> getAll() {
         List<Bucket> bucket = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM bucket");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM bucket");
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int thisId = resultSet.getInt("id");
                 int userId = resultSet.getInt("userId");
@@ -100,9 +101,11 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     public Bucket getByUserAndProduct(User user, Product product) {
         Bucket bucket = new Bucket();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM bucket " +
-                    "WHERE userId='" + user.getId() + "' AND productId='" + product.getId() + "'");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM bucket " +
+                    "WHERE userId = ? AND productId = ?");
+            statement.setInt(1, user.getId());
+            statement.setInt(2, product.getId());
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int thisId = resultSet.getInt("id");
                 int userId = resultSet.getInt("userId");

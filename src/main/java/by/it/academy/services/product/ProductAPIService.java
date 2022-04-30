@@ -1,10 +1,8 @@
 package by.it.academy.services.product;
 
-import by.it.academy.Paths;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.product.ProductRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAPIService implements ProductService<Product> {
@@ -50,8 +48,8 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> getHeadphones() {
-        return repository.getHeadphones();
+    public List<Product> getCategoryDesc(String category) {
+        return repository.getCategoryDesc(category);
     }
 
     @Override
@@ -60,6 +58,11 @@ public class ProductAPIService implements ProductService<Product> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Product> getAllDesc() {
+        return repository.getAllDesc();
     }
 
 

@@ -1,7 +1,5 @@
 package by.it.academy.repositories.product;
 
-import by.it.academy.entities.Product;
-
 import java.util.List;
 
 public interface ProductRepository<T> {
@@ -17,7 +15,9 @@ public interface ProductRepository<T> {
 
     List<T> getLastProducts(int amount);
 
-    List<T> getHeadphones();
+    List<T> getCategoryDesc(String category);
 
     T getByID(int id);
+
+    List<T> getAllDesc();
 }

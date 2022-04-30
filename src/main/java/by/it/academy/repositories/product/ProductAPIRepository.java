@@ -16,8 +16,9 @@ public class ProductAPIRepository implements ProductRepository<Product> {
 
     @Override
     public boolean create(Product product) {
-        try (Connection con = connection.connect()) {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO products (category, type, name, image, date, producer, amount, price) VALUES (?,?,?,?,?,?,?,?)");
+        try (Connection conn = connection.connect()) {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO products (category, type, name, image, date, producer, amount, price) " +
+                    "VALUES (?,?,?,?,?,?,?,?)");
             statement.setString(1, product.getCategory());
             statement.setString(2, product.getType());
             statement.setString(3, product.getName());
@@ -37,22 +38,22 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     public Product get(Product product) {
         Product thisProduct = new Product();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM products");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products " +
+                    "WHERE id = ?");
+            statement.setInt(1, product.getId());
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                if (resultSet.getInt("id") == product.getId()) {
-                    int id = resultSet.getInt("id");
-                    String category = resultSet.getString("category");
-                    String type = resultSet.getString("type");
-                    String name = resultSet.getString("name");
-                    String image = resultSet.getString("image");
-                    Date date = resultSet.getDate("date");
-                    String producer = resultSet.getString("producer");
-                    int amount = resultSet.getInt("amount");
-                    double price = resultSet.getDouble("price");
-                    thisProduct = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
-                    return thisProduct;
-                }
+                int id = resultSet.getInt("id");
+                String category = resultSet.getString("category");
+                String type = resultSet.getString("type");
+                String name = resultSet.getString("name");
+                String image = resultSet.getString("image");
+                Date date = resultSet.getDate("date");
+                String producer = resultSet.getString("producer");
+                int amount = resultSet.getInt("amount");
+                double price = resultSet.getDouble("price");
+                thisProduct = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                return thisProduct;
             }
         } catch (SQLException | ClassNotFoundException e) {
             return thisProduct;
@@ -63,7 +64,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     @Override
     public boolean update(Product product, Product newProduct) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("UPDATE products SET category=?, type=?, name=?, image=?, date=?, producer=?, amount=?, price=? WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement("UPDATE products SET category=?, type=?, name=?, image=?, date=?, producer=?, amount=?, price=? " +
+                    "WHERE id=?");
             statement.setString(1, newProduct.getCategory());
             statement.setString(2, newProduct.getType());
             statement.setString(3, newProduct.getName());
@@ -96,8 +98,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     public List<Product> getAll() {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM products");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products");
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String category = resultSet.getString("category");
@@ -121,8 +123,9 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     public List<Product> getLastProducts(int amount) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM products ORDER BY id DESC LIMIT " + amount);
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products ORDER BY id DESC LIMIT ?");
+            statement.setInt(1, amount);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String category = resultSet.getString("category");
@@ -142,14 +145,15 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return products;
     }
 
-    public List<Product> getHeadphones() {
+    public List<Product> getCategoryDesc(String category) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM products WHERE category = 'headphones'");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE category = ? ORDER BY id DESC");
+            statement.setString(1, category);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String category = resultSet.getString("category");
+                String thisCategory = resultSet.getString("category");
                 String type = resultSet.getString("type");
                 String name = resultSet.getString("name");
                 String image = resultSet.getString("image");
@@ -157,7 +161,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int thisAmount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, thisAmount, price);
+                Product product = new Product(id, thisCategory, type, name, image, date.toLocalDate(), producer, thisAmount, price);
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -169,8 +173,9 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     public Product getByID(int id) {
         Product thisProduct = new Product();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM products WHERE id=" + id);
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int thisId = resultSet.getInt("id");
                 String category = resultSet.getString("category");
@@ -191,6 +196,28 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return thisProduct;
     }
 
-
+    public List<Product> getAllDesc() {
+        List<Product> products = new ArrayList<>();
+        try (Connection conn = connection.connect()) {
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products ORDER BY id DESC ");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String category = resultSet.getString("category");
+                String type = resultSet.getString("type");
+                String name = resultSet.getString("name");
+                String image = resultSet.getString("image");
+                Date date = resultSet.getDate("date");
+                String producer = resultSet.getString("producer");
+                int amount = resultSet.getInt("amount");
+                double price = resultSet.getDouble("price");
+                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                products.add(product);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return products;
+        }
+        return products;
+    }
 
 }

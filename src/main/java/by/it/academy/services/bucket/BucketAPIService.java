@@ -58,7 +58,8 @@ public class BucketAPIService implements BucketService<Bucket>{
         if (bucket.getId() > 0) {
             return addAmountToExistBucket(bucket, Paths.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET);
         } else {
-            return create(bucket);
+            Bucket newBucket = new Bucket(user.getId(), product.getId(), Paths.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET);
+            return create(newBucket);
         }
     }
 }

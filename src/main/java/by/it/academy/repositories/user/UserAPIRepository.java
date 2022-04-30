@@ -34,9 +34,10 @@ public class UserAPIRepository implements UserRepository<User> {
     public User get(User user) {
         User thisUser = new User();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM users " +
-                    "WHERE id = " + user.getId());
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users " +
+                    "WHERE id = ?");
+            statement.setInt(1, user.getId());
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String login = resultSet.getString("login");
@@ -84,8 +85,8 @@ public class UserAPIRepository implements UserRepository<User> {
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users");
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String login = resultSet.getString("login");
@@ -103,10 +104,11 @@ public class UserAPIRepository implements UserRepository<User> {
     public User getByLoginPassword(String login, String password) {
         User thisUser = new User();
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM users " +
-                    "WHERE login = '" + login + "' " +
-                    "AND password = '" + password + "'");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users " +
+                    "WHERE login = ? AND password = ?");
+            statement.setString(1, login);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String thisLogin = resultSet.getString("login");
@@ -123,9 +125,10 @@ public class UserAPIRepository implements UserRepository<User> {
 
     public boolean checkLogin(String login) {
         try (Connection conn = connection.connect()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM users " +
-                    "WHERE login = '" + login + "'");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users " +
+                    "WHERE login = ?");
+            statement.setString(1, login);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 return true;
             }

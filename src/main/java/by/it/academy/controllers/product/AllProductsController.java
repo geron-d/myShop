@@ -30,7 +30,7 @@ public class AllProductsController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Product> products = productService.getAll();
+        List<Product> products = productService.getAllDesc();
         req.setAttribute("products", products);
         log.info(products);
 
