@@ -30,7 +30,7 @@
 </nav>
 
 <ul>
-    <li><h1>Products is not in the store</h1></li>
+    <li><h1>Product has not in the store</h1></li>
     <li><h3>${product.name}</h3></li>
     <li><h5>Category:</h5>${product.category}</li>
     <li><h5>Type:</h5>${product.type}</li>

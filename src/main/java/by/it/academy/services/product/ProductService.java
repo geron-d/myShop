@@ -21,7 +21,7 @@ public interface ProductService<T> {
 
     List<T> getCategoryDesc(String category);
 
-    boolean isProductGetAmount(T t);
+    boolean checkProductAmount(T t);
 
     List<T> getAllDesc();
 }

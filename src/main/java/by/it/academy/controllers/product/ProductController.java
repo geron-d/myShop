@@ -3,7 +3,6 @@ package by.it.academy.controllers.product;
 import by.it.academy.Paths;
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
-import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.bucket.BucketAPIRepository;
 import by.it.academy.repositories.bucket.BucketRepository;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(urlPatterns = "/product")
 public class ProductController extends HttpServlet {
@@ -61,20 +59,13 @@ public class ProductController extends HttpServlet {
         req.setAttribute("product", product);
         log.info(product);
 
-        boolean isProductGetAmount = productService.isProductGetAmount(product);
-        if (isProductGetAmount) {
-            boolean isAdded = bucketService.add(user, product);
-            final RequestDispatcher requestDispatcher;
-            if (isAdded) {
-                requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
-            }
-            else {
-                requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_IS_NOT_ADDED_TO_BUCKET_PATH);
-            }
-            requestDispatcher.forward(req, resp);
+        boolean isAdded = bucketService.add(user, product);
+        final RequestDispatcher requestDispatcher;
+        if (isAdded) {
+            requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
         } else {
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.NO_PRODUCTS_PATH);
-            requestDispatcher.forward(req, resp);
+            requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_IS_NOT_ADDED_TO_BUCKET_PATH);
         }
+        requestDispatcher.forward(req, resp);
     }
 }

@@ -53,7 +53,7 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public boolean isProductGetAmount(Product product) {
+    public boolean checkProductAmount(Product product) {
         if (product.getAmount() > 0) {
             return true;
         }
