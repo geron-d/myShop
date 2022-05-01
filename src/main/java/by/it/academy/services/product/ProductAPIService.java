@@ -65,5 +65,20 @@ public class ProductAPIService implements ProductService<Product> {
         return repository.getAllDesc();
     }
 
+    @Override
+    public boolean decreaseProductAmount(Product product, int amount) {
+        boolean isDecreased = true;
+        if (product.getAmount() >= amount) {
+            product.setAmount(product.getAmount() - amount);
+            boolean isUpdated = update(product, product);
+            if (!isUpdated) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return isDecreased;
+    }
+
 
 }

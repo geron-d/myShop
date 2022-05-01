@@ -26,9 +26,6 @@ public class CheckProductAmount implements Filter {
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    BucketRepository<Bucket> bucketRepository = new BucketAPIRepository(connection);
-    BucketService<Bucket> bucketService = new BucketAPIService(bucketRepository);
-
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

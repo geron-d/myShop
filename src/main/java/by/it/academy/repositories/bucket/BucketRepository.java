@@ -18,4 +18,8 @@ public interface BucketRepository<T> {
     List<T> getAll();
 
     T getByUserAndProduct(User user, Product product);
+
+    List<T> getByUser(User user);
+
+    T getById(int id);
 }

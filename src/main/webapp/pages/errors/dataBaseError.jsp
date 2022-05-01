@@ -11,6 +11,6 @@
     <title>DataBaseError</title>
 </head>
 <body>
-    <p2>DataBase Error. Try registration again or connect with administration</p2>
+    <p2>DataBase Error. Connect with administration</p2>
 </body>
 </html>

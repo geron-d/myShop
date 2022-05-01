@@ -24,4 +24,6 @@ public interface ProductService<T> {
     boolean checkProductAmount(T t);
 
     List<T> getAllDesc();
+
+    boolean decreaseProductAmount(T T, int amount);
 }

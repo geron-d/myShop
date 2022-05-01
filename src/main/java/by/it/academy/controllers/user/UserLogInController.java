@@ -1,13 +1,19 @@
 package by.it.academy.controllers.user;
 
 import by.it.academy.Paths;
-import by.it.academy.entities.AccessLevel;
-import by.it.academy.entities.ProductInBucket;
-import by.it.academy.entities.User;
+import by.it.academy.entities.*;
+import by.it.academy.repositories.bucket.BucketAPIRepository;
+import by.it.academy.repositories.bucket.BucketRepository;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
+import by.it.academy.repositories.product.ProductAPIRepository;
+import by.it.academy.repositories.product.ProductRepository;
 import by.it.academy.repositories.user.UserAPIRepository;
 import by.it.academy.repositories.user.UserRepository;
+import by.it.academy.services.bucket.BucketAPIService;
+import by.it.academy.services.bucket.BucketService;
+import by.it.academy.services.product.ProductAPIService;
+import by.it.academy.services.product.ProductService;
 import by.it.academy.services.user.UserAPIService;
 import by.it.academy.services.user.UserService;
 import org.apache.log4j.Logger;
@@ -30,6 +36,10 @@ public class UserLogInController extends HttpServlet {
     ConnectionSQL connection = new ConnectionMySQL();
     UserRepository<User> userRepository = new UserAPIRepository(connection);
     UserService<User> userService = new UserAPIService(userRepository);
+    ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
+    ProductService<Product> productService = new ProductAPIService(productAPIRepository);
+    BucketRepository<Bucket> bucketRepository = new BucketAPIRepository(connection);
+    BucketService<Bucket> bucketService = new BucketAPIService(bucketRepository, productService);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,9 +53,13 @@ public class UserLogInController extends HttpServlet {
             final HttpSession session = req.getSession();
             session.setAttribute("user", user);
 
-//            List<ProductInBucket> bucket = new ArrayList<>();
-//            log.info(bucket);
-//            session.setAttribute("bucket", bucket);
+            List<ProductInBucket> productsInBucket = bucketService.getProductsInBucket(user);
+            session.setAttribute("productsInBucket", productsInBucket);
+            log.info(productsInBucket);
+
+            double allCost = bucketService.getAllCost(productsInBucket);
+            session.setAttribute("allCost", allCost);
+            log.info(allCost);
 
             final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/start");
             requestDispatcher.forward(req, resp);

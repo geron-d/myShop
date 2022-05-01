@@ -21,6 +21,10 @@ public class Bucket {
         this.amount = amount;
     }
 
+    public Bucket(int id) {
+        this.id = id;
+    }
+
     public Bucket() {
     }
 

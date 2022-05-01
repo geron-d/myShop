@@ -18,7 +18,21 @@ public interface BucketService<T> {
 
     List<T> getAll();
 
-    public T getByUserAndProduct(User user, Product product);
+    T getByUserAndProduct(User user, Product product);
+
+    T getById(int id);
 
     boolean add(User user, Product product);
+
+    List<T> getByUser(User user);
+
+    List<ProductInBucket> getProductsInBucket(User user);
+
+    boolean deleteAmountProducts(List<ProductInBucket> productsInBucket, Product product, int amount);
+
+    double getAllCost(List<ProductInBucket> productsInBucket);
+
+    boolean deleteAllProducts(List<ProductInBucket> productsInBucket);
+
+    boolean buy(List<ProductInBucket> productsInBucket);
 }

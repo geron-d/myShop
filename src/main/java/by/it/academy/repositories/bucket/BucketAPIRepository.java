@@ -2,6 +2,7 @@ package by.it.academy.repositories.bucket;
 
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
+import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionSQL;
 
@@ -98,6 +99,7 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
         return bucket;
     }
 
+    @Override
     public Bucket getByUserAndProduct(User user, Product product) {
         Bucket bucket = new Bucket();
         try (Connection conn = connection.connect()) {
@@ -119,4 +121,47 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
         }
         return bucket;
     }
+
+    @Override
+    public List<Bucket> getByUser(User user) {
+        List<Bucket> bucket = new ArrayList<>();
+        try (Connection conn = connection.connect()) {
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM bucket WHERE userId = ?");
+            statement.setInt(1, user.getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int thisId = resultSet.getInt("id");
+                int userId = resultSet.getInt("userId");
+                int productId = resultSet.getInt("productId");
+                int amount = resultSet.getInt("amount");
+                Bucket thisBucket = new Bucket(thisId, userId, productId, amount);
+                bucket.add(thisBucket);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return bucket;
+        }
+        return bucket;
+    }
+
+    @Override
+    public Bucket getById(int id) {
+        Bucket thisBucket = new Bucket();
+        try (Connection conn = connection.connect()) {
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM bucket WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int thisId = resultSet.getInt("id");
+                int userId = resultSet.getInt("userId");
+                int productId = resultSet.getInt("productId");
+                int amount = resultSet.getInt("amount");
+                thisBucket = new Bucket(thisId, userId, productId, amount);
+                return thisBucket;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return thisBucket;
+        }
+        return thisBucket;
+    }
+
 }

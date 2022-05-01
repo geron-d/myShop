@@ -4,15 +4,13 @@ import java.util.Objects;
 
 public class ProductInBucket {
     private Product product;
+    private int bucketId;
     private int amount = 1;
 
-    public ProductInBucket(Product product, int amount) {
+    public ProductInBucket(Product product, int bucketId, int amount) {
         this.product = product;
+        this.bucketId = bucketId;
         this.amount = amount;
-    }
-
-    public ProductInBucket(Product product) {
-        this.product = product;
     }
 
     public Product getProduct() {
@@ -21,6 +19,14 @@ public class ProductInBucket {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public int getBucketId() {
+        return bucketId;
+    }
+
+    public void setBucketId(int bucketId) {
+        this.bucketId = bucketId;
     }
 
     public int getAmount() {
@@ -36,18 +42,19 @@ public class ProductInBucket {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductInBucket that = (ProductInBucket) o;
-        return amount == that.amount && Objects.equals(product, that.product);
+        return bucketId == that.bucketId && amount == that.amount && Objects.equals(product, that.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product, amount);
+        return Objects.hash(product, bucketId, amount);
     }
 
     @Override
     public String toString() {
         return "ProductInBucket{" +
                 "product=" + product +
+                ", bucketId=" + bucketId +
                 ", amount=" + amount +
                 '}';
     }

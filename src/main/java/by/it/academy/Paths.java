@@ -11,6 +11,9 @@ public class Paths {
     public static final String NO_PRODUCTS_PATH = "/pages/products/noProducts.jsp";
     public static final String PRODUCT_IS_NOT_ADDED_TO_BUCKET_PATH = "/pages/products/productIsNotAddedToBucket.jsp";
     public static final String BUCKET_PATH = "/pages/products/bucket.jsp";
+    public static final String PRODUCT_DELETED_FROM_BUCKET_PATH = "/pages/products/productDeletedFromBucket.jsp";
+    public static final String ALL_PRODUCTS_DELETED_FROM_BUCKET_PATH = "/pages/products/allProductsDeletedFromBucket.jsp";
+    public static final String PRODUCTS_BOUGHT_PATH = "/pages/products/productsBought.jsp";
 
 
 
@@ -20,5 +23,6 @@ public class Paths {
 
     public static final int AMOUNT_PRODUCTS_ON_START_PAGE = 4;
     public static final int AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET = 1;
+    public static final int AMOUNT_PRODUCT_DELETED_WHEN_USER_PULL_DELETE = 1;
     public static final String CATEGORY_HEADPHONES = "headphones";
 }
