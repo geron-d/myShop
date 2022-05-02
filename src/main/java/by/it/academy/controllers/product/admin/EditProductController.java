@@ -1,5 +1,7 @@
-package by.it.academy.controllers;
+package by.it.academy.controllers.product.admin;
 
+import by.it.academy.Paths;
+import by.it.academy.controllers.product.ProductController;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
@@ -7,6 +9,7 @@ import by.it.academy.repositories.product.ProductAPIRepository;
 import by.it.academy.repositories.product.ProductRepository;
 import by.it.academy.services.product.ProductAPIService;
 import by.it.academy.services.product.ProductService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,22 +20,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 
-@WebServlet(urlPatterns = "/addProduct")
-public class AddProductController extends HttpServlet {
+@WebServlet(urlPatterns = "/products/edit")
+public class EditProductController extends HttpServlet {
+    Logger log = Logger.getLogger(ProductController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    private static final String ADD_PRODUCT_PATH = "/pages/AddProduct.jsp";
-    private static final String PRODUCT_ADDED_PATH = "/pages/ProductAdded.jsp";
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(ADD_PRODUCT_PATH);
-        requestDispatcher.forward(req, resp);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        Product product = productService.getByID(id);
+        log.info(product);
+
         final String category = req.getParameter("category");
         final String type = req.getParameter("type");
         final String name = req.getParameter("name");
@@ -40,11 +40,12 @@ public class AddProductController extends HttpServlet {
         final String producer = req.getParameter("producer");
         final int amount = Integer.parseInt(req.getParameter("amount"));
         final double price = Double.parseDouble(req.getParameter("price"));
-        final Product product = new Product(category, type, name, image, LocalDate.now(), producer, amount, price);
+        final Product newProduct = new Product(category, type, name, image, product.getLocalDate(), producer, amount, price);
+        log.info(newProduct);
 
-        boolean isCreated = productService.create(product);
-        if (isCreated) {
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(PRODUCT_ADDED_PATH);
+        boolean isUpdated = productService.update(product, newProduct);
+        if (isUpdated) {
+            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_UPDATED_PATH);
             requestDispatcher.forward(req, resp);
         }
     }

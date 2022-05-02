@@ -1,22 +1,16 @@
 <%--
   Created by IntelliJ IDEA.
   User: geron
-  Date: 22.04.2022
-  Time: 18:24
+  Date: 02.05.2022
+  Time: 12:37
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!doctype HTML>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StartPageAdmin</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>headphones</title>
 </head>
-
 <body>
 <nav class="top-menu">
     <p><a href="${pageContext.request.contextPath}/start"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
@@ -35,12 +29,10 @@
 </nav>
 
 <ul>
-    <li><h1>Last products</h1></li>
-    <c:forEach var="lastProduct" items="${lastProducts}">
-        <li><a href="${pageContext.request.contextPath}/products/product/admin?id=${lastProduct.id}">${lastProduct.name}</a></li>
+    <li><h1>Headphones</h1></li>
+    <c:forEach var="headphone" items="${headphones}">
+        <li><a href="${pageContext.request.contextPath}/products/product/admin?id=${headphone.id}">${headphone.name}</a></li>
     </c:forEach>
 </ul>
-
 </body>
-
 </html>

@@ -7,6 +7,7 @@ public class Paths {
     public static final String START_PAGE_ADMIN_PATH = "/pages/startPageAdmin.jsp";
 
     public static final String USER_PRIVATE_ROOM = "/pages/user/userPrivateRoom.jsp";
+    public static final String ADMIN_PRIVATE_ROOM = "/pages/user/adminPrivateRoom.jsp";
 
     public static final String ALL_PRODUCTS_PATH = "/pages/products/allProducts.jsp";
     public static final String HEADPHONES_PATH = "/pages/products/headphones.jsp";
@@ -18,6 +19,16 @@ public class Paths {
     public static final String PRODUCT_DELETED_FROM_BUCKET_PATH = "/pages/products/productDeletedFromBucket.jsp";
     public static final String ALL_PRODUCTS_DELETED_FROM_BUCKET_PATH = "/pages/products/allProductsDeletedFromBucket.jsp";
     public static final String PRODUCTS_BOUGHT_PATH = "/pages/products/productsBought.jsp";
+
+    public static final String ADMIN_ALL_PRODUCTS_PATH = "/pages/products/admin/allProducts.jsp";
+    public static final String ADMIN_HEADPHONES_PATH = "/pages/products/admin/headphones.jsp";
+    public static final String ADMIN_PRODUCT_PATH = "/pages/products/admin/product.jsp";
+    public static final String EDIT_PRODUCT_PATH = "/pages/products/admin/editProduct.jsp";
+    public static final String PRODUCT_UPDATED_PATH = "/pages/products/admin/productUpdated.jsp";
+    public static final String PRODUCT_DELETED_PATH = "/pages/products/admin/productDeleted.jsp";
+    public static final String ADD_PRODUCT_PATH = "/pages/products/admin/addProduct.jsp";
+    public static final String PRODUCT_ADDED_PATH = "/pages/products/admin/productAdded.jsp";
+
 
 
 
