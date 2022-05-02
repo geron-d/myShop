@@ -5,6 +5,4 @@ import java.sql.SQLException;
 
 public interface ConnectionSQL {
     Connection connect() throws ClassNotFoundException, SQLException;
-
-    boolean close() throws SQLException;
 }

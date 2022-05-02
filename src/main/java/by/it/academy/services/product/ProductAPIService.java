@@ -54,10 +54,7 @@ public class ProductAPIService implements ProductService<Product> {
 
     @Override
     public boolean checkProductAmount(Product product) {
-        if (product.getAmount() > 0) {
-            return true;
-        }
-        return false;
+        return product.getAmount() > 0;
     }
 
     @Override

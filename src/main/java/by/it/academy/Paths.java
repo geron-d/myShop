@@ -30,8 +30,6 @@ public class Paths {
     public static final String PRODUCT_ADDED_PATH = "/pages/products/admin/productAdded.jsp";
 
 
-
-
     public static final String USER_LOGIN_ERROR = "/pages/errors/userLogInError.jsp";
     public static final String USER_LOGIN_IS_ALREADY_TAKEN_ERROR = "/pages/errors/userLoginIsAlreadyTakenError.jsp";
     public static final String DATA_BASE_ERROR = "/pages/errors/dataBaseError.jsp";

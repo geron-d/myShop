@@ -2,11 +2,13 @@ package by.it.academy.repositories.bucket;
 
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
-import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionSQL;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

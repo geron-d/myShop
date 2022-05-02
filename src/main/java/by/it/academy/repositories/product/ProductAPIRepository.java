@@ -187,7 +187,6 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
                 thisProduct = new Product(thisId, category, type, name, image, date.toLocalDate(), producer, amount, price);
-                connection.close();
                 return thisProduct;
             }
         } catch (SQLException | ClassNotFoundException e) {

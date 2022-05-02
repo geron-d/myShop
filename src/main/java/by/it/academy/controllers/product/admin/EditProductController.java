@@ -1,7 +1,6 @@
 package by.it.academy.controllers.product.admin;
 
 import by.it.academy.Paths;
-import by.it.academy.controllers.product.ProductController;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
@@ -18,11 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 
 @WebServlet(urlPatterns = "/products/edit")
 public class EditProductController extends HttpServlet {
-    Logger log = Logger.getLogger(ProductController.class);
+    Logger log = Logger.getLogger(EditProductController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);

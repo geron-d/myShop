@@ -3,7 +3,6 @@ package by.it.academy.entities;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Data
 public class Product {

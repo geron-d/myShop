@@ -1,7 +1,6 @@
 package by.it.academy.controllers.product;
 
 import by.it.academy.Paths;
-import by.it.academy.controllers.user.UserLogInController;
 import by.it.academy.entities.AccessLevel;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;
@@ -9,12 +8,8 @@ import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.repositories.product.ProductAPIRepository;
 import by.it.academy.repositories.product.ProductRepository;
-import by.it.academy.repositories.user.UserAPIRepository;
-import by.it.academy.repositories.user.UserRepository;
 import by.it.academy.services.product.ProductAPIService;
 import by.it.academy.services.product.ProductService;
-import by.it.academy.services.user.UserAPIService;
-import by.it.academy.services.user.UserService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -55,6 +50,6 @@ public class StartPageController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req,resp);
+        doGet(req, resp);
     }
 }

@@ -4,7 +4,6 @@ import by.it.academy.entities.User;
 import by.it.academy.repositories.user.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public class UserAPIService implements UserService<User> {
     private final UserRepository<User> repository;
@@ -47,5 +46,5 @@ public class UserAPIService implements UserService<User> {
     public boolean checkLogin(String login) {
         return repository.checkLogin(login);
     }
-    
+
 }

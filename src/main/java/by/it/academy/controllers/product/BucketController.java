@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @WebServlet(urlPatterns = "/bucket")
 public class BucketController extends HttpServlet {
@@ -48,10 +47,8 @@ public class BucketController extends HttpServlet {
         session.setAttribute("productsInBucket", productsInBucket);
         log.info(productsInBucket);
 
-        boolean isBucketEmpty = true;
-        if (productsInBucket.isEmpty()) {
-            isBucketEmpty = false;
-        }
+        boolean isBucketEmpty = !productsInBucket.isEmpty();
+
         session.setAttribute("isBucketEmpty", isBucketEmpty);
         log.info(isBucketEmpty);
 
@@ -89,10 +86,7 @@ public class BucketController extends HttpServlet {
                     productsInBucket = bucketService.getProductsInBucket(user);
                     session.setAttribute("productsInBucket", productsInBucket);
 
-                    boolean isBucketEmpty = true;
-                    if (productsInBucket.isEmpty()) {
-                        isBucketEmpty = false;
-                    }
+                    boolean isBucketEmpty = !productsInBucket.isEmpty();
                     session.setAttribute("isBucketEmpty", isBucketEmpty);
                     log.info(isBucketEmpty);
 
@@ -101,8 +95,7 @@ public class BucketController extends HttpServlet {
 
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_DELETED_FROM_BUCKET_PATH);
                     requestDispatcher.forward(req, resp);
-                }
-                else {
+                } else {
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                     requestDispatcher.forward(req, resp);
                 }
@@ -114,10 +107,7 @@ public class BucketController extends HttpServlet {
                     productsInBucket = bucketService.getProductsInBucket(user);
                     session.setAttribute("productsInBucket", productsInBucket);
 
-                    boolean isBucketEmpty = true;
-                    if (productsInBucket.isEmpty()) {
-                        isBucketEmpty = false;
-                    }
+                    boolean isBucketEmpty = !productsInBucket.isEmpty();
                     session.setAttribute("isBucketEmpty", isBucketEmpty);
                     log.info(isBucketEmpty);
 
@@ -126,8 +116,7 @@ public class BucketController extends HttpServlet {
 
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.ALL_PRODUCTS_DELETED_FROM_BUCKET_PATH);
                     requestDispatcher.forward(req, resp);
-                }
-                else {
+                } else {
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                     requestDispatcher.forward(req, resp);
                 }
@@ -144,8 +133,7 @@ public class BucketController extends HttpServlet {
 
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCTS_BOUGHT_PATH);
                     requestDispatcher.forward(req, resp);
-                }
-                else {
+                } else {
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                     requestDispatcher.forward(req, resp);
                 }

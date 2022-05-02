@@ -1,17 +1,11 @@
 package by.it.academy.filters;
 
 import by.it.academy.Paths;
-import by.it.academy.controllers.product.ProductController;
-import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
-import by.it.academy.repositories.bucket.BucketAPIRepository;
-import by.it.academy.repositories.bucket.BucketRepository;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.repositories.product.ProductAPIRepository;
 import by.it.academy.repositories.product.ProductRepository;
-import by.it.academy.services.bucket.BucketAPIService;
-import by.it.academy.services.bucket.BucketService;
 import by.it.academy.services.product.ProductAPIService;
 import by.it.academy.services.product.ProductService;
 import org.apache.log4j.Logger;
@@ -22,7 +16,7 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = "/product")
 public class CheckProductAmount implements Filter {
-    Logger log = Logger.getLogger(ProductController.class);
+    Logger log = Logger.getLogger(CheckProductAmount.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);

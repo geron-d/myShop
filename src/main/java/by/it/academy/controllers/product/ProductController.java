@@ -3,7 +3,6 @@ package by.it.academy.controllers.product;
 import by.it.academy.Paths;
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
-import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.bucket.BucketAPIRepository;
 import by.it.academy.repositories.bucket.BucketRepository;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(urlPatterns = "/product")
 public class ProductController extends HttpServlet {

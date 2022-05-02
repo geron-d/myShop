@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: geron
@@ -5,7 +6,7 @@
   Time: 14:38
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <title>AddProduct</title>
@@ -14,13 +15,27 @@
 <c:import url="/pages/adminHeader.jsp"/>
 
 <form action="${pageContext.request.contextPath}/products/add" method="post">
-    <input type="text" name="category" placeholder="category">
-    <input type="text" name="type" placeholder="type">
-    <input type="text" name="name" placeholder="name">
-    <input type="text" name="image" placeholder="image">
-    <input type="text" name="producer" placeholder="producer">
-    <input type="text" name="amount" placeholder="amount">
-    <input type="text" name="price" placeholder="price">
+    <label>
+        <input type="text" name="category" placeholder="category">
+    </label>
+    <label>
+        <input type="text" name="type" placeholder="type">
+    </label>
+    <label>
+        <input type="text" name="name" placeholder="name">
+    </label>
+    <label>
+        <input type="text" name="image" placeholder="image">
+    </label>
+    <label>
+        <input type="text" name="producer" placeholder="producer">
+    </label>
+    <label>
+        <input type="text" name="amount" placeholder="amount">
+    </label>
+    <label>
+        <input type="text" name="price" placeholder="price">
+    </label>
     <input type="submit" value="Create">
 </form>
 </body>

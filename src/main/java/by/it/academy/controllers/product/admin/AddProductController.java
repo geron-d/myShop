@@ -1,7 +1,6 @@
 package by.it.academy.controllers.product.admin;
 
 import by.it.academy.Paths;
-import by.it.academy.controllers.product.ProductController;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;

@@ -4,10 +4,12 @@ import by.it.academy.entities.AccessLevel;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionSQL;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserAPIRepository implements UserRepository<User> {
     private final ConnectionSQL connection;
@@ -39,12 +41,12 @@ public class UserAPIRepository implements UserRepository<User> {
             statement.setInt(1, user.getId());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    String login = resultSet.getString("login");
-                    String password = resultSet.getString("password");
-                    AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
-                    thisUser = new User(id, login, password, accessLevel);
-                    return thisUser;
+                int id = resultSet.getInt("id");
+                String login = resultSet.getString("login");
+                String password = resultSet.getString("password");
+                AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
+                thisUser = new User(id, login, password, accessLevel);
+                return thisUser;
             }
         } catch (SQLException | ClassNotFoundException e) {
             return thisUser;

@@ -5,7 +5,7 @@
   Time: 19:13
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -17,6 +17,7 @@
 
 <ul>
     <li><h1>Headphones</h1></li>
+    <%--@elvariable id="headphones" type="java.util.List"--%>
     <c:forEach var="headphone" items="${headphones}">
         <li><a href="${pageContext.request.contextPath}/product?id=${headphone.id}">${headphone.name}</a></li>
     </c:forEach>

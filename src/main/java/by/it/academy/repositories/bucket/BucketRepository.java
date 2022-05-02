@@ -1,6 +1,5 @@
 package by.it.academy.repositories.bucket;
 
-import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;
 

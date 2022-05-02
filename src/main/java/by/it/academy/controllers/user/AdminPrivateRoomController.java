@@ -1,7 +1,6 @@
 package by.it.academy.controllers.user;
 
 import by.it.academy.Paths;
-import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,7 +13,6 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/admin/adminPrivateRoom")
 public class AdminPrivateRoomController extends HttpServlet {
-    Logger log = Logger.getLogger(UserLogInController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

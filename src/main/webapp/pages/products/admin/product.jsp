@@ -1,3 +1,4 @@
+<%--@elvariable id="product" type="javax.xml.stream.util.StreamReaderDelegate"--%>
 <%--
   Created by IntelliJ IDEA.
   User: geron
@@ -5,7 +6,7 @@
   Time: 12:48
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -23,12 +24,14 @@
     <li><h5>Amount:</h5>${product.amount}</li>
     <li><h5>Price:</h5>${product.price}</li>
     <li>
-        <form action="${pageContext.request.contextPath}/products/product/admin?id=${product.id}&submit=edit" method="post">
+        <form action="${pageContext.request.contextPath}/products/product/admin?id=${product.id}&submit=edit"
+              method="post">
             <input type="submit" value="Edit">
         </form>
     </li>
     <li>
-        <form action="${pageContext.request.contextPath}/products/product/admin?id=${product.id}&submit=delete" method="post">
+        <form action="${pageContext.request.contextPath}/products/product/admin?id=${product.id}&submit=delete"
+              method="post">
             <input type="submit" value="Delete">
         </form>
     </li>

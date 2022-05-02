@@ -2,8 +2,6 @@ package by.it.academy.entities;
 
 import lombok.Data;
 
-import java.util.Objects;
-
 @Data
 public class User {
     private int id;

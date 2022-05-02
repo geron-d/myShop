@@ -10,9 +10,8 @@ import by.it.academy.services.product.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
-public class BucketAPIService implements BucketService<Bucket>{
+public class BucketAPIService implements BucketService<Bucket> {
     BucketRepository<Bucket> bucketRepository;
     ProductService<Product> productService;
 
@@ -56,14 +55,14 @@ public class BucketAPIService implements BucketService<Bucket>{
         return bucketRepository.getById(id);
     }
 
-    public boolean addAmountToExistBucket (Bucket bucket, int n) {
+    public boolean addAmountToExistBucket(Bucket bucket, int n) {
         Bucket newBucket = new Bucket(bucket.getId(), bucket.getUserId(), bucket.getProductId(), bucket.getAmount() + n);
         return update(bucket, newBucket);
     }
 
     @Override
     public boolean add(User user, Product product) {
-        Bucket bucket = getByUserAndProduct(user,product);
+        Bucket bucket = getByUserAndProduct(user, product);
         if (bucket.getId() > 0) {
             return addAmountToExistBucket(bucket, Paths.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET);
         } else {
@@ -143,6 +142,9 @@ public class BucketAPIService implements BucketService<Bucket>{
             }
             Bucket bucket = getById(productInBucket.getBucketId());
             boolean isDeleted = delete(bucket);
+            if (!isDeleted) {
+                return false;
+            }
         }
         return isBought;
     }

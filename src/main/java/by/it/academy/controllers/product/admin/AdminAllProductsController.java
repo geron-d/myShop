@@ -1,7 +1,6 @@
 package by.it.academy.controllers.product.admin;
 
 import by.it.academy.Paths;
-import by.it.academy.controllers.product.AllProductsController;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
@@ -22,7 +21,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/products/admin")
 public class AdminAllProductsController extends HttpServlet {
-    Logger log = Logger.getLogger(AllProductsController.class);
+    Logger log = Logger.getLogger(AdminAllProductsController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
