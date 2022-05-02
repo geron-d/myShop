@@ -26,7 +26,7 @@
             </ul>
         </li>
         <li><a href="${pageContext.request.contextPath}/bucket">Bucket</a></li>
-        <li><a href="">Private room</a></li>
+        <li><a href="${pageContext.request.contextPath}/user/userPrivateRoom">Private room</a></li>
     </ul>
 </nav>
 
