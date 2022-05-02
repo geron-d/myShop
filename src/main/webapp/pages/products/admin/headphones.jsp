@@ -12,21 +12,7 @@
     <title>headphones</title>
 </head>
 <body>
-<nav class="top-menu">
-    <p><a href="${pageContext.request.contextPath}/start"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
-    <ul class="menu-main">
-        <li><a href="${pageContext.request.contextPath}/start">Start Page</a></li>
-        <li>
-            <a href="${pageContext.request.contextPath}/products/admin">Products</a>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/products/admin">All products</a></li>
-                <li><a href="${pageContext.request.contextPath}/products/headphones/admin">Headphones</a></li>
-            </ul>
-        </li>
-        <li><a href="${pageContext.request.contextPath}/products/add">Add product</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/adminPrivateRoom">Private room</a></li>
-    </ul>
-</nav>
+<c:import url="/pages/adminHeader.jsp"/>
 
 <ul>
     <li><h1>Headphones</h1></li>

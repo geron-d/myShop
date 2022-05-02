@@ -12,5 +12,6 @@
 </head>
 <body>
     <p2>DataBase Error. Connect with administration</p2>
+    <a href="${pageContext.request.contextPath}/start">Start Page</a>
 </body>
 </html>

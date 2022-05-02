@@ -10,6 +10,7 @@ import by.it.academy.services.product.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class BucketAPIService implements BucketService<Bucket>{
     BucketRepository<Bucket> bucketRepository;
@@ -80,6 +81,7 @@ public class BucketAPIService implements BucketService<Bucket>{
     public List<ProductInBucket> getProductsInBucket(User user) {
         List<ProductInBucket> productsInBucket = new ArrayList<>();
         List<Bucket> bucket = getByUser(user);
+
         for (Bucket value : bucket) {
             Product product = productService.getByID(value.getProductId());
             ProductInBucket productInBucket = new ProductInBucket(product, value.getId(), value.getAmount());

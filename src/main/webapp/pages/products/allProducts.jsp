@@ -14,21 +14,7 @@
 </head>
 <body>
 
-<nav class="top-menu">
-    <p><a href="${pageContext.request.contextPath}/start"><img src="${pageContext.request.contextPath}/logo.jpg" alt="Logo"></a></p>
-    <ul class="menu-main">
-        <li><a href="${pageContext.request.contextPath}/start">Start Page</a></li>
-        <li>
-            <a href="${pageContext.request.contextPath}/products">Products</a>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/products">All products</a></li>
-                <li><a href="${pageContext.request.contextPath}/headphones">Headphones</a></li>
-            </ul>
-        </li>
-        <li><a href="${pageContext.request.contextPath}/bucket">Bucket</a></li>
-        <li><a href="${pageContext.request.contextPath}/user/userPrivateRoom">Private room</a></li>
-    </ul>
-</nav>
+<c:import url="/pages/userHeader.jsp"/>
 
 <ul>
     <li><h1>All products</h1></li>
