@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet(urlPatterns = "/bucket")
 public class BucketController extends HttpServlet {
@@ -46,6 +47,13 @@ public class BucketController extends HttpServlet {
         List<ProductInBucket> productsInBucket = bucketService.getProductsInBucket(user);
         session.setAttribute("productsInBucket", productsInBucket);
         log.info(productsInBucket);
+
+        boolean isBucketEmpty = true;
+        if (productsInBucket.isEmpty()) {
+            isBucketEmpty = false;
+        }
+        session.setAttribute("isBucketEmpty", isBucketEmpty);
+        log.info(isBucketEmpty);
 
         double allCost = bucketService.getAllCost(productsInBucket);
         session.setAttribute("allCost", allCost);
@@ -81,6 +89,13 @@ public class BucketController extends HttpServlet {
                     productsInBucket = bucketService.getProductsInBucket(user);
                     session.setAttribute("productsInBucket", productsInBucket);
 
+                    boolean isBucketEmpty = true;
+                    if (productsInBucket.isEmpty()) {
+                        isBucketEmpty = false;
+                    }
+                    session.setAttribute("isBucketEmpty", isBucketEmpty);
+                    log.info(isBucketEmpty);
+
                     double allCost = bucketService.getAllCost(productsInBucket);
                     session.setAttribute("allCost", allCost);
 
@@ -91,12 +106,20 @@ public class BucketController extends HttpServlet {
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                     requestDispatcher.forward(req, resp);
                 }
+                break;
             }
             case "deleteAll": {
                 boolean isDeleted = bucketService.deleteAllProducts(productsInBucket);
                 if (isDeleted) {
                     productsInBucket = bucketService.getProductsInBucket(user);
                     session.setAttribute("productsInBucket", productsInBucket);
+
+                    boolean isBucketEmpty = true;
+                    if (productsInBucket.isEmpty()) {
+                        isBucketEmpty = false;
+                    }
+                    session.setAttribute("isBucketEmpty", isBucketEmpty);
+                    log.info(isBucketEmpty);
 
                     double allCost = bucketService.getAllCost(productsInBucket);
                     session.setAttribute("allCost", allCost);
@@ -108,6 +131,7 @@ public class BucketController extends HttpServlet {
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                     requestDispatcher.forward(req, resp);
                 }
+                break;
             }
             case "buy": {
                 boolean isBought = bucketService.buy(productsInBucket);
@@ -125,6 +149,7 @@ public class BucketController extends HttpServlet {
                     final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                     requestDispatcher.forward(req, resp);
                 }
+                break;
             }
         }
 

@@ -39,21 +39,18 @@
             <form action="${pageContext.request.contextPath}/bucket?id=${productInBucket.product.id}&submit=delete" method="post">
                 <input type="submit" value="Delete">
             </form>
-                <%--            <form action="${pageContext.request.contextPath}/bucket?id=${product.product.id}" method="post">--%>
-                <%--                <input type="submit" value="DeleteAll">--%>
-                <%--            </form>--%>
         </li>
     </c:forEach>
 
     <li><h1>All cost products in bucket = ${allCost}</h1></li>
-    <form action="${pageContext.request.contextPath}/bucket?submit=deleteAll" method="post">
-        <input type="submit" value="DeleteAll">
-    </form>
-    <%--    <li>--%>
-    <%--        <form action="${pageContext.request.contextPath}/bucket?id=${product.product.id}" method="post">--%>
-    <%--            <input type="submit" value="Buy">--%>
-    <%--        </form>--%>
-    <%--    </li>--%>
+    <c:if test="${isBucketEmpty}">
+        <form action="${pageContext.request.contextPath}/bucket?submit=deleteAll" method="post">
+            <input type="submit" value="DeleteAll">
+        </form>
+        <form action="${pageContext.request.contextPath}/bucket?submit=buy" method="post">
+            <input type="submit" value="Buy">
+        </form>
+    </c:if>
 </ul>
 </body>
 </html>

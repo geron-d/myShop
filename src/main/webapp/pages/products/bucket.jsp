@@ -42,12 +42,15 @@
     </c:forEach>
 
     <li><h1>All cost products in bucket = ${allCost}</h1></li>
-    <form action="${pageContext.request.contextPath}/bucket?submit=deleteAll" method="post">
-        <input type="submit" value="DeleteAll">
-    </form>
-    <form action="${pageContext.request.contextPath}/bucket?submit=buy" method="post">
-        <input type="submit" value="Buy">
-    </form>
+    <c:if test="${isBucketEmpty}">
+        <form action="${pageContext.request.contextPath}/bucket?submit=deleteAll" method="post">
+            <input type="submit" value="DeleteAll">
+        </form>
+        <form action="${pageContext.request.contextPath}/bucket?submit=buy" method="post">
+            <input type="submit" value="Buy">
+        </form>
+    </c:if>
+
 </ul>
 </body>
 </html>

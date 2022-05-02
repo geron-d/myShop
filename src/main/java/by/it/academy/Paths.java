@@ -1,8 +1,12 @@
 package by.it.academy;
 
 public class Paths {
+    public static final String INDEX_PATH = "/index.jsp";
+
     public static final String START_PAGE_USER_PATH = "/pages/startPageUser.jsp";
     public static final String START_PAGE_ADMIN_PATH = "/pages/startPageAdmin.jsp";
+
+    public static final String USER_PRIVATE_ROOM = "/pages/user/userPrivateRoom.jsp";
 
     public static final String ALL_PRODUCTS_PATH = "/pages/products/allProducts.jsp";
     public static final String HEADPHONES_PATH = "/pages/products/headphones.jsp";
