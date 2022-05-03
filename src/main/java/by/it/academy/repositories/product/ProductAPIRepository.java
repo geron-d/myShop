@@ -145,6 +145,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return products;
     }
 
+    @Override
     public List<Product> getCategoryDesc(String category) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
@@ -170,6 +171,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return products;
     }
 
+    @Override
     public Product getByID(int id) {
         Product thisProduct = new Product();
         try (Connection conn = connection.connect()) {
@@ -195,10 +197,40 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return thisProduct;
     }
 
+    @Override
     public List<Product> getAllDesc() {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM products ORDER BY id DESC ");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String category = resultSet.getString("category");
+                String type = resultSet.getString("type");
+                String name = resultSet.getString("name");
+                String image = resultSet.getString("image");
+                Date date = resultSet.getDate("date");
+                String producer = resultSet.getString("producer");
+                int amount = resultSet.getInt("amount");
+                double price = resultSet.getDouble("price");
+                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                products.add(product);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return products;
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> search(String search) {
+        List<Product> products = new ArrayList<>();
+        try (Connection conn = connection.connect()) {
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products " +
+                    "WHERE LOWER(name) like LOWER('%"+search+"%') " +
+                    "OR LOWER(category) like LOWER('%"+search+"%') " +
+                    "OR LOWER(type) like LOWER('%"+search+"%') " +
+                    "ORDER BY id DESC");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");

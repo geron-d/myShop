@@ -1,5 +1,7 @@
 package by.it.academy.repositories.product;
 
+import by.it.academy.entities.Product;
+
 import java.util.List;
 
 public interface ProductRepository<T> {
@@ -20,4 +22,6 @@ public interface ProductRepository<T> {
     T getByID(int id);
 
     List<T> getAllDesc();
+
+    List<T> search(String search);
 }

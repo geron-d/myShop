@@ -22,6 +22,13 @@
     <p><a href="${pageContext.request.contextPath}/start"><img src="${pageContext.request.contextPath}/logo.jpg"
                                                                alt="Logo"></a></p>
     <ul class="menu-main">
+        <li><form action="${pageContext.request.contextPath}/search" method="post">
+            <label>
+                <input type="text" name="search" placeholder="search">
+            </label>
+            <input type="submit" value="Search">
+        </form></li>
+
         <li><a href="${pageContext.request.contextPath}/start">Start Page</a></li>
         <li>
             <a href="${pageContext.request.contextPath}/products">Products</a>
@@ -33,12 +40,13 @@
         <li><a href="${pageContext.request.contextPath}/bucket">Bucket</a></li>
         <%--@elvariable id="user" type="java"--%>
         <c:if test="${user == null}">
-        <li><a href="${pageContext.request.contextPath}/pages/user/logIn.jsp">LogIn</a></li>
+            <li><a href="${pageContext.request.contextPath}/pages/user/logIn.jsp">LogIn</a></li>
         </c:if>
         <c:if test="${user != null}">
             <li><a href="${pageContext.request.contextPath}/user/userPrivateRoom">Private room</a></li>
         </c:if>
     </ul>
+
 </nav>
 
 </body>

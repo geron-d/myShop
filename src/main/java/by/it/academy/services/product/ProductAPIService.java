@@ -77,5 +77,8 @@ public class ProductAPIService implements ProductService<Product> {
         return isDecreased;
     }
 
-
+    @Override
+    public List<Product> search(String search) {
+        return repository.search(search);
+    }
 }

@@ -1,6 +1,7 @@
 package by.it.academy.controllers.product;
 
 import by.it.academy.Paths;
+import by.it.academy.controllers.product.admin.AddProductController;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionMySQL;
@@ -21,22 +22,25 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/products")
-public class AllProductsController extends HttpServlet {
-    Logger log = Logger.getLogger(AllProductsController.class);
+@WebServlet(urlPatterns = "/search")
+public class SearchController extends HttpServlet {
+    Logger log = Logger.getLogger(AddProductController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
-        log.info("/products - method: get - user: " + user);
+        log.info("/search - method: post - user: " + user);
 
-        List<Product> products = productService.getAllDesc();
-        log.info("/products - method: get - products: " + products);
+        final String search = req.getParameter("search");
+        log.info("/search - method: post - search: " + search);
+
+        List<Product> products = productService.search(search);
+        log.info("/search - method: get - products: " + products);
 
         req.setAttribute("products", products);
 

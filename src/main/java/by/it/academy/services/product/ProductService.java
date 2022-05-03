@@ -26,4 +26,6 @@ public interface ProductService<T> {
     List<T> getAllDesc();
 
     boolean decreaseProductAmount(T T, int amount);
+
+    List<T> search(String search);
 }
