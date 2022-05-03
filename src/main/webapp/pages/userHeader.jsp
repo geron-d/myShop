@@ -5,7 +5,7 @@
   Time: 17:22
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!doctype HTML>
@@ -31,7 +31,13 @@
             </ul>
         </li>
         <li><a href="${pageContext.request.contextPath}/bucket">Bucket</a></li>
-        <li><a href="${pageContext.request.contextPath}/user/userPrivateRoom">Private room</a></li>
+        <%--@elvariable id="user" type="java"--%>
+        <c:if test="${user == null}">
+        <li><a href="${pageContext.request.contextPath}/pages/user/logIn.jsp">LogIn</a></li>
+        </c:if>
+        <c:if test="${user != null}">
+            <li><a href="${pageContext.request.contextPath}/user/userPrivateRoom">Private room</a></li>
+        </c:if>
     </ul>
 </nav>
 

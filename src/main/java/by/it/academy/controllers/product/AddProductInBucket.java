@@ -25,9 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/product")
-public class ProductController extends HttpServlet {
-    Logger log = Logger.getLogger(ProductController.class);
+@WebServlet(urlPatterns = "/product/addInBucket")
+public class AddProductInBucket extends HttpServlet {
+    Logger log = Logger.getLogger(AddProductInBucket.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
@@ -35,21 +35,29 @@ public class ProductController extends HttpServlet {
     BucketService<Bucket> bucketService = new BucketAPIService(bucketRepository, productService);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
-        log.info("/product - method: get - user: " + user);
+        log.info("/product - method: post - user: " + user);
 
         int id = Integer.parseInt(req.getParameter("id"));
-        log.info("/product - method: get - id: " + id);
+        log.info("/product - method: post - id: " + id);
 
         Product product = productService.getByID(id);
-        log.info("/product - method: get - product: " + product);
+        log.info("/product - method: post - product: " + product);
 
-        session.setAttribute("product", product);
+        req.setAttribute("product", product);
 
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_PATH);
+        boolean isAdded = bucketService.add(user, product);
+        log.info("/product - method: post - isAdded: " + isAdded);
+
+        final RequestDispatcher requestDispatcher;
+        if (isAdded) {
+            requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
+        } else {
+            requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_IS_NOT_ADDED_TO_BUCKET_PATH);
+        }
         requestDispatcher.forward(req, resp);
     }
 }

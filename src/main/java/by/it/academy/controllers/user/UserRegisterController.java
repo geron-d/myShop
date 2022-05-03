@@ -50,7 +50,7 @@ public class UserRegisterController extends HttpServlet {
         final String password = req.getParameter("password");
         log.info("/user/create - method: post - password: " + password);
 
-        User user = userService.getByLoginPassword(login, password);
+        User user = new User(login, password);
         log.info("/user/create - method: post - user: " + user);
 
         boolean isCreated = userService.create(user);

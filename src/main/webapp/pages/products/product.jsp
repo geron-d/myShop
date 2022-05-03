@@ -25,7 +25,7 @@
     <li><h5>Amount:</h5>${product.amount}</li>
     <li><h5>Price:</h5>${product.price}</li>
     <li>
-        <form action="${pageContext.request.contextPath}/product?id=${product.id}" method="post">
+        <form action="${pageContext.request.contextPath}/product/addInBucket?id=${product.id}" method="post">
             <input type="submit" value="AddToBucket">
         </form>
     </li>

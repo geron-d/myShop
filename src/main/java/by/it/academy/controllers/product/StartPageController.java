@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet(urlPatterns = "/start")
 public class StartPageController extends HttpServlet {
@@ -42,10 +43,14 @@ public class StartPageController extends HttpServlet {
         req.setAttribute("lastProducts", lastProducts);
 
         final RequestDispatcher requestDispatcher;
-        if (user.getAccessLevel().equals(AccessLevel.USER)) {
+        if (Objects.isNull(user)) {
             requestDispatcher = req.getRequestDispatcher(Paths.START_PAGE_USER_PATH);
         } else {
-            requestDispatcher = req.getRequestDispatcher(Paths.START_PAGE_ADMIN_PATH);
+            if (user.getAccessLevel().equals(AccessLevel.USER)) {
+                requestDispatcher = req.getRequestDispatcher(Paths.START_PAGE_USER_PATH);
+            } else {
+                requestDispatcher = req.getRequestDispatcher(Paths.START_PAGE_ADMIN_PATH);
+            }
         }
         requestDispatcher.forward(req, resp);
     }

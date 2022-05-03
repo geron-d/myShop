@@ -8,6 +8,8 @@ public class Paths {
 
     public static final String USER_PRIVATE_ROOM = "/pages/user/userPrivateRoom.jsp";
     public static final String ADMIN_PRIVATE_ROOM = "/pages/user/adminPrivateRoom.jsp";
+    public static final String USER_NOT_LOGGED_PATH = "/pages/user/userNotLogged.jsp";
+    public static final String LOG_IN_PATH = "/pages/user/logIn.jsp";
 
     public static final String ALL_PRODUCTS_PATH = "/pages/products/allProducts.jsp";
     public static final String HEADPHONES_PATH = "/pages/products/headphones.jsp";
