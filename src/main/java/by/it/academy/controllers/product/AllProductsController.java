@@ -2,6 +2,7 @@ package by.it.academy.controllers.product;
 
 import by.it.academy.Paths;
 import by.it.academy.entities.Product;
+import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionMySQL;
 import by.it.academy.repositories.connections.ConnectionSQL;
 import by.it.academy.repositories.product.ProductAPIRepository;
@@ -16,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,9 +30,15 @@ public class AllProductsController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final HttpSession session = req.getSession();
+
+        User user = (User) session.getAttribute("user");
+        log.info("/products - method: get - user: " + user);
+
         List<Product> products = productService.getAllDesc();
+        log.info("/products - method: get - user: " + products);
+
         req.setAttribute("products", products);
-        log.info(products);
 
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.ALL_PRODUCTS_PATH);
         requestDispatcher.forward(req, resp);

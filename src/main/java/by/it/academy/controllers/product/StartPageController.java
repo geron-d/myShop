@@ -31,13 +31,15 @@ public class StartPageController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         final HttpSession session = req.getSession();
+
         User user = (User) session.getAttribute("user");
+        log.info("/start - method: get - user: " + user);
 
         List<Product> lastProducts = productService.getLastProducts(Paths.AMOUNT_PRODUCTS_ON_START_PAGE);
+        log.info("/start - method: get - lastProducts: " + lastProducts);
+
         req.setAttribute("lastProducts", lastProducts);
-        log.info(lastProducts);
 
         final RequestDispatcher requestDispatcher;
         if (user.getAccessLevel().equals(AccessLevel.USER)) {

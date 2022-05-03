@@ -46,30 +46,33 @@ public class UserLogInController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String login = req.getParameter("login");
+        log.info("/user/login - method: get - login: " + login);
+
         final String password = req.getParameter("password");
+        log.info("/user/login - method: get - password: " + password);
 
         User user = userService.getByLoginPassword(login, password);
-        log.info(user);
+        log.info("/user/login - method: get - user: " + user);
 
+        final RequestDispatcher requestDispatcher;
         if (Objects.nonNull(req.getSession()) && (user.getId() > 0)) {
             final HttpSession session = req.getSession();
             session.setAttribute("user", user);
 
             List<ProductInBucket> productsInBucket = bucketService.getProductsInBucket(user);
+            log.info("/user/login - method: get - productsInBucket: " + productsInBucket);
+
             session.setAttribute("productsInBucket", productsInBucket);
-            log.info(productsInBucket);
 
             double allCost = bucketService.getAllCost(productsInBucket);
+            log.info("/user/login - method: get - allCost: " + allCost);
+
             session.setAttribute("allCost", allCost);
-            log.info(allCost);
 
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/start");
-            requestDispatcher.forward(req, resp);
-
+            requestDispatcher = req.getRequestDispatcher("/start");
         } else {
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.USER_LOGIN_ERROR);
-            requestDispatcher.forward(req, resp);
+            requestDispatcher = req.getRequestDispatcher(Paths.USER_LOGIN_ERROR);
         }
-
+        requestDispatcher.forward(req, resp);
     }
 }

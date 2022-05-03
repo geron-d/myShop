@@ -38,10 +38,16 @@ public class ProductController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
 
+        User user = (User) session.getAttribute("user");
+        log.info("/product - method: get - user: " + user);
+
         int id = Integer.parseInt(req.getParameter("id"));
+        log.info("/product - method: get - id: " + id);
+
         Product product = productService.getByID(id);
+        log.info("/product - method: get - product: " + product);
+
         session.setAttribute("product", product);
-        log.info(product);
 
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_PATH);
         requestDispatcher.forward(req, resp);
@@ -52,14 +58,19 @@ public class ProductController extends HttpServlet {
         final HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
-        log.info(user);
+        log.info("/product - method: post - user: " + user);
 
         int id = Integer.parseInt(req.getParameter("id"));
+        log.info("/product - method: post - id: " + id);
+
         Product product = productService.getByID(id);
+        log.info("/product - method: post - product: " + product);
+
         req.setAttribute("product", product);
-        log.info(product);
 
         boolean isAdded = bucketService.add(user, product);
+        log.info("/product - method: post - isAdded: " + isAdded);
+
         final RequestDispatcher requestDispatcher;
         if (isAdded) {
             requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);

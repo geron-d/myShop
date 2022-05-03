@@ -45,30 +45,36 @@ public class UserRegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String login = req.getParameter("login");
-        final String password = req.getParameter("password");
+        log.info("/user/create - method: post - login: " + login);
 
-        User user = new User(login, password);
-        log.info(user);
+        final String password = req.getParameter("password");
+        log.info("/user/create - method: post - password: " + password);
+
+        User user = userService.getByLoginPassword(login, password);
+        log.info("/user/create - method: post - user: " + user);
 
         boolean isCreated = userService.create(user);
-        user = userService.getByLoginPassword(login, password);
+        log.info("/user/create - method: post - isCreated: " + isCreated);
+
+        final RequestDispatcher requestDispatcher;
         if (isCreated) {
             final HttpSession session = req.getSession();
             session.setAttribute("user", user);
 
             List<ProductInBucket> productsInBucket = bucketService.getProductsInBucket(user);
+            log.info("/user/create - method: post - productsInBucket: " + productsInBucket);
+
             session.setAttribute("productsInBucket", productsInBucket);
-            log.info(productsInBucket);
 
             double allCost = bucketService.getAllCost(productsInBucket);
-            session.setAttribute("allCost", allCost);
-            log.info(allCost);
+            log.info("/user/create - method: post - allCost: " + allCost);
 
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/start");
-            requestDispatcher.forward(req, resp);
+            session.setAttribute("allCost", allCost);
+
+            requestDispatcher = req.getRequestDispatcher("/start");
         } else {
-            final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
-            requestDispatcher.forward(req, resp);
+            requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
         }
+        requestDispatcher.forward(req, resp);
     }
 }

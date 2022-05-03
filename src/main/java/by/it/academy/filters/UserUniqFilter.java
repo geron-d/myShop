@@ -24,7 +24,7 @@ public class UserUniqFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String login = request.getParameter("login");
-        log.info(login);
+        log.info("/user/create - method: filter - login: " + login);
 
         if (userService.checkLogin(login)) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(Paths.USER_LOGIN_IS_ALREADY_TAKEN_ERROR);

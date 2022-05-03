@@ -41,20 +41,22 @@ public class BucketController extends HttpServlet {
         final HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
-        log.info(user);
+        log.info("/bucket - method: get - user: " + user);
 
         List<ProductInBucket> productsInBucket = bucketService.getProductsInBucket(user);
+        log.info("/bucket - method: get - productsInBucket: " + productsInBucket);
+
         session.setAttribute("productsInBucket", productsInBucket);
-        log.info(productsInBucket);
 
         boolean isBucketEmpty = !productsInBucket.isEmpty();
+        log.info("/bucket - method: get - isBucketEmpty: " + isBucketEmpty);
 
         session.setAttribute("isBucketEmpty", isBucketEmpty);
-        log.info(isBucketEmpty);
 
         double allCost = bucketService.getAllCost(productsInBucket);
+        log.info("/bucket - method: get - allCost: " + allCost);
+
         session.setAttribute("allCost", allCost);
-        log.info(allCost);
 
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.BUCKET_PATH);
         requestDispatcher.forward(req, resp);
@@ -64,82 +66,106 @@ public class BucketController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
 
-        String submit = req.getParameter("submit");
-        log.info(submit);
+        User user = (User) session.getAttribute("user");
+        log.info("/bucket - method: post - user: " + user);
 
         List<ProductInBucket> productsInBucket = (List<ProductInBucket>) session.getAttribute("productsInBucket");
-        log.info(productsInBucket);
+        log.info("/bucket - method: post - productsInBucket: " + productsInBucket);
 
-        User user = (User) session.getAttribute("user");
-        log.info(user);
+        String submit = req.getParameter("submit");
+        log.info("/bucket - method: post - submit: " + submit);
 
         switch (submit) {
             case "delete": {
                 int id = Integer.parseInt(req.getParameter("id"));
+                log.info("/bucket - method: post - id: " + id);
+
                 Product product = productService.getByID(id);
-                log.info(product);
+                log.info("/bucket - method: post - product: " + product);
 
                 boolean isDeleted = bucketService.deleteAmountProducts(productsInBucket, product, Paths.AMOUNT_PRODUCT_DELETED_WHEN_USER_PULL_DELETE);
+                log.info("/bucket - method: post - isDeleted: " + isDeleted);
+
+                final RequestDispatcher requestDispatcher;
                 if (isDeleted) {
+                    log.info("/bucket - method: post - product: " + product);
+
                     req.setAttribute("product", product);
 
                     productsInBucket = bucketService.getProductsInBucket(user);
+                    log.info("/bucket - method: post - productsInBucket: " + productsInBucket);
+
                     session.setAttribute("productsInBucket", productsInBucket);
 
                     boolean isBucketEmpty = !productsInBucket.isEmpty();
+                    log.info("/bucket - method: post - isBucketEmpty: " + isBucketEmpty);
+
                     session.setAttribute("isBucketEmpty", isBucketEmpty);
-                    log.info(isBucketEmpty);
 
                     double allCost = bucketService.getAllCost(productsInBucket);
+                    log.info("/bucket - method: post - allCost: " + allCost);
+
                     session.setAttribute("allCost", allCost);
 
-                    final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_DELETED_FROM_BUCKET_PATH);
-                    requestDispatcher.forward(req, resp);
+                    requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_DELETED_FROM_BUCKET_PATH);
                 } else {
-                    final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
-                    requestDispatcher.forward(req, resp);
+                    requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
+
                 }
+                requestDispatcher.forward(req, resp);
                 break;
             }
             case "deleteAll": {
                 boolean isDeleted = bucketService.deleteAllProducts(productsInBucket);
+                log.info("/bucket - method: post - isDeleted: " + isDeleted);
+
+                final RequestDispatcher requestDispatcher;
                 if (isDeleted) {
                     productsInBucket = bucketService.getProductsInBucket(user);
+                    log.info("/bucket - method: post - productsInBucket: " + productsInBucket);
+
                     session.setAttribute("productsInBucket", productsInBucket);
 
                     boolean isBucketEmpty = !productsInBucket.isEmpty();
+                    log.info("/bucket - method: post - isBucketEmpty: " + isBucketEmpty);
+
                     session.setAttribute("isBucketEmpty", isBucketEmpty);
-                    log.info(isBucketEmpty);
 
                     double allCost = bucketService.getAllCost(productsInBucket);
+                    log.info("/bucket - method: post - allCost: " + allCost);
+
                     session.setAttribute("allCost", allCost);
 
-                    final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.ALL_PRODUCTS_DELETED_FROM_BUCKET_PATH);
-                    requestDispatcher.forward(req, resp);
+                    requestDispatcher = req.getRequestDispatcher(Paths.ALL_PRODUCTS_DELETED_FROM_BUCKET_PATH);
                 } else {
-                    final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
-                    requestDispatcher.forward(req, resp);
+                    requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                 }
+                requestDispatcher.forward(req, resp);
                 break;
             }
             case "buy": {
                 boolean isBought = bucketService.buy(productsInBucket);
+                log.info("/bucket - method: post - isBought: " + isBought);
+
+                final RequestDispatcher requestDispatcher;
                 if (isBought) {
                     productsInBucket = bucketService.getProductsInBucket(user);
+                    log.info("/bucket - method: post - productsInBucket: " + productsInBucket);
+
                     session.setAttribute("productsInBucket", productsInBucket);
 
                     double allCost = bucketService.getAllCost(productsInBucket);
+                    log.info("/bucket - method: post - allCost: " + allCost);
+
                     session.setAttribute("allCost", allCost);
 
-                    final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCTS_BOUGHT_PATH);
-                    requestDispatcher.forward(req, resp);
+                    requestDispatcher = req.getRequestDispatcher(Paths.PRODUCTS_BOUGHT_PATH);
                 } else {
-                    final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
-                    requestDispatcher.forward(req, resp);
+                    requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
                 }
+                requestDispatcher.forward(req, resp);
                 break;
             }
         }
-
     }
 }

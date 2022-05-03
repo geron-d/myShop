@@ -24,11 +24,16 @@ public class CheckProductAmount implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
+        log.info("/product - method: filter - id: " + id);
+
         Product product = productService.getByID(id);
+        log.info("/product - method: filter - product: " + product);
+
         request.setAttribute("product", product);
-        log.info(product);
 
         boolean isProductGetAmount = productService.checkProductAmount(product);
+        log.info("/product - method: filter - isProductGetAmount: " + isProductGetAmount);
+
         if (isProductGetAmount) {
             chain.doFilter(request, response);
         } else {

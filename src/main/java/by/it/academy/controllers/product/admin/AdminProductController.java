@@ -31,10 +31,16 @@ public class AdminProductController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
 
+        User user = (User) session.getAttribute("user");
+        log.info("/products/product/admin - method: get - user: " + user);
+
         int id = Integer.parseInt(req.getParameter("id"));
+        log.info("/products/product/admin - method: get - id: " + id);
+
         Product product = productService.getByID(id);
+        log.info("/products/product/admin - method: get - product: " + product);
+
         session.setAttribute("product", product);
-        log.info(product);
 
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.ADMIN_PRODUCT_PATH);
         requestDispatcher.forward(req, resp);
@@ -45,15 +51,18 @@ public class AdminProductController extends HttpServlet {
         final HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
-        log.info(user);
+        log.info("/products/product/admin - method: post - user: " + user);
 
         int id = Integer.parseInt(req.getParameter("id"));
+        log.info("/products/product/admin - method: post - id: " + id);
+
         Product product = productService.getByID(id);
+        log.info("/products/product/admin - method: post - product: " + product);
+
         req.setAttribute("product", product);
-        log.info(product);
 
         String submit = req.getParameter("submit");
-        log.info(submit);
+        log.info("/products/product/admin - method: post - submit: " + submit);
 
         switch (submit) {
             case "edit": {
@@ -63,6 +72,8 @@ public class AdminProductController extends HttpServlet {
             }
             case "delete": {
                 boolean isDeleted = productService.delete(product);
+                log.info("/products/product/admin - method: post - isDeleted: " + isDeleted);
+
                 final RequestDispatcher requestDispatcher;
                 if (isDeleted) {
                     requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_DELETED_PATH);
@@ -72,7 +83,6 @@ public class AdminProductController extends HttpServlet {
                 requestDispatcher.forward(req, resp);
                 break;
             }
-
         }
     }
 }
