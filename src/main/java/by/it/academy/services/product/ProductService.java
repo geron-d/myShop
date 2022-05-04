@@ -28,4 +28,12 @@ public interface ProductService<T> {
     boolean decreaseProductAmount(T T, int amount);
 
     List<T> search(String search);
+
+    List<T> getTypeDesc(String type);
+
+    List<T> sortByCategory(String[] categories);
+
+    List<T> sortByType(String[] types);
+
+    List<T> sort(String[] categories, String[] types);
 }

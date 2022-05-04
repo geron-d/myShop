@@ -1,4 +1,4 @@
-package by.it.academy.controllers.product;
+package by.it.academy.controllers.product.admin;
 
 import by.it.academy.Paths;
 import by.it.academy.entities.Product;
@@ -21,9 +21,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/search")
-public class SearchController extends HttpServlet {
-    Logger log = Logger.getLogger(SearchController.class);
+@WebServlet(urlPatterns = {"/products/search/admin"})
+public class AdminSearchController extends HttpServlet {
+    Logger log = Logger.getLogger(AdminSearchController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
@@ -43,8 +43,7 @@ public class SearchController extends HttpServlet {
 
         req.setAttribute("products", products);
 
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.SEARCH_PATH);
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.ADMIN_SEARCH_PATH);
         requestDispatcher.forward(req, resp);
     }
-
 }

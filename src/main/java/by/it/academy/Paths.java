@@ -21,6 +21,9 @@ public class Paths {
     public static final String PRODUCT_DELETED_FROM_BUCKET_PATH = "/pages/products/productDeletedFromBucket.jsp";
     public static final String ALL_PRODUCTS_DELETED_FROM_BUCKET_PATH = "/pages/products/allProductsDeletedFromBucket.jsp";
     public static final String PRODUCTS_BOUGHT_PATH = "/pages/products/productsBought.jsp";
+    public static final String SEARCH_PATH = "/pages/products/search.jsp";
+    public static final String SORT_PATH = "/pages/products/sort.jsp";
+
 
     public static final String ADMIN_ALL_PRODUCTS_PATH = "/pages/products/admin/allProducts.jsp";
     public static final String ADMIN_HEADPHONES_PATH = "/pages/products/admin/headphones.jsp";
@@ -30,6 +33,8 @@ public class Paths {
     public static final String PRODUCT_DELETED_PATH = "/pages/products/admin/productDeleted.jsp";
     public static final String ADD_PRODUCT_PATH = "/pages/products/admin/addProduct.jsp";
     public static final String PRODUCT_ADDED_PATH = "/pages/products/admin/productAdded.jsp";
+    public static final String ADMIN_SEARCH_PATH = "/pages/products/admin/search.jsp";
+    public static final String ADMIN_SORT_PATH = "/pages/products/admin/sort.jsp";
 
 
     public static final String USER_LOGIN_ERROR = "/pages/errors/userLogInError.jsp";

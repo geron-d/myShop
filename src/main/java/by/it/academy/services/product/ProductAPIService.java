@@ -1,9 +1,13 @@
 package by.it.academy.services.product;
 
+import by.it.academy.comparators.product.ProductIdDescComparator;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.product.ProductRepository;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductAPIService implements ProductService<Product> {
     private final ProductRepository<Product> repository;
@@ -80,5 +84,53 @@ public class ProductAPIService implements ProductService<Product> {
     @Override
     public List<Product> search(String search) {
         return repository.search(search);
+    }
+
+    @Override
+    public List<Product> getTypeDesc(String type) {
+        return repository.getTypeDesc(type);
+    }
+
+    @Override
+    public List<Product> sortByCategory(String[] categories) {
+        List<Product> categoryProducts = new ArrayList<>();
+        if (categories == null) {
+            return null;
+        }
+        for (String category : categories) {
+            categoryProducts.addAll(getCategoryDesc(category));
+        }
+        return categoryProducts;
+    }
+
+    @Override
+    public List<Product> sortByType(String[] types) {
+        List<Product> typeProducts = new ArrayList<>();
+        if (types == null) {
+            return null;
+        }
+        for (String type : types) {
+            typeProducts.addAll(getTypeDesc(type));
+        }
+        return typeProducts;
+    }
+
+    @Override
+    public List<Product> sort(String[] categories, String[] types) {
+        List<Product> sortProducts = new ArrayList<>();
+        List<Product> categoryProducts = sortByCategory(categories);
+        List<Product> typeProducts = sortByType(types);
+        if (categories == null && types == null) {
+            return null;
+        } else if (categories != null) {
+            sortProducts.addAll(categoryProducts);
+        }
+        if (types != null) {
+            sortProducts.addAll(typeProducts);
+        }
+        sortProducts = sortProducts.stream().distinct().collect(Collectors.toList());
+        Comparator<Product> productComparator = new ProductIdDescComparator();
+        sortProducts.sort(productComparator);
+        return sortProducts;
     }
 }

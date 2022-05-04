@@ -149,8 +149,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     public List<Product> getCategoryDesc(String category) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE category = ? ORDER BY id DESC");
-            statement.setString(1, category);
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE category = '" + category + "' ORDER BY id DESC");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -227,9 +226,9 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM products " +
-                    "WHERE LOWER(name) like LOWER('%"+search+"%') " +
-                    "OR LOWER(category) like LOWER('%"+search+"%') " +
-                    "OR LOWER(type) like LOWER('%"+search+"%') " +
+                    "WHERE LOWER(name) like LOWER('%" + search + "%') " +
+                    "OR LOWER(category) like LOWER('%" + search + "%') " +
+                    "OR LOWER(type) like LOWER('%" + search + "%') " +
                     "ORDER BY id DESC");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -243,6 +242,31 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
                 Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                products.add(product);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return products;
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getTypeDesc(String type) {
+        List<Product> products = new ArrayList<>();
+        try (Connection conn = connection.connect()) {
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE type = '" + type + "' ORDER BY id DESC");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String thisCategory = resultSet.getString("category");
+                String thisType = resultSet.getString("type");
+                String name = resultSet.getString("name");
+                String image = resultSet.getString("image");
+                Date date = resultSet.getDate("date");
+                String producer = resultSet.getString("producer");
+                int thisAmount = resultSet.getInt("amount");
+                double price = resultSet.getDouble("price");
+                Product product = new Product(id, thisCategory, thisType, name, image, date.toLocalDate(), producer, thisAmount, price);
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {

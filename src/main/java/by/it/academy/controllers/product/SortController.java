@@ -19,32 +19,37 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/search")
-public class SearchController extends HttpServlet {
-    Logger log = Logger.getLogger(SearchController.class);
+@WebServlet(urlPatterns = {"/sort"})
+public class SortController extends HttpServlet {
+    Logger log = Logger.getLogger(SortController.class);
     ConnectionSQL connection = new ConnectionMySQL();
     ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
     ProductService<Product> productService = new ProductAPIService(productAPIRepository);
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
-        log.info("/search - method: get - user: " + user);
+        log.info("/sort - method: get - user: " + user);
 
-        final String search = req.getParameter("search");
-        log.info("/search - method: get - search: " + search);
+        final String[] categories = req.getParameterValues("category");
+        log.info("/sort - method: get - categories: " + Arrays.toString(categories));
 
-        List<Product> products = productService.search(search);
+        final String[] types = req.getParameterValues("type");
+        log.info("/sort - method: get - types: " + Arrays.toString(types));
+
+
+        List<Product> products = productService.sort(categories, types);
         log.info("/search - method: get - products: " + products);
 
         req.setAttribute("products", products);
 
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.SEARCH_PATH);
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.SORT_PATH);
         requestDispatcher.forward(req, resp);
     }
-
 }
