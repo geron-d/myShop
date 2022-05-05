@@ -8,8 +8,9 @@ import by.it.academy.entities.User;
 import by.it.academy.repositories.bucket.BucketRepository;
 import by.it.academy.services.product.ProductService;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class BucketAPIService implements BucketService<Bucket> {
     BucketRepository<Bucket> bucketRepository;
@@ -78,75 +79,68 @@ public class BucketAPIService implements BucketService<Bucket> {
 
     @Override
     public List<ProductInBucket> getProductsInBucket(User user) {
-        List<ProductInBucket> productsInBucket = new ArrayList<>();
         List<Bucket> bucket = getByUser(user);
 
-        for (Bucket value : bucket) {
-            Product product = productService.getByID(value.getProductId());
-            ProductInBucket productInBucket = new ProductInBucket(product, value.getId(), value.getAmount());
-            productsInBucket.add(productInBucket);
-        }
-        return productsInBucket;
+        return bucket
+                .stream()
+                .map(bucket1 -> new ProductInBucket(productService.getByID(bucket1.getProductId()), bucket1.getId(), bucket1.getAmount()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean deleteAmountProducts(List<ProductInBucket> productsInBucket, Product product, int amount) {
-        for (ProductInBucket productInBucket : productsInBucket) {
-            if (productInBucket.getProduct().getId() == product.getId()) {
-                if (productInBucket.getAmount() > amount) {
-                    Bucket bucket = getById(productInBucket.getBucketId());
-                    bucket.setAmount(productInBucket.getAmount() - amount);
-                    return update(bucket, bucket);
-                } else if (productInBucket.getAmount() == amount) {
-                    Bucket bucket = getById(productInBucket.getBucketId());
-                    return delete(bucket);
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
+        AtomicBoolean isDeleted = new AtomicBoolean(false);
+        productsInBucket
+                .stream()
+                .filter(productInBucket -> productInBucket.getProduct().getId() == product.getId())
+                .forEach(
+                        productInBucket -> {
+                            if (productInBucket.getAmount() > amount) {
+                                Bucket bucket = getById(productInBucket.getBucketId());
+                                bucket.setAmount(productInBucket.getAmount() - amount);
+                                isDeleted.set(update(bucket, bucket));
+                            } else if (productInBucket.getAmount() == amount) {
+                                Bucket bucket = getById(productInBucket.getBucketId());
+                                isDeleted.set(delete(bucket));
+                            }
+                        }
+                );
+        return isDeleted.get();
     }
 
     @Override
     public double getAllCost(List<ProductInBucket> productsInBucket) {
-        double allCost = 0;
-        for (ProductInBucket productInBucket : productsInBucket) {
-            double price = productInBucket.getProduct().getPrice();
-            int amount = productInBucket.getAmount();
-            allCost += price * amount;
-        }
-        return allCost;
+        return productsInBucket
+                .stream().mapToDouble(productInBucket -> productInBucket.getProduct().getPrice() * productInBucket.getAmount()).sum();
     }
 
     @Override
     public boolean deleteAllProducts(List<ProductInBucket> productsInBucket) {
-        boolean isDeletedAll = true;
-        for (ProductInBucket productInBucket : productsInBucket) {
-            Bucket bucket = getById(productInBucket.getBucketId());
-            boolean isDeleted = delete(bucket);
-            if (!isDeleted) {
-                return false;
-            }
-        }
-        return isDeletedAll;
+        AtomicBoolean isDeletedAll = new AtomicBoolean(true);
+        productsInBucket
+                .forEach(productInBucket -> {
+                    boolean isDeleted = delete(getById(productInBucket.getBucketId()));
+                    if (!isDeleted) {
+                        isDeletedAll.set(false);
+                    }
+                });
+        return isDeletedAll.get();
     }
 
     @Override
     public boolean buy(List<ProductInBucket> productsInBucket) {
-        boolean isBought = true;
-        for (ProductInBucket productInBucket : productsInBucket) {
+        AtomicBoolean isBought = new AtomicBoolean(true);
+        productsInBucket.forEach(productInBucket -> {
             boolean isDecreased = productService.decreaseProductAmount(productInBucket.getProduct(), productInBucket.getAmount());
             if (!isDecreased) {
-                return false;
+                isBought.set(false);
             }
-            Bucket bucket = getById(productInBucket.getBucketId());
-            boolean isDeleted = delete(bucket);
+            boolean isDeleted = delete(getById(productInBucket.getBucketId()));
             if (!isDeleted) {
-                return false;
+                isBought.set(false);
             }
-        }
-        return isBought;
+        });
+        return isBought.get();
     }
 
 }
