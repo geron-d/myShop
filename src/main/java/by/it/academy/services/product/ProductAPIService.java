@@ -1,6 +1,7 @@
 package by.it.academy.services.product;
 
 import by.it.academy.comparators.product.ProductIdDescComparator;
+import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.product.ProductRepository;
 
@@ -38,8 +39,8 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> getAll() {
-        return repository.getAll();
+    public List<Product> getAllProducts(Order order) {
+        return repository.getAllProducts(order);
     }
 
     @Override
@@ -48,13 +49,13 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> getLastProducts(int amount) {
-        return repository.getLastProducts(amount);
+    public List<Product> getLastProducts(int amount, Order order) {
+        return repository.getLastProducts(amount, order);
     }
 
     @Override
-    public List<Product> getCategoryDesc(String category) {
-        return repository.getCategoryDesc(category);
+    public List<Product> getProductsInCategory(String category, Order order) {
+        return repository.getProductsInCategory(category, order);
     }
 
     @Override
@@ -64,22 +65,19 @@ public class ProductAPIService implements ProductService<Product> {
 
     @Override
     public List<Product> getAllDesc() {
-        return repository.getAllDesc();
+        return repository.getAllProducts(Order.DESC);
     }
 
     @Override
     public boolean decreaseProductAmount(Product product, int amount) {
-        boolean isDecreased = true;
+        boolean isUpdated = false;
         if (product.getAmount() >= amount) {
-            product = new Product(product.getId(), product.getCategory(), product.getType(), product.getName(), product.getImage_path(), product.getLocalDate(), product.getProducer(), product.getAmount() - amount, product.getPrice());
-            boolean isUpdated = update(product, product);
-            if (!isUpdated) {
-                return false;
-            }
-        } else {
-            return false;
+            product = new Product(product.getId(), product.getCategory(), product.getType(), product.getName(),
+                    product.getImage_path(), product.getLocalDate(), product.getProducer(),
+                    product.getAmount() - amount, product.getPrice());
+            isUpdated = update(product, product);
         }
-        return isDecreased;
+        return isUpdated;
     }
 
     @Override
@@ -88,8 +86,8 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> getTypeDesc(String type) {
-        return repository.getTypeDesc(type);
+    public List<Product> getType(String type, Order order) {
+        return repository.getProductsInType(type, order);
     }
 
     @Override
@@ -99,7 +97,7 @@ public class ProductAPIService implements ProductService<Product> {
             return null;
         }
         Arrays.stream(categories)
-                .map(this::getCategoryDesc)
+                .map(category -> getProductsInCategory(category, Order.ASC))
                 .forEachOrdered(categoryProducts::addAll);
         return categoryProducts;
     }
@@ -111,7 +109,7 @@ public class ProductAPIService implements ProductService<Product> {
             return null;
         }
         Arrays.stream(types)
-                .map(this::getTypeDesc)
+                .map(type -> getType(type, Order.ASC))
                 .forEachOrdered(typeProducts::addAll);
         return typeProducts;
     }
@@ -121,8 +119,8 @@ public class ProductAPIService implements ProductService<Product> {
         List<Product> sortProducts = new ArrayList<>();
         List<Product> categoryProducts = sortByCategory(categories);
         List<Product> typeProducts = sortByType(types);
-        if (categories == null && types == null) {
-            return null;
+        if (categories == null && types == null) { // todo Objects
+            return null;// todo not return null
         } else if (categories != null) {
             sortProducts.addAll(categoryProducts);
         }

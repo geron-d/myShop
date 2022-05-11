@@ -11,7 +11,7 @@ public interface UserRepository<T> {
 
     boolean delete(T t);
 
-    List<T> getAll();
+    List<T> getAllUsers();
 
     T getByLoginPassword(String login, String password);
 

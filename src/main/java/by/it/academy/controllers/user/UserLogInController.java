@@ -52,11 +52,11 @@ public class UserLogInController extends HttpServlet {
         log.info("/user/login - method: get - user: " + user);
 
         final RequestDispatcher requestDispatcher;
-        if (Objects.nonNull(req.getSession()) && (user.getId() > 0)) {
+        if (Objects.nonNull(req.getSession()) && (user.getId() > 0)) { // todo rework > 0
             final HttpSession session = req.getSession();
             session.setAttribute("user", user);
 
-            List<ProductInBucket> productsInBucket = bucketService.getProductsInBucket(user);
+            List<ProductInBucket> productsInBucket = bucketService.getProductsInBucket(user); // todo  to bucket controller
             log.info("/user/login - method: get - productsInBucket: " + productsInBucket);
 
             session.setAttribute("productsInBucket", productsInBucket);

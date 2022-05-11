@@ -34,7 +34,7 @@ public class UserAPIService implements UserService<User> {
 
     @Override
     public List<User> getAll() {
-        return repository.getAll();
+        return repository.getAllUsers();
     }
 
     @Override

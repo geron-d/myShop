@@ -1,13 +1,17 @@
 package by.it.academy.repositories.product;
 
+import by.it.academy.contants.Order;
+import by.it.academy.contants.SQL;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.connections.ConnectionSQL;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAPIRepository implements ProductRepository<Product> {
+    Logger log = Logger.getLogger(ProductAPIRepository.class);
     private final ConnectionSQL connection;
 
     public ProductAPIRepository(ConnectionSQL connection) {
@@ -17,8 +21,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     @Override
     public boolean create(Product product) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO products (category, type, name, image, date, producer, amount, price) " +
-                    "VALUES (?,?,?,?,?,?,?,?)");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_INSERT_SQL);
             statement.setString(1, product.getCategory());
             statement.setString(2, product.getType());
             statement.setString(3, product.getName());
@@ -30,6 +33,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: create: " + e);
             return false;
         }
     }
@@ -38,8 +42,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     public Product get(Product product) {
         Product thisProduct = new Product();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products " +
-                    "WHERE id = ?");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_SQL);
             statement.setInt(1, product.getId());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -52,10 +55,21 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                thisProduct = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                thisProduct = Product.builder()
+                        .id(id)
+                        .category(category)
+                        .type(type)
+                        .name(name)
+                        .image_path(image)
+                        .localDate(date.toLocalDate())
+                        .producer(producer)
+                        .amount(amount)
+                        .price(price)
+                        .build();
                 return thisProduct;
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: get: " + e);
             return thisProduct;
         }
         return thisProduct;
@@ -64,8 +78,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     @Override
     public boolean update(Product product, Product newProduct) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("UPDATE products SET category=?, type=?, name=?, image=?, date=?, producer=?, amount=?, price=? " +
-                    "WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_UPDATE_SQL);
             statement.setString(1, newProduct.getCategory());
             statement.setString(2, newProduct.getType());
             statement.setString(3, newProduct.getName());
@@ -78,6 +91,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: update: " + e);
             return false;
         }
     }
@@ -85,20 +99,21 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     @Override
     public boolean delete(Product product) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM products WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_DELETE_SQL);
             statement.setInt(1, product.getId());
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: delete: " + e);
             return false;
         }
     }
 
     @Override
-    public List<Product> getAll() {
+    public List<Product> getAllProducts(Order order) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_ALL_PRODUCTS_SQL + order);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -110,20 +125,31 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                Product product = Product.builder()
+                        .id(id)
+                        .category(category)
+                        .type(type)
+                        .name(name)
+                        .image_path(image)
+                        .localDate(date.toLocalDate())
+                        .producer(producer)
+                        .amount(amount)
+                        .price(price)
+                        .build();
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: getAllProducts: " + e);
             return products;
         }
         return products;
     }
 
     @Override
-    public List<Product> getLastProducts(int amount) {
+    public List<Product> getLastProducts(int amount, Order order) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products ORDER BY id DESC LIMIT ?");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_ALL_PRODUCTS_SQL + order + SQL.LIMIT_SQL);
             statement.setInt(1, amount);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -136,20 +162,32 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int thisAmount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, thisAmount, price);
+                Product product = Product.builder()
+                        .id(id)
+                        .category(category)
+                        .type(type)
+                        .name(name)
+                        .image_path(image)
+                        .localDate(date.toLocalDate())
+                        .producer(producer)
+                        .amount(thisAmount)
+                        .price(price)
+                        .build();
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: getLastProducts: " + e);
             return products;
         }
         return products;
     }
 
     @Override
-    public List<Product> getCategoryDesc(String category) {
+    public List<Product> getProductsInCategory(String category, Order order) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE category = '" + category + "' ORDER BY id DESC");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_PRODUCTS_IN_CATEGORY_SQL + order);
+            statement.setString(1, category);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -161,10 +199,21 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int thisAmount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, thisCategory, type, name, image, date.toLocalDate(), producer, thisAmount, price);
+                Product product = Product.builder()
+                        .id(id)
+                        .category(thisCategory)
+                        .type(type)
+                        .name(name)
+                        .image_path(image)
+                        .localDate(date.toLocalDate())
+                        .producer(producer)
+                        .amount(thisAmount)
+                        .price(price)
+                        .build();
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: getProductsInCategory: " + e);
             return products;
         }
         return products;
@@ -174,7 +223,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     public Product getByID(int id) {
         Product thisProduct = new Product();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE id = ?");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_SQL);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -187,38 +236,24 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                thisProduct = new Product(thisId, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                thisProduct = Product.builder()
+                        .id(thisId)
+                        .category(category)
+                        .type(type)
+                        .name(name)
+                        .image_path(image)
+                        .localDate(date.toLocalDate())
+                        .producer(producer)
+                        .amount(amount)
+                        .price(price)
+                        .build();
                 return thisProduct;
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: getByID: " + e);
             return thisProduct;
         }
         return thisProduct;
-    }
-
-    @Override
-    public List<Product> getAllDesc() {
-        List<Product> products = new ArrayList<>();
-        try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products ORDER BY id DESC ");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String category = resultSet.getString("category");
-                String type = resultSet.getString("type");
-                String name = resultSet.getString("name");
-                String image = resultSet.getString("image");
-                Date date = resultSet.getDate("date");
-                String producer = resultSet.getString("producer");
-                int amount = resultSet.getInt("amount");
-                double price = resultSet.getDouble("price");
-                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
-                products.add(product);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            return products;
-        }
-        return products;
     }
 
     @Override
@@ -241,20 +276,32 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, category, type, name, image, date.toLocalDate(), producer, amount, price);
+                Product product = Product.builder()
+                        .id(id)
+                        .category(category)
+                        .type(type)
+                        .name(name)
+                        .image_path(image)
+                        .localDate(date.toLocalDate())
+                        .producer(producer)
+                        .amount(amount)
+                        .price(price)
+                        .build();
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: search: " + e);
             return products;
         }
         return products;
     }
 
     @Override
-    public List<Product> getTypeDesc(String type) {
+    public List<Product> getProductsInType(String type, Order order) {
         List<Product> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE type = '" + type + "' ORDER BY id DESC");
+            PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_PRODUCTS_IN_TYPE_SQL + order);
+            statement.setString(1, type);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -266,10 +313,21 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int thisAmount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, thisCategory, thisType, name, image, date.toLocalDate(), producer, thisAmount, price);
+                Product product = Product.builder()
+                        .id(id)
+                        .category(thisCategory)
+                        .type(thisType)
+                        .name(name)
+                        .image_path(image)
+                        .localDate(date.toLocalDate())
+                        .producer(producer)
+                        .amount(thisAmount)
+                        .price(price)
+                        .build();
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("ProductAPIRepository - method: getProductsInType: " + e);
             return products;
         }
         return products;

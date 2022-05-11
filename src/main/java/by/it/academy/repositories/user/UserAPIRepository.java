@@ -1,8 +1,10 @@
 package by.it.academy.repositories.user;
 
+import by.it.academy.contants.SQL;
 import by.it.academy.entities.AccessLevel;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionSQL;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserAPIRepository implements UserRepository<User> {
+    Logger log = Logger.getLogger(UserAPIRepository.class);
     private final ConnectionSQL connection;
 
     public UserAPIRepository(ConnectionSQL connection) {
@@ -21,13 +24,14 @@ public class UserAPIRepository implements UserRepository<User> {
     @Override
     public boolean create(User user) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO users (login, password, accessLevel) VALUES (?,?,?)");
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_INSERT_SQL);
             statement.setString(1, user.getLogin());
             statement.setString(2, user.getPassword());
             statement.setInt(3, (user.getAccessLevel().ordinal() + 1));
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("UserAPIRepository - method: create: " + e);
             return false;
         }
     }
@@ -36,8 +40,7 @@ public class UserAPIRepository implements UserRepository<User> {
     public User get(User user) {
         User thisUser = new User();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users " +
-                    "WHERE id = ?");
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_GET_SQL);
             statement.setInt(1, user.getId());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -45,10 +48,16 @@ public class UserAPIRepository implements UserRepository<User> {
                 String login = resultSet.getString("login");
                 String password = resultSet.getString("password");
                 AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
-                thisUser = new User(id, login, password, accessLevel);
+                thisUser = User.builder()
+                        .id(id)
+                        .login(login)
+                        .password(password)
+                        .accessLevel(accessLevel)
+                        .build();
                 return thisUser;
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("UserAPIRepository - method: get: " + e);
             return thisUser;
         }
         return thisUser;
@@ -57,8 +66,7 @@ public class UserAPIRepository implements UserRepository<User> {
     @Override
     public boolean update(User user, User newUser) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("UPDATE users SET login=?, password=?, accessLevel=? " +
-                    "WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_UPDATE_SQL);
             statement.setString(1, newUser.getLogin());
             statement.setString(2, newUser.getPassword());
             statement.setInt(3, (user.getAccessLevel().ordinal() + 1));
@@ -66,6 +74,7 @@ public class UserAPIRepository implements UserRepository<User> {
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("UserAPIRepository - method: update: " + e);
             return false;
         }
     }
@@ -73,31 +82,37 @@ public class UserAPIRepository implements UserRepository<User> {
     @Override
     public boolean delete(User user) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM users " +
-                    "WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_DELETE_SQL);
             statement.setInt(1, user.getId());
             statement.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("UserAPIRepository - method: delete: " + e);
             return false;
         }
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users");
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_GET_ALL_USERS_SQL);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String login = resultSet.getString("login");
                 String password = resultSet.getString("password");
                 AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
-                users.add(new User(id, login, password, accessLevel));
+                users.add(User.builder()
+                        .id(id)
+                        .login(login)
+                        .password(password)
+                        .accessLevel(accessLevel)
+                        .build());
             }
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            log.info("UserAPIRepository - method: getAllUsers: " + e);
+            return users;
         }
         return users;
     }
@@ -106,8 +121,7 @@ public class UserAPIRepository implements UserRepository<User> {
     public User getByLoginPassword(String login, String password) {
         User thisUser = new User();
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users " +
-                    "WHERE login = ? AND password = ?");
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_GET_BY_LOGIN_PASSWORD_SQL);
             statement.setString(1, login);
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
@@ -116,10 +130,16 @@ public class UserAPIRepository implements UserRepository<User> {
                 String thisLogin = resultSet.getString("login");
                 String thisPassword = resultSet.getString("password");
                 AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
-                thisUser = new User(id, thisLogin, thisPassword, accessLevel);
+                thisUser = User.builder()
+                        .id(id)
+                        .login(thisLogin)
+                        .password(thisPassword)
+                        .accessLevel(accessLevel)
+                        .build();
                 return thisUser;
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("UserAPIRepository - method: getByLoginPassword: " + e);
             return thisUser;
         }
         return thisUser;
@@ -127,14 +147,14 @@ public class UserAPIRepository implements UserRepository<User> {
 
     public boolean checkLogin(String login) {
         try (Connection conn = connection.connect()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM users " +
-                    "WHERE login = ?");
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_CHECK_LOGIN_SQL);
             statement.setString(1, login);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 return true;
             }
         } catch (SQLException | ClassNotFoundException e) {
+            log.info("UserAPIRepository - method: checkLogin: " + e);
             return false;
         }
         return false;

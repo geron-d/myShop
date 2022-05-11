@@ -35,7 +35,7 @@ public class AdminAllProductsController extends HttpServlet {
         User user = (User) session.getAttribute("user");
         log.info("/products/admin - method: get - user: " + user);
 
-        List<Product> products = productService.getAllDesc();
+        List<Product> products = productService.getAllDesc(); //todo desc - param
         log.info("/products/admin - method: get - products: " + products);
         req.setAttribute("products", products);
 

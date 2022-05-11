@@ -1,6 +1,7 @@
 package by.it.academy.controllers.product;
 
 import by.it.academy.Paths;
+import by.it.academy.contants.Order;
 import by.it.academy.entities.AccessLevel;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;
@@ -37,7 +38,7 @@ public class StartPageController extends HttpServlet {
         User user = (User) session.getAttribute("user");
         log.info("/start - method: get - user: " + user);
 
-        List<Product> lastProducts = productService.getLastProducts(Paths.AMOUNT_PRODUCTS_ON_START_PAGE);
+        List<Product> lastProducts = productService.getLastProducts(Paths.AMOUNT_PRODUCTS_ON_START_PAGE, Order.DESC);
         log.info("/start - method: get - lastProducts: " + lastProducts);
 
         req.setAttribute("lastProducts", lastProducts);

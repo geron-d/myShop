@@ -1,6 +1,7 @@
 package by.it.academy.controllers.product;
 
 import by.it.academy.Paths;
+import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionMySQL;
@@ -35,7 +36,7 @@ public class HeadphonesController extends HttpServlet {
         User user = (User) session.getAttribute("user");
         log.info("/headphones - method: get - user: " + user);
 
-        List<Product> headphones = productService.getCategoryDesc(Paths.CATEGORY_HEADPHONES);
+        List<Product> headphones = productService.getProductsInCategory(Paths.CATEGORY_HEADPHONES, Order.DESC );
         log.info("/headphones - method: get - headphones: " + headphones);
 
         req.setAttribute("headphones", headphones);

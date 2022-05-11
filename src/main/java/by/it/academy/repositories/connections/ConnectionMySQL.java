@@ -40,9 +40,4 @@ public class ConnectionMySQL implements ConnectionSQL {
         connection = DriverManager.getConnection(url, username, password);
         return connection;
     }
-
-    public boolean close() throws SQLException {
-        connection.close();
-        return true;
-    }
 }

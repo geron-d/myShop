@@ -1,10 +1,16 @@
 package by.it.academy.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
     private int id;
     private String category;
@@ -28,19 +34,6 @@ public class Product {
         this.price = product.getPrice();
     }
 
-
-    public Product(int id, String category, String type, String name, String image_path, LocalDate localDate, String producer, int amount, double price) {
-        this.id = id;
-        this.category = category;
-        this.type = type;
-        this.name = name;
-        this.image_path = image_path;
-        this.localDate = localDate;
-        this.producer = producer;
-        this.amount = amount;
-        this.price = price;
-    }
-
     public Product(String category, String type, String name, String image_path, LocalDate localDate, String producer, int amount, double price) {
         this.category = category;
         this.type = type;
@@ -51,8 +44,4 @@ public class Product {
         this.amount = amount;
         this.price = price;
     }
-
-    public Product() {
-    }
-
 }

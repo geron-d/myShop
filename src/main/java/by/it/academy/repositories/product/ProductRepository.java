@@ -1,5 +1,7 @@
 package by.it.academy.repositories.product;
 
+import by.it.academy.contants.Order;
+
 import java.util.List;
 
 public interface ProductRepository<T> {
@@ -11,17 +13,15 @@ public interface ProductRepository<T> {
 
     boolean delete(T t);
 
-    List<T> getAll();
+    List<T> getAllProducts(Order order);
 
-    List<T> getLastProducts(int amount);
+    List<T> getLastProducts(int amount, Order order);
 
-    List<T> getCategoryDesc(String category);
+    List<T> getProductsInCategory(String category, Order order);
 
     T getByID(int id);
 
-    List<T> getAllDesc();
-
     List<T> search(String search);
 
-    List<T> getTypeDesc(String type);
+    List<T> getProductsInType(String type, Order order);
 }

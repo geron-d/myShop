@@ -71,7 +71,7 @@ public class AdminProductController extends HttpServlet {
                 break;
             }
             case "delete": {
-                boolean isDeleted = productService.delete(product);
+                boolean isDeleted = productService.delete(product); //todo flags name
                 log.info("/products/product/admin - method: post - isDeleted: " + isDeleted);
 
                 final RequestDispatcher requestDispatcher;

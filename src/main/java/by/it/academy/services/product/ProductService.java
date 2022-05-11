@@ -1,5 +1,6 @@
 package by.it.academy.services.product;
 
+import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 
 import java.util.List;
@@ -13,13 +14,13 @@ public interface ProductService<T> {
 
     boolean delete(T t);
 
-    List<T> getAll();
+    List<T> getAllProducts(Order order);
 
     T getByID(int id);
 
-    List<T> getLastProducts(int amount);
+    List<T> getLastProducts(int amount, Order order);
 
-    List<T> getCategoryDesc(String category);
+    List<T> getProductsInCategory(String category, Order order);
 
     boolean checkProductAmount(T t);
 
@@ -29,7 +30,7 @@ public interface ProductService<T> {
 
     List<T> search(String search);
 
-    List<T> getTypeDesc(String type);
+    List<T> getType(String type, Order order);
 
     List<T> sortByCategory(String[] categories);
 
