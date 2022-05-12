@@ -1,4 +1,4 @@
-package by.it.academy;
+package by.it.academy.contants;
 
 public class Paths {
     public static final String INDEX_PATH = "/index.jsp";
@@ -41,8 +41,4 @@ public class Paths {
     public static final String USER_LOGIN_IS_ALREADY_TAKEN_ERROR = "/pages/errors/userLoginIsAlreadyTakenError.jsp";
     public static final String DATA_BASE_ERROR = "/pages/errors/dataBaseError.jsp";
 
-    public static final int AMOUNT_PRODUCTS_ON_START_PAGE = 4;
-    public static final int AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET = 1;
-    public static final int AMOUNT_PRODUCT_DELETED_WHEN_USER_PULL_DELETE = 1;
-    public static final String CATEGORY_HEADPHONES = "headphones";
 }

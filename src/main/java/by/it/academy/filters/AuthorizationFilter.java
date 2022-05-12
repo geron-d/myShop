@@ -1,6 +1,6 @@
 package by.it.academy.filters;
 
-import by.it.academy.Paths;
+import by.it.academy.contants.Paths;
 import by.it.academy.entities.User;
 import org.apache.log4j.Logger;
 

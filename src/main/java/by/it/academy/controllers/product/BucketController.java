@@ -1,6 +1,7 @@
 package by.it.academy.controllers.product;
 
-import by.it.academy.Paths;
+import by.it.academy.contants.Constants;
+import by.it.academy.contants.Paths;
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.ProductInBucket;
@@ -83,7 +84,7 @@ public class BucketController extends HttpServlet {
                 Product product = productService.getByID(id);
                 log.info("/bucket - method: post - product: " + product);
 
-                boolean isDeleted = bucketService.deleteAmountProducts(productsInBucket, product, Paths.AMOUNT_PRODUCT_DELETED_WHEN_USER_PULL_DELETE);
+                boolean isDeleted = bucketService.deleteAmountProducts(productsInBucket, product, Constants.AMOUNT_PRODUCT_DELETED_WHEN_USER_PULL_DELETE);
                 log.info("/bucket - method: post - isDeleted: " + isDeleted);
 
                 final RequestDispatcher requestDispatcher;

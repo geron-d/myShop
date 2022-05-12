@@ -1,6 +1,6 @@
 package by.it.academy.controllers.product;
 
-import by.it.academy.Paths;
+import by.it.academy.contants.Paths;
 import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;

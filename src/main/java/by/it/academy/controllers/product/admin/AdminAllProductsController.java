@@ -1,6 +1,6 @@
 package by.it.academy.controllers.product.admin;
 
-import by.it.academy.Paths;
+import by.it.academy.contants.Paths;
 import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;
@@ -36,7 +36,7 @@ public class AdminAllProductsController extends HttpServlet {
         User user = (User) session.getAttribute("user");
         log.info("/products/admin - method: get - user: " + user);
 
-        List<Product> products = productService.getAllProducts(Order.DESC); //todo desc - param
+        List<Product> products = productService.getAllProducts(Order.DESC);
         log.info("/products/admin - method: get - products: " + products);
         req.setAttribute("products", products);
 

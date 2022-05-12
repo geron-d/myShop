@@ -1,6 +1,6 @@
 package by.it.academy.controllers.user;
 
-import by.it.academy.Paths;
+import by.it.academy.contants.Paths;
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.ProductInBucket;

@@ -1,6 +1,6 @@
 package by.it.academy.services.bucket;
 
-import by.it.academy.Paths;
+import by.it.academy.contants.Constants;
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.ProductInBucket;
@@ -65,9 +65,9 @@ public class BucketAPIService implements BucketService<Bucket> {
     public boolean add(User user, Product product) {
         Bucket bucket = getByUserAndProduct(user, product);
         if (isBucketExist(bucket)) {
-            return addAmountToExistBucket(bucket, Paths.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET);
+            return addAmountToExistBucket(bucket, Constants.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET);
         } else {
-            Bucket newBucket = Bucket.builder().userId(user.getId()).productId(product.getId()).amount(Paths.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET).build();
+            Bucket newBucket = Bucket.builder().userId(user.getId()).productId(product.getId()).amount(Constants.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET).build();
             return create(newBucket);
         }
     }
