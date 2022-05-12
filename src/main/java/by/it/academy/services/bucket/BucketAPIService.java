@@ -43,7 +43,7 @@ public class BucketAPIService implements BucketService<Bucket> {
 
     @Override
     public List<Bucket> getAll() {
-        return bucketRepository.getAll();
+        return bucketRepository.getAllBucket();
     }
 
     @Override

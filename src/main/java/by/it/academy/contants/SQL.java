@@ -16,9 +16,18 @@ public class SQL {
             "date=?, producer=?, amount=?, price=? WHERE id=?";
     public static final String PRODUCT_DELETE_SQL = "DELETE FROM products WHERE id=?";
     public static final String PRODUCT_GET_ALL_PRODUCTS_SQL = "SELECT * FROM products ORDER BY id ";
-    public static final String PRODUCT_GET_PRODUCTS_IN_CATEGORY_SQL = "SELECT * FROM products WHERE category=? ORDER BY id ";
+    public static final String PRODUCT_GET_PRODUCTS_IN_CATEGORY_SQL = "SELECT * FROM products " +
+            "WHERE category=? ORDER BY id ";
     public static final String PRODUCT_GET_PRODUCTS_IN_TYPE_SQL = "SELECT * FROM products WHERE type=? ORDER BY id ";
 
+    public static final String BUCKET_INSERT_SQL = "INSERT INTO bucket (userId, productId, amount) VALUES (?,?,?)";
+    public static final String BUCKET_GET_SQL = "SELECT * FROM bucket WHERE id = ?";
+    public static final String BUCKET_UPDATE_SQL = "UPDATE bucket SET userId=?, productId=?, amount=? WHERE id=?";
+    public static final String BUCKET_DELETE_SQL = "DELETE FROM bucket WHERE id=?";
+    public static final String BUCKET_GET_ALL_BUCKET_SQL = "SELECT * FROM bucket";
+    public static final String BUCKET_GET_BY_USER_AND_PRODUCT_SQL = "SELECT * FROM bucket " +
+            "WHERE userId = ? AND productId = ?";
+    public static final String BUCKET_GET_BY_USER_SQL = "SELECT * FROM bucket WHERE userId = ?";
 
     public static final String LIMIT_SQL = " LIMIT ?";
 }
