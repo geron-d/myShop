@@ -24,13 +24,11 @@ public interface ProductService<T> {
 
     boolean checkProductAmount(T t);
 
-    List<T> getAllDesc();
-
     boolean decreaseProductAmount(T T, int amount);
 
     List<T> search(String search);
 
-    List<T> getType(String type, Order order);
+    List<T> getProductsInType(String type, Order order);
 
     List<T> sortByCategory(String[] categories);
 

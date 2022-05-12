@@ -33,7 +33,7 @@ public class UserAPIService implements UserService<User> {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         return repository.getAllUsers();
     }
 

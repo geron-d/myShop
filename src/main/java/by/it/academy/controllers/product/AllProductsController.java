@@ -1,6 +1,7 @@
 package by.it.academy.controllers.product;
 
 import by.it.academy.Paths;
+import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.User;
 import by.it.academy.repositories.connections.ConnectionMySQL;
@@ -35,7 +36,7 @@ public class AllProductsController extends HttpServlet {
         User user = (User) session.getAttribute("user");
         log.info("/products - method: get - user: " + user);
 
-        List<Product> products = productService.getAllDesc();
+        List<Product> products = productService.getAllProducts(Order.DESC);
         log.info("/products - method: get - products: " + products);
 
         req.setAttribute("products", products);

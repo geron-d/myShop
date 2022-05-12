@@ -13,7 +13,7 @@ public interface UserService<T> {
 
     boolean delete(T t);
 
-    List<T> getAll();
+    List<T> getAllUsers();
 
     T getByLoginPassword(String login, String password);
 

@@ -5,10 +5,7 @@ import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 import by.it.academy.repositories.product.ProductRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProductAPIService implements ProductService<Product> {
@@ -64,20 +61,20 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> getAllDesc() {
-        return repository.getAllProducts(Order.DESC);
-    }
-
-    @Override
     public boolean decreaseProductAmount(Product product, int amount) {
-        boolean isUpdated = false;
+        boolean isProductDecreased = false;
         if (product.getAmount() >= amount) {
-            product = new Product(product.getId(), product.getCategory(), product.getType(), product.getName(),
-                    product.getImage_path(), product.getLocalDate(), product.getProducer(),
-                    product.getAmount() - amount, product.getPrice());
-            isUpdated = update(product, product);
+            product = Product.builder()
+                    .id(product.getId())
+                    .category(product.getCategory())
+                    .type(product.getType())
+                    .name(product.getName())
+                    .amount(product.getAmount() - amount)
+                    .price(product.getPrice())
+                    .build();
+            isProductDecreased = update(product, product);
         }
-        return isUpdated;
+        return isProductDecreased;
     }
 
     @Override
@@ -86,15 +83,15 @@ public class ProductAPIService implements ProductService<Product> {
     }
 
     @Override
-    public List<Product> getType(String type, Order order) {
+    public List<Product> getProductsInType(String type, Order order) {
         return repository.getProductsInType(type, order);
     }
 
     @Override
     public List<Product> sortByCategory(String[] categories) {
         List<Product> categoryProducts = new ArrayList<>();
-        if (categories == null) {
-            return null;
+        if (Objects.isNull(categories)) {
+            return categoryProducts;
         }
         Arrays.stream(categories)
                 .map(category -> getProductsInCategory(category, Order.ASC))
@@ -105,11 +102,11 @@ public class ProductAPIService implements ProductService<Product> {
     @Override
     public List<Product> sortByType(String[] types) {
         List<Product> typeProducts = new ArrayList<>();
-        if (types == null) {
-            return null;
+        if (Objects.isNull(types)) {
+            return typeProducts;
         }
         Arrays.stream(types)
-                .map(type -> getType(type, Order.ASC))
+                .map(type -> getProductsInType(type, Order.ASC))
                 .forEachOrdered(typeProducts::addAll);
         return typeProducts;
     }
@@ -119,12 +116,12 @@ public class ProductAPIService implements ProductService<Product> {
         List<Product> sortProducts = new ArrayList<>();
         List<Product> categoryProducts = sortByCategory(categories);
         List<Product> typeProducts = sortByType(types);
-        if (categories == null && types == null) { // todo Objects
-            return null;// todo not return null
-        } else if (categories != null) {
+        if (Objects.isNull(categories) && Objects.isNull(types)) {
+            return sortProducts;
+        } else if (Objects.nonNull(categories)) {
             sortProducts.addAll(categoryProducts);
         }
-        if (types != null) {
+        if (Objects.nonNull(types)) {
             sortProducts.addAll(typeProducts);
         }
         Comparator<Product> productComparator = new ProductIdDescComparator();

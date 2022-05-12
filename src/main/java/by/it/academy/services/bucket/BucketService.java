@@ -15,7 +15,7 @@ public interface BucketService<T> {
 
     boolean delete(T t);
 
-    List<T> getAll();
+    List<T> getAllBucket();
 
     T getByUserAndProduct(User user, Product product);
 
