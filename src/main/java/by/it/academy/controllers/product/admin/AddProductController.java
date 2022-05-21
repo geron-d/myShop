@@ -31,6 +31,7 @@ public class AddProductController extends DefaultController {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final HttpSession session = req.getSession();
+
         logUserInSession(session, log);
 
         final Product product = getProductByParams(req);

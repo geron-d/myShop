@@ -47,4 +47,9 @@ public class UserAPIService implements UserService<User> {
         return repository.checkLogin(login);
     }
 
+    @Override
+    public boolean checkUserId(User user) {
+        return repository.checkUserId(user);
+    }
+
 }

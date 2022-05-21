@@ -2,26 +2,18 @@ package by.it.academy.controllers.product;
 
 import by.it.academy.contants.Constants;
 import by.it.academy.contants.Paths;
+import by.it.academy.controllers.DefaultController;
 import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
-import by.it.academy.repositories.bucket.BucketAPIRepository;
-import by.it.academy.repositories.bucket.BucketRepository;
-import by.it.academy.repositories.connections.ConnectionMySQL;
-import by.it.academy.repositories.connections.ConnectionSQL;
-import by.it.academy.repositories.product.ProductAPIRepository;
-import by.it.academy.repositories.product.ProductRepository;
-import by.it.academy.services.bucket.BucketAPIService;
 import by.it.academy.services.bucket.BucketService;
-import by.it.academy.services.product.ProductAPIService;
 import by.it.academy.services.product.ProductService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,13 +21,10 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/bucket")
-public class BucketController extends HttpServlet {
+public class BucketController extends DefaultController {
     Logger log = Logger.getLogger(BucketController.class);
-    ConnectionSQL connection = new ConnectionMySQL();
-    ProductRepository<Product> productAPIRepository = new ProductAPIRepository(connection);
-    ProductService<Product> productService = new ProductAPIService(productAPIRepository);
-    BucketRepository<Bucket> bucketRepository = new BucketAPIRepository(connection);
-    BucketService<Bucket> bucketService = new BucketAPIService(bucketRepository, productService);
+    ProductService<Product> productService = createProductAPIService();
+    BucketService<Bucket> bucketService = createBucketAPIService(productService);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -84,11 +73,12 @@ public class BucketController extends HttpServlet {
                 Product product = productService.getByID(id);
                 log.info("/bucket - method: post - product: " + product);
 
-                boolean isDeleted = bucketService.deleteAmountProducts(productsInBucket, product, Constants.AMOUNT_PRODUCT_DELETED_WHEN_USER_PULL_DELETE);
-                log.info("/bucket - method: post - isDeleted: " + isDeleted);
+                boolean isProductDeletedFromBucket = bucketService.deleteAmountProducts(productsInBucket, product,
+                        Constants.AMOUNT_PRODUCT_DELETED_WHEN_USER_PULL_DELETE);
+                log.info("/bucket - method: post - isDeleted: " + isProductDeletedFromBucket);
 
                 final RequestDispatcher requestDispatcher;
-                if (isDeleted) {
+                if (isProductDeletedFromBucket) {
                     log.info("/bucket - method: post - product: " + product);
 
                     req.setAttribute("product", product);
@@ -117,11 +107,11 @@ public class BucketController extends HttpServlet {
                 break;
             }
             case "deleteAll": {
-                boolean isDeleted = bucketService.deleteAllProducts(productsInBucket);
-                log.info("/bucket - method: post - isDeleted: " + isDeleted);
+                boolean isAllProductsDeletedFromBucket = bucketService.deleteAllProducts(productsInBucket);
+                log.info("/bucket - method: post - isDeleted: " + isAllProductsDeletedFromBucket);
 
                 final RequestDispatcher requestDispatcher;
-                if (isDeleted) {
+                if (isAllProductsDeletedFromBucket) {
                     productsInBucket = bucketService.getProductsInBucket(user);
                     log.info("/bucket - method: post - productsInBucket: " + productsInBucket);
 
@@ -145,11 +135,14 @@ public class BucketController extends HttpServlet {
                 break;
             }
             case "buy": {
-                boolean isBought = bucketService.buy(productsInBucket);
-                log.info("/bucket - method: post - isBought: " + isBought);
+                productsInBucket = bucketService.getProductsInBucket(user);
+                log.info("/bucket - method: post - productsInBucket: " + productsInBucket);
+
+                boolean isProductsBought = bucketService.buy(productsInBucket);
+                log.info("/bucket - method: post - isBought: " + isProductsBought);
 
                 final RequestDispatcher requestDispatcher;
-                if (isBought) {
+                if (isProductsBought) {
                     productsInBucket = bucketService.getProductsInBucket(user);
                     log.info("/bucket - method: post - productsInBucket: " + productsInBucket);
 

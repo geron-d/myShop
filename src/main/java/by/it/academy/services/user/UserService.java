@@ -18,4 +18,6 @@ public interface UserService<T> {
     T getByLoginPassword(String login, String password);
 
     boolean checkLogin(String login);
+
+    boolean checkUserId(T t);
 }

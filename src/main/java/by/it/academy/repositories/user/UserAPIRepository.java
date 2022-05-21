@@ -159,4 +159,19 @@ public class UserAPIRepository implements UserRepository<User> {
         }
         return false;
     }
+
+    public boolean checkUserId(User user) {
+        try (Connection conn = connection.connect()) {
+            PreparedStatement statement = conn.prepareStatement(SQL.USER_CHECK_USER_ID_SQL);
+            statement.setInt(1, user.getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            log.info("UserAPIRepository - method: checkLogin: " + e);
+            return false;
+        }
+        return false;
+    }
 }

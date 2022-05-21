@@ -46,7 +46,7 @@
                 <li><h1>All products</h1></li>
                 <%--@elvariable id="products" type="java.util.List"--%>
                 <c:forEach var="product" items="${products}">
-                    <li><a href="${pageContext.request.contextPath}/product?id=${product.id}">${product.name}</a></li>
+                    <li><a href="${pageContext.request.contextPath}/products/product/admin?id=${product.id}">${product.name}</a></li>
                 </c:forEach>
             </ul>
         </td>

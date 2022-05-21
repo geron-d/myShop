@@ -8,6 +8,7 @@ public class SQL {
     public static final String USER_GET_ALL_USERS_SQL = "SELECT * FROM users";
     public static final String USER_GET_BY_LOGIN_PASSWORD_SQL = "SELECT * FROM users WHERE login = ? AND password = ?";
     public static final String USER_CHECK_LOGIN_SQL = "SELECT * FROM users WHERE login = ?";
+    public static final String USER_CHECK_USER_ID_SQL = "SELECT * FROM users WHERE id = ?";
 
     public static final String PRODUCT_INSERT_SQL = "INSERT INTO products (category, type, name, image, date, " +
             "producer, amount, price) VALUES (?,?,?,?,?,?,?,?)";

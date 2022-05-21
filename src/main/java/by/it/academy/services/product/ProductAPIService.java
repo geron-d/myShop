@@ -69,6 +69,9 @@ public class ProductAPIService implements ProductService<Product> {
                     .category(product.getCategory())
                     .type(product.getType())
                     .name(product.getName())
+                    .image_path(product.getImage_path())
+                    .localDate(product.getLocalDate())
+                    .producer(product.getProducer())
                     .amount(product.getAmount() - amount)
                     .price(product.getPrice())
                     .build();

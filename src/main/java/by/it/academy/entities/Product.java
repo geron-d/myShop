@@ -34,6 +34,15 @@ public class Product {
         this.price = product.getPrice();
     }
 
+    public Product(String category, String type, String name, String image_path, String producer, int amount, double price) {
+        this.category = category;
+        this.type = type;
+        this.name = name;
+        this.image_path = image_path;
+        this.producer = producer;
+        this.amount = amount;
+        this.price = price;
+    }
     public Product(String category, String type, String name, String image_path, LocalDate localDate, String producer, int amount, double price) {
         this.category = category;
         this.type = type;
