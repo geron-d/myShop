@@ -22,7 +22,9 @@ public class ProductAPIService implements ProductService<Product> {
 
     @Override
     public Product get(Product product) {
-        return repository.get(product);
+        return repository.get(product).isPresent()
+                ? repository.get(product).get()
+                : new Product();
     }
 
     @Override
@@ -37,22 +39,36 @@ public class ProductAPIService implements ProductService<Product> {
 
     @Override
     public List<Product> getAllProducts(Order order) {
-        return repository.getAllProducts(order);
+        return repository.getAllProducts(order)
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Product getByID(int id) {
-        return repository.getByID(id);
+        return repository.getByID(id).isPresent()
+                ? repository.getByID(id).get()
+                : new Product();
     }
 
     @Override
     public List<Product> getLastProducts(int amount, Order order) {
-        return repository.getLastProducts(amount, order);
+        return repository.getLastProducts(amount, order)
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Product> getProductsInCategory(String category, Order order) {
-        return repository.getProductsInCategory(category, order);
+        return repository.getProductsInCategory(category, order)
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -82,12 +98,20 @@ public class ProductAPIService implements ProductService<Product> {
 
     @Override
     public List<Product> search(String search) {
-        return repository.search(search);
+        return repository.search(search)
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Product> getProductsInType(String type, Order order) {
-        return repository.getProductsInType(type, order);
+        return repository.getProductsInType(type, order)
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override

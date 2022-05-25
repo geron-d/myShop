@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BucketAPIRepository implements BucketRepository<Bucket> {
     Logger log = Logger.getLogger(BucketAPIRepository.class);
@@ -38,8 +39,8 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     }
 
     @Override
-    public Bucket get(Bucket bucket) {
-        Bucket thisBucket = new Bucket();
+    public Optional<Bucket> get(Bucket bucket) {
+        Optional<Bucket> thisBucket = Optional.of(new Bucket());
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.BUCKET_GET_SQL);
             statement.setInt(1, bucket.getId());
@@ -49,12 +50,12 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
                 int userId = resultSet.getInt("userId");
                 int productId = resultSet.getInt("productId");
                 int amount = resultSet.getInt("amount");
-                thisBucket = Bucket.builder()
+                thisBucket = Optional.ofNullable(Bucket.builder()
                         .id(thisId)
                         .userId(userId)
                         .productId(productId)
                         .amount(amount)
-                        .build();
+                        .build());
                 return thisBucket;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -94,8 +95,8 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     }
 
     @Override
-    public List<Bucket> getAllBucket() {
-        List<Bucket> bucket = new ArrayList<>();
+    public List<Optional<Bucket>> getAllBucket() {
+        List<Optional<Bucket>> bucket = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.BUCKET_GET_ALL_BUCKET_SQL);
             ResultSet resultSet = statement.executeQuery();
@@ -110,7 +111,7 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
                         .productId(productId)
                         .amount(amount)
                         .build();
-                bucket.add(thisBucket);
+                bucket.add(Optional.ofNullable(thisBucket));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("BucketAPIRepository - method: getAllBucket: " + e);
@@ -120,8 +121,8 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     }
 
     @Override
-    public Bucket getByUserAndProduct(User user, Product product) {
-        Bucket bucket = new Bucket();
+    public Optional<Bucket> getByUserAndProduct(User user, Product product) {
+        Optional<Bucket> bucket = Optional.of(new Bucket());
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.BUCKET_GET_BY_USER_AND_PRODUCT_SQL);
             statement.setInt(1, user.getId());
@@ -132,12 +133,12 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
                 int userId = resultSet.getInt("userId");
                 int productId = resultSet.getInt("productId");
                 int amount = resultSet.getInt("amount");
-                bucket = Bucket.builder()
+                bucket = Optional.ofNullable(Bucket.builder()
                         .id(thisId)
                         .userId(userId)
                         .productId(productId)
                         .amount(amount)
-                        .build();
+                        .build());
                 return bucket;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -148,8 +149,8 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     }
 
     @Override
-    public List<Bucket> getByUser(User user) {
-        List<Bucket> bucket = new ArrayList<>();
+    public List<Optional<Bucket>> getByUser(User user) {
+        List<Optional<Bucket>> bucket = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.BUCKET_GET_BY_USER_SQL);
             statement.setInt(1, user.getId());
@@ -165,7 +166,7 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
                         .productId(productId)
                         .amount(amount)
                         .build();
-                bucket.add(thisBucket);
+                bucket.add(Optional.ofNullable(thisBucket));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("BucketAPIRepository - method: getByUser: " + e);
@@ -175,8 +176,8 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
     }
 
     @Override
-    public Bucket getById(int id) {
-        Bucket thisBucket = new Bucket();
+    public Optional<Bucket> getById(int id) {
+        Optional<Bucket> thisBucket = Optional.of(new Bucket());
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.BUCKET_GET_SQL);
             statement.setInt(1, id);
@@ -186,12 +187,12 @@ public class BucketAPIRepository implements BucketRepository<Bucket> {
                 int userId = resultSet.getInt("userId");
                 int productId = resultSet.getInt("productId");
                 int amount = resultSet.getInt("amount");
-                thisBucket = Bucket.builder()
+                thisBucket = Optional.ofNullable(Bucket.builder()
                         .id(thisId)
                         .userId(userId)
                         .productId(productId)
                         .amount(amount)
-                        .build();
+                        .build());
                 return thisBucket;
             }
         } catch (SQLException | ClassNotFoundException e) {

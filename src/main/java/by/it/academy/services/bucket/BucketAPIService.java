@@ -9,6 +9,7 @@ import by.it.academy.repositories.bucket.BucketRepository;
 import by.it.academy.services.product.ProductService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,9 @@ public class BucketAPIService implements BucketService<Bucket> {
 
     @Override
     public Bucket get(Bucket bucket) {
-        return bucketRepository.get(bucket);
+        return bucketRepository.get(bucket).isPresent()
+                ? bucketRepository.get(bucket).get()
+                : new Bucket();
     }
 
     @Override
@@ -43,17 +46,25 @@ public class BucketAPIService implements BucketService<Bucket> {
 
     @Override
     public List<Bucket> getAllBucket() {
-        return bucketRepository.getAllBucket();
+        return bucketRepository.getAllBucket()
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Bucket getByUserAndProduct(User user, Product product) {
-        return bucketRepository.getByUserAndProduct(user, product);
+        return bucketRepository.getByUserAndProduct(user, product).isPresent()
+                ? bucketRepository.getByUserAndProduct(user, product).get()
+                : new Bucket();
     }
 
     @Override
     public Bucket getById(int id) {
-        return bucketRepository.getById(id);
+        return bucketRepository.getById(id).isPresent()
+                ? bucketRepository.getById(id).get()
+                : new Bucket();
     }
 
     public boolean addAmountToExistBucket(Bucket bucket, int n) {
@@ -74,7 +85,11 @@ public class BucketAPIService implements BucketService<Bucket> {
 
     @Override
     public List<Bucket> getByUser(User user) {
-        return bucketRepository.getByUser(user);
+        return bucketRepository.getByUser(user)
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override

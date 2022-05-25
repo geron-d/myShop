@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserAPIRepository implements UserRepository<User> {
     Logger log = Logger.getLogger(UserAPIRepository.class);
@@ -37,8 +38,8 @@ public class UserAPIRepository implements UserRepository<User> {
     }
 
     @Override
-    public User get(User user) {
-        User thisUser = new User();
+    public Optional<User> get(User user) {
+        Optional<User> thisUser = Optional.of(new User());
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.USER_GET_SQL);
             statement.setInt(1, user.getId());
@@ -48,12 +49,12 @@ public class UserAPIRepository implements UserRepository<User> {
                 String login = resultSet.getString("login");
                 String password = resultSet.getString("password");
                 AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
-                thisUser = User.builder()
+                thisUser = Optional.ofNullable(User.builder()
                         .id(id)
                         .login(login)
                         .password(password)
                         .accessLevel(accessLevel)
-                        .build();
+                        .build());
                 return thisUser;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -93,8 +94,8 @@ public class UserAPIRepository implements UserRepository<User> {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
+    public List<Optional<User>> getAllUsers() {
+        List<Optional<User>> users = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.USER_GET_ALL_USERS_SQL);
             ResultSet resultSet = statement.executeQuery();
@@ -103,12 +104,12 @@ public class UserAPIRepository implements UserRepository<User> {
                 String login = resultSet.getString("login");
                 String password = resultSet.getString("password");
                 AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
-                users.add(User.builder()
+                users.add(Optional.ofNullable(User.builder()
                         .id(id)
                         .login(login)
                         .password(password)
                         .accessLevel(accessLevel)
-                        .build());
+                        .build()));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("UserAPIRepository - method: getAllUsers: " + e);
@@ -118,8 +119,8 @@ public class UserAPIRepository implements UserRepository<User> {
     }
 
     @Override
-    public User getByLoginPassword(String login, String password) {
-        User thisUser = new User();
+    public Optional<User> getByLoginPassword(String login, String password) {
+        Optional<User> thisUser = Optional.of(new User());
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.USER_GET_BY_LOGIN_PASSWORD_SQL);
             statement.setString(1, login);
@@ -130,12 +131,12 @@ public class UserAPIRepository implements UserRepository<User> {
                 String thisLogin = resultSet.getString("login");
                 String thisPassword = resultSet.getString("password");
                 AccessLevel accessLevel = AccessLevel.valueOf(resultSet.getString("accessLevel"));
-                thisUser = User.builder()
+                thisUser = Optional.ofNullable(User.builder()
                         .id(id)
                         .login(thisLogin)
                         .password(thisPassword)
                         .accessLevel(accessLevel)
-                        .build();
+                        .build());
                 return thisUser;
             }
         } catch (SQLException | ClassNotFoundException e) {

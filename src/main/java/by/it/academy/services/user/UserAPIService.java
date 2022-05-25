@@ -4,6 +4,8 @@ import by.it.academy.entities.User;
 import by.it.academy.repositories.user.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UserAPIService implements UserService<User> {
     private final UserRepository<User> repository;
@@ -19,7 +21,9 @@ public class UserAPIService implements UserService<User> {
 
     @Override
     public User get(User user) {
-        return repository.get(user);
+        return repository.get(user).isPresent()
+                ? repository.get(user).get()
+                : new User();
     }
 
     @Override
@@ -34,12 +38,18 @@ public class UserAPIService implements UserService<User> {
 
     @Override
     public List<User> getAllUsers() {
-        return repository.getAllUsers();
+        return repository.getAllUsers()
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public User getByLoginPassword(String login, String password) {
-        return repository.getByLoginPassword(login, password);
+        return repository.getByLoginPassword(login, password).isPresent()
+                ? repository.getByLoginPassword(login, password).get()
+                : new User();
     }
 
     @Override

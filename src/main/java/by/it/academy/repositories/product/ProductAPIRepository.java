@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductAPIRepository implements ProductRepository<Product> {
     Logger log = Logger.getLogger(ProductAPIRepository.class);
@@ -39,8 +40,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public Product get(Product product) {
-        Product thisProduct = new Product();
+    public Optional<Product> get(Product product) {
+        Optional<Product> thisProduct = Optional.of(new Product());
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_SQL);
             statement.setInt(1, product.getId());
@@ -55,7 +56,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                thisProduct = Product.builder()
+                thisProduct = Optional.ofNullable(Product.builder()
                         .id(id)
                         .category(category)
                         .type(type)
@@ -65,7 +66,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                         .producer(producer)
                         .amount(amount)
                         .price(price)
-                        .build();
+                        .build());
                 return thisProduct;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -110,8 +111,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public List<Product> getAllProducts(Order order) {
-        List<Product> products = new ArrayList<>();
+    public List<Optional<Product>> getAllProducts(Order order) {
+        List<Optional<Product>> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_ALL_PRODUCTS_SQL + order);
             ResultSet resultSet = statement.executeQuery();
@@ -136,7 +137,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                         .amount(amount)
                         .price(price)
                         .build();
-                products.add(product);
+                products.add(Optional.ofNullable(product));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("ProductAPIRepository - method: getAllProducts: " + e);
@@ -146,8 +147,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public List<Product> getLastProducts(int amount, Order order) {
-        List<Product> products = new ArrayList<>();
+    public List<Optional<Product>> getLastProducts(int amount, Order order) {
+        List<Optional<Product>> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_ALL_PRODUCTS_SQL + order + SQL.LIMIT_SQL);
             statement.setInt(1, amount);
@@ -173,7 +174,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                         .amount(thisAmount)
                         .price(price)
                         .build();
-                products.add(product);
+                products.add(Optional.ofNullable(product));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("ProductAPIRepository - method: getLastProducts: " + e);
@@ -183,8 +184,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public List<Product> getProductsInCategory(String category, Order order) {
-        List<Product> products = new ArrayList<>();
+    public List<Optional<Product>> getProductsInCategory(String category, Order order) {
+        List<Optional<Product>> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_PRODUCTS_IN_CATEGORY_SQL + order);
             statement.setString(1, category);
@@ -210,7 +211,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                         .amount(thisAmount)
                         .price(price)
                         .build();
-                products.add(product);
+                products.add(Optional.ofNullable(product));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("ProductAPIRepository - method: getProductsInCategory: " + e);
@@ -220,8 +221,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public Product getByID(int id) {
-        Product thisProduct = new Product();
+    public Optional<Product> getByID(int id) {
+        Optional<Product> thisProduct = Optional.of(new Product());
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_SQL);
             statement.setInt(1, id);
@@ -236,7 +237,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                 String producer = resultSet.getString("producer");
                 int amount = resultSet.getInt("amount");
                 double price = resultSet.getDouble("price");
-                thisProduct = Product.builder()
+                thisProduct = Optional.ofNullable(Product.builder()
                         .id(thisId)
                         .category(category)
                         .type(type)
@@ -246,7 +247,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                         .producer(producer)
                         .amount(amount)
                         .price(price)
-                        .build();
+                        .build());
                 return thisProduct;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -257,8 +258,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public List<Product> search(String search) {
-        List<Product> products = new ArrayList<>();
+    public List<Optional<Product>> search(String search) {
+        List<Optional<Product>> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM products " +
                     "WHERE LOWER(name) like LOWER('%" + search + "%') " +
@@ -287,7 +288,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                         .amount(amount)
                         .price(price)
                         .build();
-                products.add(product);
+                products.add(Optional.ofNullable(product));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("ProductAPIRepository - method: search: " + e);
@@ -297,8 +298,8 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     }
 
     @Override
-    public List<Product> getProductsInType(String type, Order order) {
-        List<Product> products = new ArrayList<>();
+    public List<Optional<Product>> getProductsInType(String type, Order order) {
+        List<Optional<Product>> products = new ArrayList<>();
         try (Connection conn = connection.connect()) {
             PreparedStatement statement = conn.prepareStatement(SQL.PRODUCT_GET_PRODUCTS_IN_TYPE_SQL + order);
             statement.setString(1, type);
@@ -324,7 +325,7 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                         .amount(thisAmount)
                         .price(price)
                         .build();
-                products.add(product);
+                products.add(Optional.ofNullable(product));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.info("ProductAPIRepository - method: getProductsInType: " + e);
