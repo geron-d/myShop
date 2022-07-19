@@ -19,10 +19,10 @@
 <ul>
     <li><h1>Product added to bucket</h1></li>
     <li><h3>${product.name}</h3></li>
-    <li><h5>Category:</h5>${product.category}</li>
-    <li><h5>Type:</h5>${product.type}</li>
-    <li><h5>Photo:</h5><img src="${pageContext.request.contextPath}${product.image_path}" alt="Photo"></li>
-    <li><h5>Producer:</h5>${product.producer}</li>
+    <li><h5>Category:</h5>${product.category.category}</li>
+    <li><h5>Type:</h5>${product.type.type}</li>
+    <li><h5>Photo:</h5><img src="${pageContext.request.contextPath}${product.imagePath}" alt="Photo"></li>
+    <li><h5>Producer:</h5>${product.producer.producer}</li>
     <li><h5>Amount:</h5>${product.amount}</li>
     <li><h5>Price:</h5>${product.price}</li>
     <li>

@@ -1,23 +1,27 @@
 package by.it.academy.services.user;
 
-import by.it.academy.entities.User;
+import by.it.academy.contants.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService<T> {
-    boolean create(T t);
 
-    User get(T t);
+    Optional<T> getUserById(int id);
 
-    boolean update(T t, T newT);
+    Optional<T> saveUser(T t);
 
-    boolean delete(T t);
+    void deleteUser(T t);
 
-    List<T> getAllUsers();
+    List<T> getAllUsers(Order order);
 
-    T getByLoginPassword(String login, String password);
+    Optional<T> getUserByLoginPassword(String login, String password);
 
-    boolean checkLogin(String login);
+    Optional<T> getUserByLoginPassword(T t);
+
+    Optional<T> getUserByValuableFields(T t);
+
+    boolean checkUserLogin(String login);
 
     boolean checkUserId(T t);
 }

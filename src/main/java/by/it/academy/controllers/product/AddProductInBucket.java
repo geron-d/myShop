@@ -1,12 +1,13 @@
 package by.it.academy.controllers.product;
 
+import by.it.academy.contants.Constants;
 import by.it.academy.contants.Paths;
 import by.it.academy.controllers.DefaultController;
-import by.it.academy.entities.Bucket;
 import by.it.academy.entities.Product;
+import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
-import by.it.academy.services.bucket.BucketService;
 import by.it.academy.services.product.ProductService;
+import by.it.academy.services.productInBucket.ProductInBucketService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -16,12 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet(urlPatterns = "/product/addInBucket")
 public class AddProductInBucket extends DefaultController {
     Logger log = Logger.getLogger(AddProductInBucket.class);
     ProductService<Product> productService = createProductAPIService();
-    BucketService<Bucket> bucketService = createBucketAPIService(productService);
+    ProductInBucketService<ProductInBucket> productInBucketService = createProductInBucketAPIService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,17 +35,24 @@ public class AddProductInBucket extends DefaultController {
         int id = Integer.parseInt(req.getParameter("id"));
         log.info("/product - method: post - id: " + id);
 
-        Product product = productService.getByID(id);
+        Optional<Product> product = productService.getProductById(id);
         log.info("/product - method: post - product: " + product);
 
-        req.setAttribute("product", product);
+        ProductInBucket productInBucket = new ProductInBucket();
 
-        boolean isProductAddedToBucket = bucketService.add(user, product);
-        log.info("/product - method: post - isAdded: " + isProductAddedToBucket);
+        if (product.isPresent()) {
+            req.setAttribute("product", product.get());
+            productInBucket = ProductInBucket.builder()
+                    .user(user)
+                    .product(product.get())
+                    .amount(Constants.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET)
+                    .build();
+        }
 
-        final RequestDispatcher requestDispatcher = isProductAddedToBucket
-                ? req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH)
-                : req.getRequestDispatcher(Paths.PRODUCT_IS_NOT_ADDED_TO_BUCKET_PATH);
+        productInBucketService.saveProductInBucket(productInBucket);
+        log.info("/product - method: post - saveProductInBucket: " + productInBucket);
+
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_TO_BUCKET_PATH);
         requestDispatcher.forward(req, resp);
     }
 }

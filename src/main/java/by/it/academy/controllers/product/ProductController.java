@@ -28,7 +28,7 @@ public class ProductController extends DefaultController {
         int id = Integer.parseInt(req.getParameter("id"));
         log.info("/product - method: get - id: " + id);
 
-        Product product = productService.getByID(id);
+        Product product = productService.getProductById(id).get();
         log.info("/product - method: get - product: " + product);
 
         session.setAttribute("product", product);

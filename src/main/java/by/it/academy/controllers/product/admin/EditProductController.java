@@ -2,8 +2,14 @@ package by.it.academy.controllers.product.admin;
 
 import by.it.academy.contants.Paths;
 import by.it.academy.controllers.DefaultController;
+import by.it.academy.entities.Category;
+import by.it.academy.entities.Producer;
 import by.it.academy.entities.Product;
+import by.it.academy.entities.Type;
+import by.it.academy.services.category.CategoryService;
+import by.it.academy.services.producer.ProducerService;
 import by.it.academy.services.product.ProductService;
+import by.it.academy.services.type.TypeService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -17,6 +23,9 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/products/edit")
 public class EditProductController extends DefaultController {
     Logger log = Logger.getLogger(EditProductController.class);
+    CategoryService<Category> categoryService = createCategoryAPIService();
+    TypeService<Type> typeService = createTypeAPIService();
+    ProducerService<Producer> producerService = createProducerAPIService();
     ProductService<Product> productService = createProductAPIService();
 
     @Override
@@ -28,18 +37,16 @@ public class EditProductController extends DefaultController {
         int id = Integer.parseInt(req.getParameter("id"));
         log.info("/products/edit - method: post - id: " + id);
 
-        Product product = productService.getByID(id);
+        Product product = productService.getProductById(id).get();
         log.info("/products/edit - method: post - product: " + product);
 
-        final Product newProduct = getProductByParams(req);
+        final Product newProduct = getProductByParams(req, categoryService, typeService, producerService);
         log.info("/products/edit - method: post - newProduct: " + newProduct);
 
-        boolean isProductUpdated = productService.update(product, newProduct);
-        log.info("/products/edit - method: post - isUpdated: " + isProductUpdated);
+        productService.saveProduct(newProduct);
+        log.info("/products/edit - method: post - saveProduct: " + newProduct);
 
-        final RequestDispatcher requestDispatcher = isProductUpdated
-                ? req.getRequestDispatcher(Paths.PRODUCT_UPDATED_PATH)
-                : req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_UPDATED_PATH);
         requestDispatcher.forward(req, resp);
     }
 }

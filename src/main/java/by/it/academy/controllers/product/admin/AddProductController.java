@@ -2,8 +2,14 @@ package by.it.academy.controllers.product.admin;
 
 import by.it.academy.contants.Paths;
 import by.it.academy.controllers.DefaultController;
+import by.it.academy.entities.Category;
+import by.it.academy.entities.Producer;
 import by.it.academy.entities.Product;
+import by.it.academy.entities.Type;
+import by.it.academy.services.category.CategoryService;
+import by.it.academy.services.producer.ProducerService;
 import by.it.academy.services.product.ProductService;
+import by.it.academy.services.type.TypeService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -17,6 +23,9 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/products/add")
 public class AddProductController extends DefaultController {
     Logger log = Logger.getLogger(AddProductController.class);
+    CategoryService<Category> categoryService = createCategoryAPIService();
+    TypeService<Type> typeService = createTypeAPIService();
+    ProducerService<Producer> producerService = createProducerAPIService();
     ProductService<Product> productService = createProductAPIService();
 
     @Override
@@ -34,15 +43,12 @@ public class AddProductController extends DefaultController {
 
         logUserInSession(session, log);
 
-        final Product product = getProductByParams(req);
+        final Product product = getProductByParams(req, categoryService, typeService, producerService);
         log.info("/products/add - method: post - product: " + product);
 
-        boolean isProductCreated = productService.create(product);
-        log.info("/products/add - method: post - isProductCreated: " + isProductCreated);
+        productService.saveProduct(product);
 
-        final RequestDispatcher requestDispatcher = isProductCreated
-                ? req.getRequestDispatcher(Paths.PRODUCT_ADDED_PATH)
-                : req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_ADDED_PATH);
         requestDispatcher.forward(req, resp);
     }
 }

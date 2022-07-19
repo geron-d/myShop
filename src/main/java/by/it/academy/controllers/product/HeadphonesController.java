@@ -4,7 +4,9 @@ import by.it.academy.contants.Constants;
 import by.it.academy.contants.Order;
 import by.it.academy.contants.Paths;
 import by.it.academy.controllers.DefaultController;
+import by.it.academy.entities.Category;
 import by.it.academy.entities.Product;
+import by.it.academy.services.category.CategoryService;
 import by.it.academy.services.product.ProductService;
 import org.apache.log4j.Logger;
 
@@ -20,6 +22,7 @@ import java.util.List;
 @WebServlet(urlPatterns = "/headphones")
 public class HeadphonesController extends DefaultController {
     Logger log = Logger.getLogger(HeadphonesController.class);
+    CategoryService<Category> categoryService = createCategoryAPIService();
     ProductService<Product> productService = createProductAPIService();
 
     @Override
@@ -28,7 +31,8 @@ public class HeadphonesController extends DefaultController {
 
         logUserInSession(session, log);
 
-        List<Product> headphones = productService.getProductsInCategory(Constants.CATEGORY_HEADPHONES, Order.DESC);
+        Category category = categoryService.getCategoryByName(Constants.CATEGORY_HEADPHONES).get();
+        List<Product> headphones = productService.getProductsByCategory(category, Order.DESC);
         log.info("/headphones - method: get - headphones: " + headphones);
 
         req.setAttribute("headphones", headphones);

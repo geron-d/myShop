@@ -1,4 +1,4 @@
-package by.it.academy.comparators.product;
+package by.it.academy.comparators;
 
 import by.it.academy.entities.Product;
 

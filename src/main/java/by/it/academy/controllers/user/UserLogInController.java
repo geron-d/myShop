@@ -28,7 +28,7 @@ public class UserLogInController extends DefaultController {
         final String password = req.getParameter("password");
         log.info("/user/login - method: get - password: " + password);
 
-        User user = userService.getByLoginPassword(login, password);
+        User user = userService.getUserByLoginPassword(login, password).get();
         log.info("/user/login - method: get - user: " + user);
 
         final RequestDispatcher requestDispatcher;

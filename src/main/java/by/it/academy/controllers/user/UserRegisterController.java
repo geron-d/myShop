@@ -1,6 +1,5 @@
 package by.it.academy.controllers.user;
 
-import by.it.academy.contants.Paths;
 import by.it.academy.controllers.DefaultController;
 import by.it.academy.entities.User;
 import by.it.academy.services.user.UserService;
@@ -30,18 +29,14 @@ public class UserRegisterController extends DefaultController {
         User user = new User(login, password);
         log.info("/user/create - method: post - user: " + user);
 
-        boolean isUserCreated = userService.create(user);
-        log.info("/user/create - method: post - isCreated: " + isUserCreated);
+        userService.saveUser(user);
+        log.info("/user/create - method: post - saveUser: " + user);
 
-        final RequestDispatcher requestDispatcher;
-        if (isUserCreated) {
-            final HttpSession session = req.getSession();
-            session.setAttribute("user", user);
 
-            requestDispatcher = req.getRequestDispatcher("/start");
-        } else {
-            requestDispatcher = req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
-        }
+        final HttpSession session = req.getSession();
+        session.setAttribute("user", user);
+
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/start");
         requestDispatcher.forward(req, resp);
     }
 }

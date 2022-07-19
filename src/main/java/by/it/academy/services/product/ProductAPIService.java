@@ -1,155 +1,227 @@
 package by.it.academy.services.product;
 
-import by.it.academy.comparators.product.ProductIdDescComparator;
+import by.it.academy.comparators.ProductIdDescComparator;
 import by.it.academy.contants.Order;
+import by.it.academy.entities.Category;
 import by.it.academy.entities.Product;
-import by.it.academy.repositories.product.ProductRepository;
+import by.it.academy.entities.Type;
+import by.it.academy.repositories.hiber.product.ProductRepository;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProductAPIService implements ProductService<Product> {
-    private final ProductRepository<Product> repository;
+    private final Session session;
+    private final ProductRepository<Product> productRepository;
 
-    public ProductAPIService(ProductRepository<Product> repository) {
-        this.repository = repository;
+    public ProductAPIService(Session session, ProductRepository<Product> productRepository) {
+        this.session = session;
+        this.productRepository = productRepository;
     }
 
     @Override
-    public boolean create(Product product) {
-        return repository.create(product);
+    public Optional<Product> getProductById(int id) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        Optional<Product> product = productRepository.getProductById(id);
+
+        transaction.commit();
+
+        return product;
     }
 
     @Override
-    public Product get(Product product) {
-        return repository.get(product).isPresent()
-                ? repository.get(product).get()
-                : new Product();
+    public Optional<Product> saveProduct(Product product) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        Optional<Product> optionalProduct = productRepository.saveProduct(product);
+
+        transaction.commit();
+
+        return optionalProduct;
     }
 
     @Override
-    public boolean update(Product product, Product newProduct) {
-        return repository.update(product, newProduct);
-    }
+    public void deleteProduct(Product product) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
 
-    @Override
-    public boolean delete(Product product) {
-        return repository.delete(product);
+        productRepository.deleteProduct(product);
+
+        transaction.commit();
     }
 
     @Override
     public List<Product> getAllProducts(Order order) {
-        return repository.getAllProducts(order)
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        List<Product> products = productRepository.getAllProducts(order);
+
+        transaction.commit();
+
+        return products;
     }
 
     @Override
-    public Product getByID(int id) {
-        return repository.getByID(id).isPresent()
-                ? repository.getByID(id).get()
-                : new Product();
+    public Optional<Product> getProductByCategoryTypeProducerName(Product product) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        Optional<Product> optionalProduct = productRepository.getProductByCategoryTypeProducerName(product);
+
+        transaction.commit();
+
+        return optionalProduct;
+    }
+
+    @Override
+    public Optional<Product> setProduct(Product product) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        Optional<Product> optionalProduct = productRepository.setProduct(product);
+
+        transaction.commit();
+
+        return optionalProduct;
+    }
+
+    @Override
+    public Optional<Product> getProductByValuableFields(Product product) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        Optional<Product> optionalProduct = productRepository.getProductByValuableFields(product);
+
+        transaction.commit();
+
+        return optionalProduct;
     }
 
     @Override
     public List<Product> getLastProducts(int amount, Order order) {
-        return repository.getLastProducts(amount, order)
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        List<Product> products = productRepository.getLastProducts(amount, order);
+
+        transaction.commit();
+
+        return products;
     }
 
     @Override
-    public List<Product> getProductsInCategory(String category, Order order) {
-        return repository.getProductsInCategory(category, order)
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-    }
+    public List<Product> getProductsByCategory(Category category, Order order) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
 
-    @Override
-    public boolean checkProductAmount(Product product) {
-        return product.getAmount() > 0;
-    }
+        List<Product> products = productRepository.getProductsByCategory(category, order);
 
-    @Override
-    public boolean decreaseProductAmount(Product product, int amount) {
-        boolean isProductDecreased = false;
-        if (product.getAmount() >= amount) {
-            product = Product.builder()
-                    .id(product.getId())
-                    .category(product.getCategory())
-                    .type(product.getType())
-                    .name(product.getName())
-                    .image_path(product.getImage_path())
-                    .localDate(product.getLocalDate())
-                    .producer(product.getProducer())
-                    .amount(product.getAmount() - amount)
-                    .price(product.getPrice())
-                    .build();
-            isProductDecreased = update(product, product);
-        }
-        return isProductDecreased;
+        transaction.commit();
+
+        return products;
     }
 
     @Override
     public List<Product> search(String search) {
-        return repository.search(search)
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        List<Product> products = productRepository.search(search);
+
+        transaction.commit();
+
+        return products;
     }
 
     @Override
-    public List<Product> getProductsInType(String type, Order order) {
-        return repository.getProductsInType(type, order)
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+    public List<Product> getProductsByType(Type type, Order order) {
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        List<Product> products = productRepository.getProductsByType(type, order);
+
+        transaction.commit();
+
+        return products;
     }
 
     @Override
-    public List<Product> sortByCategory(String[] categories) {
-        List<Product> categoryProducts = new ArrayList<>();
+    public boolean checkProductAmount(Product product) {
+        Optional<Product> optionalProduct = Optional.ofNullable(product);
+        return optionalProduct.filter(value -> value.getAmount() > 0).isPresent();
+
+    }
+
+    @Override
+    public Optional<Product> decreaseProductAmount(Product product, int amount) {
+        Optional<Product> optionalProduct = Optional.ofNullable(product);
+        if (optionalProduct.isPresent()) {
+            if (optionalProduct.get().getAmount() >= amount) {
+                optionalProduct = Optional.of(Product.builder()
+                        .id(optionalProduct.get().getId())
+                        .category(optionalProduct.get().getCategory())
+                        .type(optionalProduct.get().getType())
+                        .name(optionalProduct.get().getName())
+                        .imagePath(optionalProduct.get().getImagePath())
+                        .dateInserting(optionalProduct.get().getDateInserting())
+                        .producer(optionalProduct.get().getProducer())
+                        .amount(optionalProduct.get().getAmount() - amount)
+                        .price(optionalProduct.get().getPrice())
+                        .build());
+                return saveProduct(optionalProduct.get());
+            }
+        }
+        return optionalProduct;
+    }
+
+    @Override
+    public List<Product> sortByCategory(List<Category> categories) {
+        List<Product> productsInCategories = new ArrayList<>();
         if (Objects.isNull(categories)) {
-            return categoryProducts;
+            return productsInCategories;
         }
-        Arrays.stream(categories)
-                .map(category -> getProductsInCategory(category, Order.ASC))
-                .forEachOrdered(categoryProducts::addAll);
-        return categoryProducts;
+        categories.stream()
+                .map(category -> getProductsByCategory(category, Order.ASC))
+                .forEachOrdered(productsInCategories::addAll);
+        return productsInCategories;
     }
 
     @Override
-    public List<Product> sortByType(String[] types) {
-        List<Product> typeProducts = new ArrayList<>();
+    public List<Product> sortByType(List<Type> types) {
+        List<Product> productsInTypes = new ArrayList<>();
         if (Objects.isNull(types)) {
-            return typeProducts;
+            return productsInTypes;
         }
-        Arrays.stream(types)
-                .map(type -> getProductsInType(type, Order.ASC))
-                .forEachOrdered(typeProducts::addAll);
-        return typeProducts;
+        types.stream()
+                .map(type -> getProductsByType(type, Order.ASC))
+                .forEachOrdered(productsInTypes::addAll);
+        return productsInTypes;
     }
 
     @Override
     public List<Product> sort(String[] categories, String[] types) {
+        List<Category> categoryList = Arrays.stream(categories)
+                .map(category -> productRepository.getCategoryRepository().getCategoryByName(category).get())
+                .collect(Collectors.toList());
+        List<Type> typeList = Arrays.stream(types)
+                .map(type -> productRepository.getTypeRepository().getTypeByName(type).get())
+                .collect(Collectors.toList());
         List<Product> sortProducts = new ArrayList<>();
-        List<Product> categoryProducts = sortByCategory(categories);
-        List<Product> typeProducts = sortByType(types);
-        if (Objects.isNull(categories) && Objects.isNull(types)) {
+        List<Product> productsInCategories = sortByCategory(categoryList);
+        List<Product> productsInTypes = sortByType(typeList);
+        if (categoryList.isEmpty() && typeList.isEmpty()) {
             return sortProducts;
-        } else if (Objects.nonNull(categories)) {
-            sortProducts.addAll(categoryProducts);
+        } else if (!categoryList.isEmpty()) {
+            sortProducts.addAll(productsInCategories);
         }
-        if (Objects.nonNull(types)) {
-            sortProducts.addAll(typeProducts);
+        if (!typeList.isEmpty()) {
+            sortProducts.addAll(productsInTypes);
         }
         Comparator<Product> productComparator = new ProductIdDescComparator();
         sortProducts = sortProducts.stream().distinct().sorted(productComparator).collect(Collectors.toList());

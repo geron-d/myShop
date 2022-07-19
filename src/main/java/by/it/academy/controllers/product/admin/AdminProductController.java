@@ -28,7 +28,7 @@ public class AdminProductController extends DefaultController {
         int id = Integer.parseInt(req.getParameter("id"));
         log.info("/products/product/admin - method: get - id: " + id);
 
-        Product product = productService.getByID(id);
+        Product product = productService.getProductById(id).get();
         log.info("/products/product/admin - method: get - product: " + product);
 
         session.setAttribute("product", product);
@@ -46,7 +46,7 @@ public class AdminProductController extends DefaultController {
         int id = Integer.parseInt(req.getParameter("id"));
         log.info("/products/product/admin - method: post - id: " + id);
 
-        Product product = productService.getByID(id);
+        Product product = productService.getProductById(id).get();
         log.info("/products/product/admin - method: post - product: " + product);
 
         req.setAttribute("product", product);
@@ -61,12 +61,10 @@ public class AdminProductController extends DefaultController {
                 break;
             }
             case "delete": {
-                boolean isProductDeleted = productService.delete(product);
-                log.info("/products/product/admin - method: post - isDeleted: " + isProductDeleted);
+                productService.deleteProduct(product);
+                log.info("/products/product/admin - method: post - deleteProduct: " + product);
 
-                final RequestDispatcher requestDispatcher = isProductDeleted
-                        ? req.getRequestDispatcher(Paths.PRODUCT_DELETED_PATH)
-                        : req.getRequestDispatcher(Paths.DATA_BASE_ERROR);
+                final RequestDispatcher requestDispatcher = req.getRequestDispatcher(Paths.PRODUCT_DELETED_PATH);
                 requestDispatcher.forward(req, resp);
                 break;
             }
