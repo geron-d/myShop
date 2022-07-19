@@ -1,5 +1,6 @@
 package by.it.academy.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,8 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = "bucket")
-@ToString(exclude = "bucket")
+@ToString
 public class User {
 
     /**
@@ -28,18 +28,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * A login of user.
      */
-    @Column(name = "login")
+    @Column(name = "login", unique = true, length = 50)
     private String login;
 
     /**
      * A password of user.
      */
-    @Column(name = "password")
+    @Column(name = "password", length = 50)
     private String password;
 
     /**
@@ -52,10 +52,13 @@ public class User {
     /**
      * Bucket where stored products which user want to buy.
      */
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "user",
             orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference
     private List<ProductInBucket> bucket = new ArrayList<>();
 
     /**
@@ -99,4 +102,5 @@ public class User {
         this.accessLevel = accessLevel;
         this.bucket = bucket;
     }
+
 }

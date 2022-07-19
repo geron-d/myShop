@@ -1,126 +1,83 @@
 package by.it.academy.services.category;
 
-import by.it.academy.contants.Order;
+import by.it.academy.dtos.requests.category.CategoryDTO;
 import by.it.academy.entities.Category;
-import by.it.academy.repositories.hiber.category.CategoryRepository;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import by.it.academy.repositories.category.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
-/**
- * Implementation of the by.it.academy.services.CategoryService interface.
- *
- * @author Maxim Zhevnov
- */
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class CategoryAPIService implements CategoryService<Category> {
-    private final Session session;
-    private final CategoryRepository<Category> categoryRepository;
 
-    /**
-     * Creates a new {@link CategoryAPIService} to manage objects of the given {@link Session}
-     * and {@link CategoryRepository}.
-     *
-     * @param session must not be {@literal null}.
-     * @param categoryRepository must not be {@literal null}.
-     */
-    public CategoryAPIService(Session session, CategoryRepository<Category> categoryRepository) {
-        this.session = session;
-        this.categoryRepository = categoryRepository;
-    }
+    private final CategoryRepository categoryRepository;
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.CategoryService#getCategoryById
-     */
     @Override
-    public Optional<Category> getCategoryById(int id) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Category> category = categoryRepository.getCategoryById(id);
-
-        transaction.commit();
-
-        return category;
+    public Category findCategory(Long id) {
+        return categoryRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.CategoryService#saveCategory
-     */
     @Override
-    public Optional<Category> saveCategory(Category category) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Category> optionalCategory = categoryRepository.saveCategory(category);
-
-        transaction.commit();
-
-        return optionalCategory;
+    @Transactional
+    public Long createCategory(CategoryDTO dto) {
+        Category category = buildCategory(dto);
+        return categoryRepository.save(category).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.CategoryService#deleteCategory
-     */
     @Override
-    public void deleteCategory(Category category) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        categoryRepository.deleteCategory(category);
-
-        transaction.commit();
+    @Transactional
+    public Long updateCategory(Long id, CategoryDTO dto) {
+        if (!checkCategory(id)) {
+            throw new NoSuchElementException();
+        }
+        Category category = buildCategory(dto);
+        category.setId(id);
+        return categoryRepository.save(category).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.CategoryService#getCategoryByName
-     */
     @Override
-    public Optional<Category> getCategoryByName(String categoryName) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Category> optionalCategory = categoryRepository.getCategoryByName(categoryName);
-
-        transaction.commit();
-
-        return optionalCategory;
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.CategoryService#getAllCategories
-     */
     @Override
-    public List<Category> getAllCategories(Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Category> categories = categoryRepository.getAllCategories(order);
-
-        transaction.commit();
-
-        return categories;
+    public Category findCategory(String name) {
+        return categoryRepository.findCategoryByName(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.CategoryService#getCategoryByValuableFields
-     */
     @Override
-    public Optional<Category> getCategoryByValuableFields(Category category) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Category> optionalCategory = categoryRepository.getCategoryByValuableFields(category);
-
-        transaction.commit();
-
-        return optionalCategory;
+    public List<Category> findCategories() {
+        return categoryRepository.findAll();
     }
+
+    @Override
+    public List<Category> searchCategories(String search) {
+        return categoryRepository.searchAllByNameContains(search);
+    }
+
+    @Override
+    @Transactional
+    public List<Category> findCategories(List<String> categoryNames) {
+        return categoryNames.stream()
+                .map(this::findCategory)
+                .collect(Collectors.toList());
+    }
+
+    private boolean checkCategory(Long id) {
+        return categoryRepository.existsById(id);
+    }
+
+    private Category buildCategory(CategoryDTO dto) {
+        return Category.builder()
+                .name(dto.getName())
+                .build();
+    }
+
 }

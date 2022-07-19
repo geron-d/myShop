@@ -1,5 +1,6 @@
 package by.it.academy.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,13 +28,14 @@ public class ProductInBucket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * User which have this product ib bucket.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     /**
@@ -63,4 +65,5 @@ public class ProductInBucket {
         this.product = product;
         this.amount = amount;
     }
+
 }

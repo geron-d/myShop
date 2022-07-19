@@ -27,13 +27,13 @@ public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * A name of the type of product.
      */
-    @Column(name = "type")
-    private String type;
+    @Column(name = "name", unique = true, length = 30)
+    private String name;
 
     /**
      * Initializes a newly created {@code Type} object so that it represents
@@ -42,6 +42,7 @@ public class Type {
      * @param type A {@code String}
      */
     public Type(String type) {
-        this.type = type;
+        this.name = type;
     }
+
 }

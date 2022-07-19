@@ -1,88 +1,44 @@
 package by.it.academy.services.user;
 
-import by.it.academy.contants.Order;
+import by.it.academy.dtos.requests.productInBucket.ProductInBucketDeleteDTO;
+import by.it.academy.dtos.requests.productInBucket.ProductInBucketWithIdDTO;
+import by.it.academy.dtos.requests.user.UserDTO;
+import by.it.academy.entities.ProductInBucket;
 
 import java.util.List;
-import java.util.Optional;
 
-/**
- * Interface for generic operations on a service for a specific type of user.
- *
- * @param <T> the type of the entity to handle
- * @author Maxim Zhevnov
- */
 public interface UserService<T> {
 
-    /**
-     * Retrieves a user by its id.
-     *
-     * @param id must not be less than 1.
-     * @return the user with the given id or {@literal Optional#empty()} if none found.
-     */
-    Optional<T> getUserById(int id);
+    T findUser(Long id);
 
-    /**
-     * Saves a given user. Use the returned instance for further operations as the save operation might have
-     * changed the user instance completely.
-     *
-     * @param t must not be {@literal null}.
-     * @return the saved user; will never be {@literal null}.
-     */
-    Optional<T> saveUser(T t);
+    Long createUser(UserDTO request);
 
-    /**
-     * Deletes a given user.
-     *
-     * @param t must not be {@literal null}.
-     */
-    void deleteUser(T t);
+    Long updateUser(Long id, UserDTO dto);
 
-    /**
-     * Returns all instances of the user in straight or reverse order.
-     *
-     * @param order must be ASC or DESC.
-     * @return all users
-     */
-    List<T> getAllUsers(Order order);
+    void deleteUser(Long id);
 
-    /**
-     * Retrieves a user by its login and password.
-     *
-     * @param login    must not be {@literal null}.
-     * @param password must not be {@literal null}.
-     * @return the user with the given id or {@literal Optional#empty()} if none found.
-     */
-    Optional<T> getUserByLoginPassword(String login, String password);
+    T findUser(String login);
 
-    /**
-     * Retrieves a user by its login and password.
-     *
-     * @param t must not be {@literal null}.
-     * @return the user with the given id or {@literal Optional#empty()} if none found.
-     */
-    Optional<T> getUserByLoginPassword(T t);
+    List<T> findUsers();
 
-    /**
-     * Retrieves a user by its valuable fields.
-     *
-     * @param t must not be {@literal null}.
-     * @return the user with the given id or {@literal Optional#empty()} if none found.
-     */
-    Optional<T> getUserByValuableFields(T t);
+    T findUser(UserDTO dto);
 
-    /**
-     * Retrieves {@literal true} if the given login found.
-     *
-     * @param login must not be {@literal null}.
-     * @return {@literal true} if the given login found or {@literal false} if none found.
-     */
-    boolean checkUserLogin(String login);
+    boolean checkUser(String login);
 
-    /**
-     * Retrieves {@literal true} if the given user's id found.
-     *
-     * @param t must not be {@literal null}.
-     * @return {@literal true} if the given user's id found or {@literal false} if none found.
-     */
-    boolean checkUserId(T t);
+    boolean checkUser(Long id);
+
+    List<ProductInBucket> getProductsInBucket(Long id);
+
+    Long addProductInBucket(ProductInBucketWithIdDTO dto);
+
+    void deleteProductInBucket(ProductInBucketDeleteDTO dto);
+
+    Long decreaseProductInBucket(ProductInBucketWithIdDTO dto);
+
+    void deleteProductsInBucket(Long id);
+
+    double getCostProductsInBucket(Long id);
+
+    void buyProductsInBucket(Long id);
+
 }

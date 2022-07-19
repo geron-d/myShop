@@ -27,13 +27,13 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * A name of the category of product.
      */
-    @Column(name = "category")
-    private String category;
+    @Column(name = "name", unique = true, length = 30)
+    private String name;
 
     /**
      * Initializes a newly created {@code Category} object so that it represents
@@ -42,7 +42,7 @@ public class Category {
      * @param category A {@code String}
      */
     public Category(String category) {
-        this.category = category;
+        this.name = category;
     }
 
 }

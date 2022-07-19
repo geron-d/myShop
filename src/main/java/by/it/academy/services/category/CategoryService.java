@@ -1,63 +1,25 @@
 package by.it.academy.services.category;
 
-import by.it.academy.contants.Order;
+import by.it.academy.dtos.requests.category.CategoryDTO;
 
 import java.util.List;
-import java.util.Optional;
 
-/**
- * Interface for generic operations on a service for a specific type of category of product.
- *
- * @param <T> the type of the entity to handle
- * @author Maxim Zhevnov
- */
 public interface CategoryService<T> {
 
-    /**
-     * Retrieves a category by its id.
-     *
-     * @param id must not be less than 1.
-     * @return the category with the given id or {@literal Optional#empty()} if none found.
-     */
-    Optional<T> getCategoryById(int id);
+    T findCategory(Long id);
 
-    /**
-     * Saves a given category. Use the returned instance for further operations as the save operation might have
-     * changed the category instance completely.
-     *
-     * @param t must not be {@literal null}.
-     * @return the saved category; will never be {@literal null}.
-     */
-    Optional<T> saveCategory(T t);
+    Long createCategory(CategoryDTO request);
 
-    /**
-     * Deletes a given category.
-     *
-     * @param t must not be {@literal null}.
-     */
-    void deleteCategory(T t);
+    Long updateCategory(Long id, CategoryDTO dto);
 
-    /**
-     * Retrieves a category by its name.
-     *
-     * @param categoryName must not be {@literal null}.
-     * @return the category with the given id or {@literal Optional#empty()} if none found.
-     */
-    Optional<T> getCategoryByName(String categoryName);
+    void deleteCategory(Long id);
 
-    /**
-     * Returns all instances of the category in straight or reverse order.
-     *
-     * @param order must be ASC or DESC.
-     * @return all categories
-     */
-    List<T> getAllCategories(Order order);
+    T findCategory(String name);
 
-    /**
-     * Retrieves a category by its valuable fields.
-     *
-     * @param t must not be {@literal null}.
-     * @return the category with the given valuable fields or {@literal Optional#empty()} if none found.
-     */
-    Optional<T> getCategoryByValuableFields(T t);
+    List<T> findCategories();
+
+    List<T> searchCategories(String search);
+
+    List<T> findCategories(List<String> categoryNames);
+
 }

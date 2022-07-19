@@ -28,21 +28,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * A category of product.
      */
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "category_id")
     private Category category;
 
     /**
      * A type of product.
      */
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "type_id")
     private Type type;
 
@@ -67,9 +65,8 @@ public class Product {
     /**
      * A producer of product.
      */
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "producer_id")
+    @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "producer_id", nullable = false)
     private Producer producer;
 
     /**
@@ -113,13 +110,13 @@ public class Product {
      * Initializes a newly created {@code Product} object so that it represents
      * the product
      *
-     * @param category      A {@code Category}
-     * @param type          A {@code Type}
-     * @param name          A {@code String}
-     * @param imagePath     A {@code String}
-     * @param producer      A {@code Producer}
-     * @param amount        An {@code int}
-     * @param price         A {@code double}
+     * @param category  A {@code Category}
+     * @param type      A {@code Type}
+     * @param name      A {@code String}
+     * @param imagePath A {@code String}
+     * @param producer  A {@code Producer}
+     * @param amount    An {@code int}
+     * @param price     A {@code double}
      */
     public Product(Category category, Type type, String name, String imagePath, Producer producer, int amount,
                    double price) {
@@ -136,7 +133,7 @@ public class Product {
      * Initializes a newly created {@code Product} object so that it represents
      * the product
      *
-     * @param product      A {@code Product}
+     * @param product A {@code Product}
      */
     public Product(Product product) {
         this.category = product.getCategory();
@@ -148,4 +145,5 @@ public class Product {
         this.amount = product.getAmount();
         this.price = product.getPrice();
     }
+
 }

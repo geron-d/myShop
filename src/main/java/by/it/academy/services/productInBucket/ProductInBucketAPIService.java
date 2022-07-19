@@ -1,261 +1,146 @@
 package by.it.academy.services.productInBucket;
 
-import by.it.academy.contants.Constants;
-import by.it.academy.contants.Order;
+import by.it.academy.dtos.requests.productInBucket.ProductInBucketDTO;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
-import by.it.academy.repositories.hiber.productInBucket.ProductInBucketRepository;
-import by.it.academy.services.product.ProductService;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import by.it.academy.repositories.productInBucket.ProductInBucketRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
-/**
- * Implementation of the by.it.academy.services.ProductInBucketService interface.
- *
- * @author Maxim Zhevnov
- */
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class ProductInBucketAPIService implements ProductInBucketService<ProductInBucket> {
-    private final Session session;
-    private final ProductInBucketRepository<ProductInBucket> productInBucketRepository;
-    private final ProductService<Product> productService;
 
-    /**
-     * Creates a new {@link ProductInBucketRepository} to manage objects of the given session.
-     *
-     * @param session                   must not be {@literal null}.
-     * @param productInBucketRepository must not be {@literal null}.
-     * @param productService            must not be {@literal null}.
-     */
-    public ProductInBucketAPIService(Session session,
-                                     ProductInBucketRepository<ProductInBucket> productInBucketRepository,
-                                     ProductService<Product> productService) {
-        this.session = session;
-        this.productInBucketRepository = productInBucketRepository;
-        this.productService = productService;
+    private final ProductInBucketRepository productInBucketRepository;
+
+    @Override
+    public ProductInBucket findProductInBucket(Long id) {
+        return productInBucketRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#getProductInBucketById
-     */
     @Override
-    public Optional<ProductInBucket> getProductInBucketById(int id) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<ProductInBucket> productInBucket = productInBucketRepository.getProductInBucketById(id);
-
-        transaction.commit();
-
-        return productInBucket;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#saveProductInBucket
-     */
-    @Override
-    public Optional<ProductInBucket> saveProductInBucket(ProductInBucket productInBucket) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<ProductInBucket> optionalProductInBucket = productInBucketRepository
-                .saveProductInBucket(productInBucket);
-
-        transaction.commit();
-
-        return optionalProductInBucket;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#deleteProductInBucket
-     */
-    @Override
-    public void deleteProductInBucket(ProductInBucket productInBucket) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        productInBucketRepository.deleteProductInBucket(productInBucket);
-
-        transaction.commit();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#getAllProductsInBucket
-     */
-    @Override
-    public List<ProductInBucket> getAllProductsInBucket(Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<ProductInBucket> productsInBucket = productInBucketRepository
-                .getAllProductsInBucket(order);
-
-        transaction.commit();
-
-        return productsInBucket;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByUserProduct
-     */
-    @Override
-    public Optional<ProductInBucket> getProductInBucketByUserProduct(User user, Product product) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<ProductInBucket> optionalProductInBucket = productInBucketRepository
-                .getProductInBucketByUserProduct(user, product);
-
-        transaction.commit();
-
-        return optionalProductInBucket;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByValuableFields
-     */
-    @Override
-    public Optional<ProductInBucket> getProductInBucketByValuableFields(User user, Product product) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<ProductInBucket> optionalProductInBucket = productInBucketRepository
-                .getProductInBucketByValuableFields(user, product);
-
-        transaction.commit();
-
-        return optionalProductInBucket;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByValuableFields
-     */
-    @Override
-    public Optional<ProductInBucket> getProductInBucketByValuableFields(ProductInBucket productInBucket) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<ProductInBucket> optionalProductInBucket = productInBucketRepository
-                .getProductInBucketByValuableFields(productInBucket);
-
-        transaction.commit();
-
-        return optionalProductInBucket;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByUser
-     */
-    @Override
-    public List<ProductInBucket> getProductInBucketByUser(User user) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<ProductInBucket> productsInBucket = productInBucketRepository
-                .getProductInBucketByUser(user);
-
-        transaction.commit();
-
-        return productsInBucket;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#addAmountToExistProductInBucket
-     */
-    @Override
-    public Optional<ProductInBucket> addAmountToExistProductInBucket(ProductInBucket productInBucket, int n) {
-        Optional<ProductInBucket> optionalProductInBucket = Optional.ofNullable(productInBucket);
-
-        if (optionalProductInBucket.isPresent()) {
-            optionalProductInBucket = Optional.of(ProductInBucket.builder()
-                    .id(optionalProductInBucket.get().getId())
-                    .user(optionalProductInBucket.get().getUser())
-                    .product(optionalProductInBucket.get().getProduct())
-                    .amount(optionalProductInBucket.get().getAmount() + n).build());
-            return saveProductInBucket(optionalProductInBucket.get());
+    @Transactional
+    public Long createProductInBucket(ProductInBucketDTO dto) {
+        if (checkProductInBucket(dto.getUser(), dto.getProduct())) {
+            throw new EntityExistsException("such product in user bucket exists");
         }
-
-        return optionalProductInBucket;
+        ProductInBucket productInBucket = buildProductInBucket(dto);
+        return productInBucketRepository.save(productInBucket).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#add
-     */
     @Override
-    public Optional<ProductInBucket> add(User user, Product product) {
-        Optional<ProductInBucket> productInBucket = getProductInBucketByUserProduct(user, product);
-        if (productInBucket.isPresent()) {
-            return addAmountToExistProductInBucket(productInBucket.get(),
-                    Constants.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET);
+    @Transactional
+    public Long createProductInBucket(ProductInBucket productInBucket) {
+        if (checkProductInBucket(productInBucket.getUser(), productInBucket.getProduct())) {
+            throw new EntityExistsException("such product in user bucket exists");
+        }
+        return productInBucketRepository.save(productInBucket).getId();
+    }
+
+    @Override
+    @Transactional
+    public Long updateProductInBucket(ProductInBucket productInBucket) {
+        if (!checkProductInBucket(productInBucket.getId())) {
+            throw new NoSuchElementException("such product in user bucket doesn't exist");
+        }
+        return productInBucketRepository.save(productInBucket).getId();
+    }
+
+    @Override
+    @Transactional
+    public Long updateProductInBucket(Long id, ProductInBucketDTO dto) {
+        if (!checkProductInBucket(id)) {
+            throw new NoSuchElementException("such product in user bucket doesn't exist");
+        }
+        ProductInBucket productInBucket = buildProductInBucket(dto);
+        productInBucket.setId(id);
+        return productInBucketRepository.save(productInBucket).getId();
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductInBucket(Long id) {
+        ProductInBucket productInBucket = findProductInBucket(id);
+        productInBucket.setUser(null);
+        productInBucket.setProduct(null);
+        updateProductInBucket(productInBucket);
+        productInBucketRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public Long addProductInBucket(ProductInBucketDTO dto) {
+        ProductInBucket productInBucket = buildProductInBucket(dto);
+        if (checkProductInBucket(dto.getUser(), dto.getProduct())) {
+            productInBucket = findProductInBucket(productInBucket.getUser(), productInBucket.getProduct());
+            return updateProductInBucket(productInBucket);
         } else {
-            ProductInBucket productInBucketNew = ProductInBucket.builder()
-                    .user(user)
-                    .product(product)
-                    .amount(Constants.AMOUNT_PRODUCT_ADDED_WHEN_USER_PULL_ADD_TO_BUCKET).build();
-            return saveProductInBucket(productInBucketNew);
+            return createProductInBucket(productInBucket);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#deleteAmountProducts
-     */
     @Override
-    public void deleteAmountProducts(List<ProductInBucket> productsInBucket, Product product, int amount) {
-        productsInBucket.stream().filter(productInBucket ->
-                        Objects.equals(productInBucket.getProduct().getId(), product.getId()))
-                .forEach(productInBucket -> {
-                    if (productInBucket.getAmount() > amount) {
-                        productInBucket.setAmount(productInBucket.getAmount() - amount);
-                    } else if (productInBucket.getAmount() == amount) {
-                        deleteProductInBucket(productInBucket);
-                    }
-                });
+    @Transactional
+    public Long addProductInBucket(ProductInBucket productInBucket) {
+        if (checkProductInBucket(productInBucket.getId())) {
+            return updateProductInBucket(productInBucket);
+        } else {
+            return createProductInBucket(productInBucket);
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#getAllCost
-     */
     @Override
-    public double getAllCost(List<ProductInBucket> productsInBucket) {
-        return productsInBucket.stream()
-                .mapToDouble(productInBucket ->
-                        productInBucket.getProduct().getPrice() * productInBucket.getAmount()).sum();
+    public ProductInBucket findProductInBucket(User user, Product product) {
+        return productInBucketRepository.findByUserAndProduct(user, product);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#deleteAllProducts
-     */
     @Override
-    public void deleteAllProducts(List<ProductInBucket> productsInBucket) {
+    public boolean checkAmountProductInBucket(ProductInBucket productInBucket, int amount) {
+        return productInBucket.getAmount() > amount;
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductsInBucket(User user) {
+        List<ProductInBucket> productsInBucket = findProductsInBucket(user);
         productsInBucket.forEach(this::deleteProductInBucket);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductInBucketService#productsInBucket
-     */
     @Override
-    public void buy(List<ProductInBucket> productsInBucket) {
-        productsInBucket.forEach(productInBucket -> {
-            productService.decreaseProductAmount(productInBucket.getProduct(), productInBucket.getAmount());
-            deleteProductInBucket(productInBucket);
-        });
+    public List<ProductInBucket> findProductsInBucket(User user) {
+        return productInBucketRepository.findAllByUser(user);
     }
+
+    @Override
+    public void deleteProductInBucket(ProductInBucket productInBucket) {
+        productInBucket.setUser(null);
+        productInBucket.setProduct(null);
+        updateProductInBucket(productInBucket);
+        productInBucketRepository.deleteById(productInBucket.getId());
+    }
+
+    private boolean checkProductInBucket(User user, Product product) {
+        return productInBucketRepository.existsByUserAndProduct(user, product);
+    }
+
+    private boolean checkProductInBucket(Long id) {
+        return productInBucketRepository.existsById(id);
+    }
+
+    private ProductInBucket buildProductInBucket(ProductInBucketDTO dto) {
+        return ProductInBucket.builder()
+                .user(dto.getUser())
+                .product(dto.getProduct())
+                .amount(dto.getAmount())
+                .build();
+    }
+
 }

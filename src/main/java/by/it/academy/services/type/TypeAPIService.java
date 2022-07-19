@@ -1,126 +1,83 @@
 package by.it.academy.services.type;
 
-import by.it.academy.contants.Order;
+import by.it.academy.dtos.requests.type.TypeDTO;
 import by.it.academy.entities.Type;
-import by.it.academy.repositories.hiber.type.TypeAPIRepository;
-import by.it.academy.repositories.hiber.type.TypeRepository;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import by.it.academy.repositories.type.TypeRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
-/**
- * Implementation of the by.it.academy.services.TypeService interface.
- *
- * @author Maxim Zhevnov
- */
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class TypeAPIService implements TypeService<Type> {
-    private final Session session;
-    private final TypeRepository<Type> typeRepository;
 
-    /**
-     * Creates a new {@link TypeAPIRepository} to manage objects of the given session.
-     *
-     * @param session        must not be {@literal null}.
-     * @param typeRepository must not be {@literal null}.
-     */
-    public TypeAPIService(Session session, TypeRepository<Type> typeRepository) {
-        this.session = session;
-        this.typeRepository = typeRepository;
-    }
+    private final TypeRepository typeRepository;
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.TypeService#getTypeById
-     */
     @Override
-    public Optional<Type> getTypeById(int id) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Type> type = typeRepository.getTypeById(id);
-
-        transaction.commit();
-
-        return type;
+    public Type findType(Long id) {
+        return typeRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.TypeService#saveType
-     */
     @Override
-    public Optional<Type> saveType(Type type) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Type> optionalType = typeRepository.saveType(type);
-
-        transaction.commit();
-
-        return optionalType;
+    @Transactional
+    public Long createType(TypeDTO dto) {
+        Type type = buildType(dto);
+        return typeRepository.save(type).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.TypeService#deleteType
-     */
     @Override
-    public void deleteType(Type type) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        typeRepository.deleteType(type);
-
-        transaction.commit();
+    @Transactional
+    public Long updateType(Long id, TypeDTO dto) {
+        if (!checkType(id)) {
+            throw new NoSuchElementException();
+        }
+        Type type = buildType(dto);
+        type.setId(id);
+        return typeRepository.save(type).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.TypeService#getTypeByName
-     */
     @Override
-    public Optional<Type> getTypeByName(String typeName) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Type> optionalType = typeRepository.getTypeByName(typeName);
-
-        transaction.commit();
-
-        return optionalType;
+    public void deleteType(Long id) {
+        typeRepository.deleteById(id);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.TypeService#getAllTypes
-     */
     @Override
-    public List<Type> getAllTypes(Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Type> types = typeRepository.getAllTypes(order);
-
-        transaction.commit();
-
-        return types;
+    public Type findType(String name) {
+        return typeRepository.findTypeByName(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.TypeService#getTypeByValuableFields
-     */
     @Override
-    public Optional<Type> getTypeByValuableFields(Type type) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Type> optionalType = typeRepository.getTypeByValuableFields(type);
-
-        transaction.commit();
-
-        return optionalType;
+    public List<Type> findTypes() {
+        return typeRepository.findAll();
     }
+
+    @Override
+    public List<Type> searchTypes(String search) {
+        return typeRepository.searchAllByNameContains(search);
+    }
+
+    @Override
+    @Transactional
+    public List<Type> findTypes(List<String> typeNames) {
+        return typeNames.stream()
+                .map(this::findType)
+                .collect(Collectors.toList());
+    }
+
+    private boolean checkType(Long id) {
+        return typeRepository.existsById(id);
+    }
+
+    private Type buildType(TypeDTO dto) {
+        return Type.builder()
+                .name(dto.getName())
+                .build();
+    }
+
 }

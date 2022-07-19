@@ -1,306 +1,254 @@
 package by.it.academy.services.product;
 
-import by.it.academy.comparators.ProductIdDescComparator;
-import by.it.academy.contants.Order;
+import by.it.academy.comparators.product.ProductIdDescComparator;
+import by.it.academy.dtos.requests.product.ProductDTO;
+import by.it.academy.dtos.requests.product.ProductDecreaseRequest;
+import by.it.academy.dtos.requests.product.SortProductRequest;
 import by.it.academy.entities.Category;
+import by.it.academy.entities.Producer;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.Type;
-import by.it.academy.repositories.hiber.product.ProductAPIRepository;
-import by.it.academy.repositories.hiber.product.ProductRepository;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import by.it.academy.exceptions.product.HaveNotEnoughProductException;
+import by.it.academy.repositories.product.ProductRepository;
+import by.it.academy.services.category.CategoryService;
+import by.it.academy.services.producer.ProducerService;
+import by.it.academy.services.type.TypeService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import javax.persistence.EntityExistsException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Implementation of the by.it.academy.services.ProductService interface.
- *
- * @author Maxim Zhevnov
- */
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class ProductAPIService implements ProductService<Product> {
-    private final Session session;
-    private final ProductRepository<Product> productRepository;
 
-    /**
-     * Creates a new {@link ProductAPIRepository} to manage objects of the given session.
-     *
-     * @param session must not be {@literal null}.
-     * @param productRepository must not be {@literal null}.
-     */
-    public ProductAPIService(Session session, ProductRepository<Product> productRepository) {
-        this.session = session;
-        this.productRepository = productRepository;
+    private final ProductRepository productRepository;
+    private final CategoryService<Category> categoryService;
+    private final TypeService<Type> typeService;
+    private final ProducerService<Producer> producerService;
+
+    @Override
+    public Product findProduct(Long id) {
+        return productRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#getProductById
-     */
     @Override
-    public Optional<Product> getProductById(int id) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Product> product = productRepository.getProductById(id);
-
-        transaction.commit();
-
-        return product;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#saveProduct
-     */
-    @Override
-    public Optional<Product> saveProduct(Product product) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Product> optionalProduct = productRepository.saveProduct(product);
-
-        transaction.commit();
-
-        return optionalProduct;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#deleteProduct
-     */
-    @Override
-    public void deleteProduct(Product product) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        productRepository.deleteProduct(product);
-
-        transaction.commit();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#getAllProducts
-     */
-    @Override
-    public List<Product> getAllProducts(Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Product> products = productRepository.getAllProducts(order);
-
-        transaction.commit();
-
-        return products;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#getProductByCategoryTypeProducerName
-     */
-    @Override
-    public Optional<Product> getProductByCategoryTypeProducerName(Product product) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Product> optionalProduct = productRepository.getProductByCategoryTypeProducerName(product);
-
-        transaction.commit();
-
-        return optionalProduct;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#setProduct
-     */
-    @Override
-    public Optional<Product> setProduct(Product product) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Product> optionalProduct = productRepository.setProduct(product);
-
-        transaction.commit();
-
-        return optionalProduct;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#getProductByValuableFields
-     */
-    @Override
-    public Optional<Product> getProductByValuableFields(Product product) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Product> optionalProduct = productRepository.getProductByValuableFields(product);
-
-        transaction.commit();
-
-        return optionalProduct;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#getLastProducts
-     */
-    @Override
-    public List<Product> getLastProducts(int amount, Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Product> products = productRepository.getLastProducts(amount, order);
-
-        transaction.commit();
-
-        return products;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#getProductsByCategory
-     */
-    @Override
-    public List<Product> getProductsByCategory(Category category, Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Product> products = productRepository.getProductsByCategory(category, order);
-
-        transaction.commit();
-
-        return products;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#search
-     */
-    @Override
-    public List<Product> search(String search) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Product> products = productRepository.search(search);
-
-        transaction.commit();
-
-        return products;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#getProductsByType
-     */
-    @Override
-    public List<Product> getProductsByType(Type type, Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Product> products = productRepository.getProductsByType(type, order);
-
-        transaction.commit();
-
-        return products;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#checkProductAmount
-     */
-    @Override
-    public boolean checkProductAmount(Product product) {
-        Optional<Product> optionalProduct = Optional.ofNullable(product);
-        return optionalProduct.filter(value -> value.getAmount() > 0).isPresent();
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#decreaseProductAmount
-     */
-    @Override
-    public Optional<Product> decreaseProductAmount(Product product, int amount) {
-        Optional<Product> optionalProduct = Optional.ofNullable(product);
-        if (optionalProduct.isPresent()) {
-            if (optionalProduct.get().getAmount() >= amount) {
-                optionalProduct = Optional.of(Product.builder()
-                        .id(optionalProduct.get().getId())
-                        .category(optionalProduct.get().getCategory())
-                        .type(optionalProduct.get().getType())
-                        .name(optionalProduct.get().getName())
-                        .imagePath(optionalProduct.get().getImagePath())
-                        .dateInserting(optionalProduct.get().getDateInserting())
-                        .producer(optionalProduct.get().getProducer())
-                        .amount(optionalProduct.get().getAmount() - amount)
-                        .price(optionalProduct.get().getPrice())
-                        .build());
-                return saveProduct(optionalProduct.get());
-            }
+    @Transactional
+    public Long createProduct(ProductDTO dto) {
+        if (checkProduct(dto)) {
+            throw new EntityExistsException();
         }
-        return optionalProduct;
+        Product product = buildProduct(dto);
+        return productRepository.save(product).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#sortByCategory
-     */
     @Override
-    public List<Product> sortByCategory(List<Category> categories) {
-        List<Product> productsInCategories = new ArrayList<>();
-        if (Objects.isNull(categories)) {
-            return productsInCategories;
+    @Transactional
+    public Long updateProduct(Long id, ProductDTO dto) {
+        if (!checkProduct(id)) {
+            throw new NoSuchElementException();
+        } else if (checkProduct(dto)) {
+            throw new EntityExistsException();
         }
-        categories.stream()
-                .map(category -> getProductsByCategory(category, Order.ASC))
-                .forEachOrdered(productsInCategories::addAll);
-        return productsInCategories;
+        Product product = buildProduct(dto);
+        product.setId(id);
+        return productRepository.save(product).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#sortByType
-     */
     @Override
-    public List<Product> sortByType(List<Type> types) {
-        List<Product> productsInTypes = new ArrayList<>();
-        if (Objects.isNull(types)) {
-            return productsInTypes;
+    public Long updateProduct(Product product) {
+        if (!checkProduct(product.getId())) {
+            throw new NoSuchElementException();
         }
-        types.stream()
-                .map(type -> getProductsByType(type, Order.ASC))
-                .forEachOrdered(productsInTypes::addAll);
-        return productsInTypes;
+        return productRepository.save(product).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.services.ProductService#sort
-     */
     @Override
-    public List<Product> sort(String[] categories, String[] types) {
-        List<Category> categoryList = Arrays.stream(categories)
-                .map(category -> productRepository.getCategoryRepository().getCategoryByName(category).get())
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Product> findProducts() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public List<Product> findProducts(String name) {
+        return productRepository.findAllByName(name);
+    }
+
+    @Override
+    @Transactional
+    public List<Product> findProducts(int amountLastProducts) {
+        Pageable lastProducts = PageRequest.of(0, amountLastProducts, Sort.by("id").descending());
+        return productRepository.findAll(lastProducts).getContent();
+    }
+
+    @Override
+    @Transactional
+    public List<Product> findProductsByCategoryName(String category) {
+        return productRepository.findAllByCategory(categoryService.findCategory(category));
+    }
+
+    @Override
+    public List<Product> findProducts(Category category) {
+        return productRepository.findAllByCategory(category);
+    }
+
+    @Override
+    public List<Product> findProducts(Type type) {
+        return productRepository.findAllByType(type);
+    }
+
+    @Override
+    public List<Product> findProductsByTypeName(String type) {
+        return productRepository.findAllByType(typeService.findType(type));
+    }
+
+    @Override
+    public List<Product> findProducts(Producer producer) {
+        return productRepository.findAllByProducer(producer);
+    }
+
+    @Override
+    public List<Product> findProductsByProducerName(String producer) {
+        return productRepository.findAllByProducer(producerService.findProducer(producer));
+    }
+
+    @Override
+    @Transactional
+    public List<Product> searchProducts(String search) {
+        List<Product> products = productRepository.searchAllByNameContains(search);
+        products.addAll(searchProductsByCategories(search));
+        products.addAll(searchProductsByTypes(search));
+        products.addAll(searchProductsByProducers(search));
+        return products.stream()
+                .distinct()
                 .collect(Collectors.toList());
-        List<Type> typeList = Arrays.stream(types)
-                .map(type -> productRepository.getTypeRepository().getTypeByName(type).get())
-                .collect(Collectors.toList());
-        List<Product> sortProducts = new ArrayList<>();
-        List<Product> productsInCategories = sortByCategory(categoryList);
-        List<Product> productsInTypes = sortByType(typeList);
-        if (categoryList.isEmpty() && typeList.isEmpty()) {
-            return sortProducts;
-        } else if (!categoryList.isEmpty()) {
-            sortProducts.addAll(productsInCategories);
-        }
-        if (!typeList.isEmpty()) {
-            sortProducts.addAll(productsInTypes);
-        }
-        Comparator<Product> productComparator = new ProductIdDescComparator();
-        sortProducts = sortProducts.stream().distinct().sorted(productComparator).collect(Collectors.toList());
-        return sortProducts;
     }
+
+    private boolean checkProductAmount(Product product, int amount) {
+        return Optional.ofNullable(product).filter(value -> value.getAmount() >= amount).isPresent();
+    }
+
+    @Override
+    @Transactional
+    public Long decreaseProductAmount(ProductDecreaseRequest request) {
+        Product product = findProduct(request.getProductId());
+        if (!checkProductAmount(product, request.getAmount())) {
+            throw new HaveNotEnoughProductException("haven't enough product");
+        }
+        product.setAmount(product.getAmount() - request.getAmount());
+        return updateProduct(product);
+    }
+
+    @Override
+    @Transactional
+    public List<Product> sortProducts(SortProductRequest request) {
+        List<Product> products = findProductsByCategories(request.getCategories());
+        products.addAll(findProductsByTypes(request.getTypes()));
+        products.addAll(findProductsByProducers(request.getProducers()));
+        return products.stream()
+                .distinct()
+                .sorted(new ProductIdDescComparator())
+                .collect(Collectors.toList());
+    }
+
+    private List<Product> findProductsByCategories(List<String> categories) {
+        List<Product> products = new ArrayList<>();
+        for (String category : categories) {
+            products.addAll(findProductsByCategoryName(category));
+        }
+        return products;
+    }
+
+    private List<Product> findProductsByTypes(List<String> types) {
+        List<Product> products = new ArrayList<>();
+        for (String type : types) {
+            products.addAll(findProductsByTypeName(type));
+        }
+        return products;
+    }
+
+    private List<Product> findProductsByProducers(List<String> producers) {
+        List<Product> products = new ArrayList<>();
+        for (String producer : producers) {
+            products.addAll(findProductsByProducerName(producer));
+        }
+        return products;
+    }
+
+    private List<Product> searchProductsByCategories(List<Category> categories) {
+        List<Product> products = new ArrayList<>();
+        for (Category category : categories) {
+            products.addAll(findProducts(category));
+        }
+        return products;
+    }
+
+    private List<Product> searchProductsByCategories(String search) {
+        return searchProductsByCategories(categoryService.searchCategories(search));
+    }
+
+    private List<Product> searchProductsByTypes(List<Type> types) {
+        List<Product> products = new ArrayList<>();
+        for (Type type : types) {
+            products.addAll(findProducts(type));
+        }
+        return products;
+    }
+
+    private List<Product> searchProductsByTypes(String search) {
+        return searchProductsByTypes(typeService.searchTypes(search));
+    }
+
+    private List<Product> searchProductsByProducers(List<Producer> producers) {
+        List<Product> products = new ArrayList<>();
+        for (Producer producer : producers) {
+            products.addAll(findProducts(producer));
+        }
+        return products;
+    }
+
+    private List<Product> searchProductsByProducers(String search) {
+        return searchProductsByProducers(producerService.searchProducers(search));
+    }
+
+    private boolean checkProduct(ProductDTO dto) {
+        Category category = categoryService.findCategory(dto.getCategory());
+        Type type = typeService.findType(dto.getType());
+        Producer producer = producerService.findProducer(dto.getProducer());
+        return productRepository.existsByCategoryAndProducerAndTypeAndName(category, producer, type, dto.getName());
+    }
+
+    private boolean checkProduct(Long id) {
+        return productRepository.existsById(id);
+    }
+
+    private Product buildProduct(ProductDTO dto) {
+        return Product.builder()
+                .category(categoryService.findCategory(dto.getCategory()))
+                .type(typeService.findType(dto.getType()))
+                .name(dto.getName())
+                .imagePath(dto.getImagePath())
+                .dateInserting(LocalDate.now())
+                .producer(producerService.findProducer(dto.getProducer()))
+                .price(dto.getPrice())
+                .amount(dto.getAmount())
+                .build();
+    }
+
 }

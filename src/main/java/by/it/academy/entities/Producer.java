@@ -27,13 +27,13 @@ public class Producer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * A name of the producer of product.
      */
-    @Column(name = "producer")
-    private String producer;
+    @Column(name = "name", unique = true, length = 100)
+    private String name;
 
     /**
      * Initializes a newly created {@code Producer} object so that it represents
@@ -42,6 +42,7 @@ public class Producer {
      * @param producer A {@code String}
      */
     public Producer(String producer) {
-        this.producer = producer;
+        this.name = producer;
     }
+
 }

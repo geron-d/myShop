@@ -1,127 +1,83 @@
 package by.it.academy.services.producer;
 
-import by.it.academy.contants.Order;
+import by.it.academy.dtos.requests.producer.ProducerDTO;
 import by.it.academy.entities.Producer;
-import by.it.academy.repositories.hiber.producer.ProducerAPIRepository;
-import by.it.academy.repositories.hiber.producer.ProducerRepository;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import by.it.academy.repositories.producer.ProducerRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
-/**
- * Implementation of the by.it.academy.sessions.ProducerService interface.
- *
- * @author Maxim Zhevnov
- */
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class ProducerAPIService implements ProducerService<Producer> {
-    private final Session session;
-    private final ProducerRepository<Producer> producerRepository;
 
-    /**
-     * Creates a new {@link ProducerAPIRepository} to manage objects of the given {@link Session}
-     * and {@link ProducerRepository}.
-     *
-     * @param session            must not be {@literal null}.
-     * @param producerRepository must not be {@literal null}.
-     */
-    public ProducerAPIService(Session session, ProducerRepository<Producer> producerRepository) {
-        this.session = session;
-        this.producerRepository = producerRepository;
-    }
+    private final ProducerRepository producerRepository;
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.sessions.ProducerService#getProducerById
-     */
     @Override
-    public Optional<Producer> getProducerById(int id) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Producer> producer = producerRepository.getProducerById(id);
-
-        transaction.commit();
-
-        return producer;
+    public Producer findProducer(Long id) {
+        return producerRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.sessions.ProducerService#saveProducer
-     */
     @Override
-    public Optional<Producer> saveProducer(Producer producer) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Producer> optionalProducer = producerRepository.saveProducer(producer);
-
-        transaction.commit();
-
-        return optionalProducer;
+    @Transactional
+    public Long createProducer(ProducerDTO dto) {
+        Producer producer = buildProducer(dto);
+        return producerRepository.save(producer).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.sessions.ProducerService#deleteProducer
-     */
     @Override
-    public void deleteProducer(Producer producer) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        producerRepository.deleteProducer(producer);
-
-        transaction.commit();
+    @Transactional
+    public Long updateProducer(Long id, ProducerDTO dto) {
+        if (!checkProducer(id)) {
+            throw new NoSuchElementException();
+        }
+        Producer producer = buildProducer(dto);
+        producer.setId(id);
+        return producerRepository.save(producer).getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.sessions.ProducerService#getProducerByName
-     */
     @Override
-    public Optional<Producer> getProducerByName(String producerName) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Producer> optionalProducer = producerRepository.getProducerByName(producerName);
-
-        transaction.commit();
-
-        return optionalProducer;
+    public void deleteProducer(Long id) {
+        producerRepository.deleteById(id);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.sessions.ProducerService#getAllProducers
-     */
     @Override
-    public List<Producer> getAllProducers(Order order) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        List<Producer> producers = producerRepository.getAllProducers(order);
-
-        transaction.commit();
-
-        return producers;
+    public Producer findProducer(String name) {
+        return producerRepository.findProducerByName(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see by.it.academy.sessions.ProducerService#getProducerByValuableFields
-     */
     @Override
-    public Optional<Producer> getProducerByValuableFields(Producer producer) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-
-        Optional<Producer> optionalProducer = producerRepository.getProducerByValuableFields(producer);
-
-        transaction.commit();
-
-        return optionalProducer;
+    public List<Producer> findProducers() {
+        return producerRepository.findAll();
     }
+
+    @Override
+    public List<Producer> searchProducers(String search) {
+        return producerRepository.searchAllByNameContains(search);
+    }
+
+    @Override
+    @Transactional
+    public List<Producer> findProducers(List<String> producerNames) {
+        return producerNames.stream()
+                .map(this::findProducer)
+                .collect(Collectors.toList());
+    }
+
+    private boolean checkProducer(Long id) {
+        return producerRepository.existsById(id);
+    }
+
+    private Producer buildProducer(ProducerDTO dto) {
+        return Producer.builder()
+                .name(dto.getName())
+                .build();
+    }
+
 }
