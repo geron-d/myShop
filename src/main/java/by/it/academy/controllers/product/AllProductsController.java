@@ -16,6 +16,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller view all products in the store.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/products")
 public class AllProductsController extends DefaultController {
     Logger log = Logger.getLogger(AllProductsController.class);

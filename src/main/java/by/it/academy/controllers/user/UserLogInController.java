@@ -15,6 +15,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Controller do login user.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/user/login")
 public class UserLogInController extends DefaultController {
     Logger log = Logger.getLogger(UserLogInController.class);

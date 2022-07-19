@@ -13,13 +13,24 @@ import org.hibernate.Transaction;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Implementation of the by.it.academy.services.ProductInBucketService interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class ProductInBucketAPIService implements ProductInBucketService<ProductInBucket> {
     private final Session session;
     private final ProductInBucketRepository<ProductInBucket> productInBucketRepository;
     private final ProductService<Product> productService;
 
+    /**
+     * Creates a new {@link ProductInBucketRepository} to manage objects of the given session.
+     *
+     * @param session                   must not be {@literal null}.
+     * @param productInBucketRepository must not be {@literal null}.
+     * @param productService            must not be {@literal null}.
+     */
     public ProductInBucketAPIService(Session session,
                                      ProductInBucketRepository<ProductInBucket> productInBucketRepository,
                                      ProductService<Product> productService) {
@@ -28,6 +39,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         this.productService = productService;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#getProductInBucketById
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketById(int id) {
         Transaction transaction = session.getTransaction();
@@ -40,6 +55,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return productInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#saveProductInBucket
+     */
     @Override
     public Optional<ProductInBucket> saveProductInBucket(ProductInBucket productInBucket) {
         Transaction transaction = session.getTransaction();
@@ -53,6 +72,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return optionalProductInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#deleteProductInBucket
+     */
     @Override
     public void deleteProductInBucket(ProductInBucket productInBucket) {
         Transaction transaction = session.getTransaction();
@@ -63,6 +86,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         transaction.commit();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#getAllProductsInBucket
+     */
     @Override
     public List<ProductInBucket> getAllProductsInBucket(Order order) {
         Transaction transaction = session.getTransaction();
@@ -76,6 +103,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return productsInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByUserProduct
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketByUserProduct(User user, Product product) {
         Transaction transaction = session.getTransaction();
@@ -89,6 +120,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return optionalProductInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByValuableFields
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketByValuableFields(User user, Product product) {
         Transaction transaction = session.getTransaction();
@@ -102,6 +137,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return optionalProductInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByValuableFields
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketByValuableFields(ProductInBucket productInBucket) {
         Transaction transaction = session.getTransaction();
@@ -115,6 +154,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return optionalProductInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#getProductInBucketByUser
+     */
     @Override
     public List<ProductInBucket> getProductInBucketByUser(User user) {
         Transaction transaction = session.getTransaction();
@@ -128,6 +171,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return productsInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#addAmountToExistProductInBucket
+     */
     @Override
     public Optional<ProductInBucket> addAmountToExistProductInBucket(ProductInBucket productInBucket, int n) {
         Optional<ProductInBucket> optionalProductInBucket = Optional.ofNullable(productInBucket);
@@ -144,6 +191,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         return optionalProductInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#add
+     */
     @Override
     public Optional<ProductInBucket> add(User user, Product product) {
         Optional<ProductInBucket> productInBucket = getProductInBucketByUserProduct(user, product);
@@ -159,6 +210,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#deleteAmountProducts
+     */
     @Override
     public void deleteAmountProducts(List<ProductInBucket> productsInBucket, Product product, int amount) {
         productsInBucket.stream().filter(productInBucket ->
@@ -172,6 +227,10 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
                 });
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#getAllCost
+     */
     @Override
     public double getAllCost(List<ProductInBucket> productsInBucket) {
         return productsInBucket.stream()
@@ -179,11 +238,19 @@ public class ProductInBucketAPIService implements ProductInBucketService<Product
                         productInBucket.getProduct().getPrice() * productInBucket.getAmount()).sum();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#deleteAllProducts
+     */
     @Override
     public void deleteAllProducts(List<ProductInBucket> productsInBucket) {
         productsInBucket.forEach(this::deleteProductInBucket);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.ProductInBucketService#productsInBucket
+     */
     @Override
     public void buy(List<ProductInBucket> productsInBucket) {
         productsInBucket.forEach(productInBucket -> {

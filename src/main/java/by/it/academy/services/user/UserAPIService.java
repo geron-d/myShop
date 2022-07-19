@@ -9,15 +9,30 @@ import org.hibernate.Transaction;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the by.it.academy.service.UserService interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class UserAPIService implements UserService<User> {
     private final Session session;
     private final UserRepository<User> userRepository;
 
+    /**
+     * Creates a new {@link UserRepository} to manage objects of the given session.
+     *
+     * @param session        must not be {@literal null}.
+     * @param userRepository must not be {@literal null}.
+     */
     public UserAPIService(Session session, UserRepository<User> userRepository) {
         this.session = session;
         this.userRepository = userRepository;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#getUserById
+     */
     @Override
     public Optional<User> getUserById(int id) {
         Transaction transaction = session.getTransaction();
@@ -30,6 +45,10 @@ public class UserAPIService implements UserService<User> {
         return user;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#saveUser
+     */
     @Override
     public Optional<User> saveUser(User user) {
         Transaction transaction = session.getTransaction();
@@ -42,6 +61,10 @@ public class UserAPIService implements UserService<User> {
         return optionalUser;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#deleteUser
+     */
     @Override
     public void deleteUser(User user) {
         Transaction transaction = session.getTransaction();
@@ -52,6 +75,10 @@ public class UserAPIService implements UserService<User> {
         transaction.commit();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#getAllUsers
+     */
     @Override
     public List<User> getAllUsers(Order order) {
         Transaction transaction = session.getTransaction();
@@ -64,6 +91,10 @@ public class UserAPIService implements UserService<User> {
         return users;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#getUserByLoginPassword
+     */
     @Override
     public Optional<User> getUserByLoginPassword(String login, String password) {
         Transaction transaction = session.getTransaction();
@@ -76,6 +107,10 @@ public class UserAPIService implements UserService<User> {
         return optionalUser;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#getUserByLoginPassword
+     */
     @Override
     public Optional<User> getUserByLoginPassword(User user) {
         Transaction transaction = session.getTransaction();
@@ -88,6 +123,10 @@ public class UserAPIService implements UserService<User> {
         return optionalUser;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#getUserByValuableFields
+     */
     @Override
     public Optional<User> getUserByValuableFields(User user) {
         Transaction transaction = session.getTransaction();
@@ -100,6 +139,10 @@ public class UserAPIService implements UserService<User> {
         return optionalUser;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#checkUserLogin
+     */
     @Override
     public boolean checkUserLogin(String login) {
         Transaction transaction = session.getTransaction();
@@ -112,6 +155,10 @@ public class UserAPIService implements UserService<User> {
         return checkUserLogin;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.service.UserService#checkUserId
+     */
     @Override
     public boolean checkUserId(User user) {
         Transaction transaction = session.getTransaction();

@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller view user bucket.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/bucket")
 public class BucketController extends DefaultController {
     Logger log = Logger.getLogger(BucketController.class);

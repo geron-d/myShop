@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Controller perform sort products by category or type for admin.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = {"/products/sort/admin"})
 public class AdminSortController extends DefaultController {
     Logger log = Logger.getLogger(AdminSortController.class);

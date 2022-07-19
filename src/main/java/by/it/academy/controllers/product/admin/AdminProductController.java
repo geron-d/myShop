@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Controller view product for admin.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/products/product/admin")
 public class AdminProductController extends DefaultController {
     Logger log = Logger.getLogger(AdminProductController.class);

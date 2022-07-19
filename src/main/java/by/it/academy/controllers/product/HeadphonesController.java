@@ -19,6 +19,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller view products in category headphones.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/headphones")
 public class HeadphonesController extends DefaultController {
     Logger log = Logger.getLogger(HeadphonesController.class);

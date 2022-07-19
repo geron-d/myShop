@@ -15,6 +15,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller perform search in products for admin.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = {"/products/search/admin"})
 public class AdminSearchController extends DefaultController {
     Logger log = Logger.getLogger(AdminSearchController.class);

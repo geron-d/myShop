@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Controller view product.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/product")
 public class ProductController extends DefaultController {
     Logger log = Logger.getLogger(ProductController.class);

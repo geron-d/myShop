@@ -5,6 +5,7 @@ import by.it.academy.contants.Order;
 import by.it.academy.entities.Product;
 import by.it.academy.entities.ProductInBucket;
 import by.it.academy.entities.User;
+import by.it.academy.repositories.hiber.category.CategoryAPIRepository;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
@@ -14,14 +15,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the by.it.academy.repositories.hiber.ProductInBucketRepository interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class ProductInBucketAPIRepository implements ProductInBucketRepository<ProductInBucket> {
     Logger log = Logger.getLogger(ProductInBucketAPIRepository.class);
     private final Session session;
 
+    /**
+     * Creates a new {@link ProductInBucketRepository} to manage objects of the given session.
+     *
+     * @param session must not be {@literal null}.
+     */
     public ProductInBucketAPIRepository(Session session) {
         this.session = session;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#getProductInBucketById
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketById(int id) {
         Optional<ProductInBucket> productInBucket = Optional.empty();
@@ -35,6 +50,10 @@ public class ProductInBucketAPIRepository implements ProductInBucketRepository<P
         return productInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#saveProductInBucket
+     */
     @Override
     public Optional<ProductInBucket> saveProductInBucket(ProductInBucket productInBucket) {
         Optional<ProductInBucket> optionalProductInBucket = Optional.ofNullable(productInBucket);
@@ -58,6 +77,10 @@ public class ProductInBucketAPIRepository implements ProductInBucketRepository<P
         return getProductInBucketByValuableFields(productInBucket);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#deleteProductInBucket
+     */
     @Override
     public void deleteProductInBucket(ProductInBucket productInBucket) {
         Optional<ProductInBucket> optionalProductInBucket = Optional.ofNullable(productInBucket);
@@ -70,6 +93,10 @@ public class ProductInBucketAPIRepository implements ProductInBucketRepository<P
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#getAllProductsInBucket
+     */
     @Override
     public List<ProductInBucket> getAllProductsInBucket(Order order) {
         List<ProductInBucket> productsInBucket;
@@ -86,6 +113,10 @@ public class ProductInBucketAPIRepository implements ProductInBucketRepository<P
         return productsInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#getProductInBucketByUserProduct
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketByUserProduct(User user, Product product) {
         Optional<ProductInBucket> productInBucket = Optional.empty();
@@ -103,11 +134,19 @@ public class ProductInBucketAPIRepository implements ProductInBucketRepository<P
         return productInBucket;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#getProductInBucketByValuableFields
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketByValuableFields(User user, Product product) {
         return getProductInBucketByUserProduct(user, product);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#getProductInBucketByValuableFields
+     */
     @Override
     public Optional<ProductInBucket> getProductInBucketByValuableFields(ProductInBucket productInBucket) {
         Optional<ProductInBucket> optionalProductInBucket = Optional.ofNullable(productInBucket);
@@ -119,6 +158,10 @@ public class ProductInBucketAPIRepository implements ProductInBucketRepository<P
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductInBucketRepository#getProductInBucketByUser
+     */
     @Override
     public List<ProductInBucket> getProductInBucketByUser(User user) {
         List<ProductInBucket> productsInBucket;
@@ -130,9 +173,5 @@ public class ProductInBucketAPIRepository implements ProductInBucketRepository<P
         log.info("ProductInBucketAPIRepository - method: getProductInBucketByUser: " + productsInBucket);
 
         return productsInBucket;
-    }
-
-    public Session getSession() {
-        return session;
     }
 }

@@ -12,14 +12,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the by.it.academy.repositories.hiber.CategoryRepository interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class CategoryAPIRepository implements CategoryRepository<Category> {
     Logger log = Logger.getLogger(CategoryAPIRepository.class);
     private final Session session;
 
+    /**
+     * Creates a new {@link CategoryAPIRepository} to manage objects of the given session.
+     *
+     * @param session must not be {@literal null}.
+     */
     public CategoryAPIRepository(Session session) {
         this.session = session;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.CategoryRepository#getCategoryById
+     */
     @Override
     public Optional<Category> getCategoryById(int id) {
         Optional<Category> category = Optional.empty();
@@ -33,6 +47,10 @@ public class CategoryAPIRepository implements CategoryRepository<Category> {
         return category;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.CategoryRepository#saveCategory
+     */
     @Override
     public Optional<Category> saveCategory(Category category) {
         Optional<Category> optionalCategory = Optional.ofNullable(category);
@@ -56,6 +74,10 @@ public class CategoryAPIRepository implements CategoryRepository<Category> {
         return optionalCategory;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.CategoryRepository#deleteCategory
+     */
     @Override
     public void deleteCategory(Category category) {
         Optional<Category> optionalCategory = Optional.ofNullable(category);
@@ -68,6 +90,10 @@ public class CategoryAPIRepository implements CategoryRepository<Category> {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.CategoryRepository#getCategoryByName
+     */
     @Override
     public Optional<Category> getCategoryByName(String categoryName) {
         Optional<Category> category = Optional.empty();
@@ -83,6 +109,10 @@ public class CategoryAPIRepository implements CategoryRepository<Category> {
         return category;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.CategoryRepository#getAllCategories
+     */
     @Override
     public List<Category> getAllCategories(Order order) {
         List<Category> categories;
@@ -97,6 +127,10 @@ public class CategoryAPIRepository implements CategoryRepository<Category> {
         return categories;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.CategoryRepository#getCategoryByValuableFields
+     */
     @Override
     public Optional<Category> getCategoryByValuableFields(Category category) {
         Optional<Category> optionalCategory = Optional.ofNullable(category);
@@ -105,10 +139,6 @@ public class CategoryAPIRepository implements CategoryRepository<Category> {
         } else {
             return optionalCategory;
         }
-    }
-
-    public Session getSession() {
-        return session;
     }
 
 }

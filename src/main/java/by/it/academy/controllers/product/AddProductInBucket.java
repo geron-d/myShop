@@ -19,6 +19,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Controller add product to user bucket.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/product/addInBucket")
 public class AddProductInBucket extends DefaultController {
     Logger log = Logger.getLogger(AddProductInBucket.class);

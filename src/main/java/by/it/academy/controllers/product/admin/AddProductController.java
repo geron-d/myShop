@@ -20,6 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Controller perform adding product to the store.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/products/add")
 public class AddProductController extends DefaultController {
     Logger log = Logger.getLogger(AddProductController.class);

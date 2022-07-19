@@ -15,6 +15,11 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
+/**
+ * Filter for checking uniq user login.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebFilter(urlPatterns = "/user/create")
 public class UserUniqFilter implements Filter {
     Logger log = Logger.getLogger(UserUniqFilter.class);

@@ -12,6 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Controller do transition user to admin private room
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/admin/adminPrivateRoom")
 public class AdminPrivateRoomController extends DefaultController {
     Logger log = Logger.getLogger(AdminPrivateRoomController.class);

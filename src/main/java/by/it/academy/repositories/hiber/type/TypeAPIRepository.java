@@ -3,6 +3,7 @@ package by.it.academy.repositories.hiber.type;
 import by.it.academy.contants.HQL;
 import by.it.academy.contants.Order;
 import by.it.academy.entities.Type;
+import by.it.academy.repositories.hiber.category.CategoryAPIRepository;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
@@ -12,14 +13,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the by.it.academy.repositories.hiber.TypeRepository interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class TypeAPIRepository implements TypeRepository<Type> {
     Logger log = Logger.getLogger(TypeAPIRepository.class);
     private final Session session;
 
+    /**
+     * Creates a new {@link TypeAPIRepository} to manage objects of the given session.
+     *
+     * @param session must not be {@literal null}.
+     */
     public TypeAPIRepository(Session session) {
         this.session = session;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.TypeAPIRepository#getTypeById
+     */
     @Override
     public Optional<Type> getTypeById(int id) {
         Optional<Type> type = Optional.empty();
@@ -33,6 +48,10 @@ public class TypeAPIRepository implements TypeRepository<Type> {
         return type;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.TypeAPIRepository#saveType
+     */
     @Override
     public Optional<Type> saveType(Type type) {
         Optional<Type> optionalType = Optional.ofNullable(type);
@@ -55,6 +74,10 @@ public class TypeAPIRepository implements TypeRepository<Type> {
         return optionalType;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.TypeAPIRepository#deleteType
+     */
     @Override
     public void deleteType(Type type) {
         Optional<Type> optionalType = Optional.ofNullable(type);
@@ -67,6 +90,10 @@ public class TypeAPIRepository implements TypeRepository<Type> {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.TypeAPIRepository#getTypeByName
+     */
     @Override
     public Optional<Type> getTypeByName(String typeName) {
         Optional<Type> type = Optional.empty();
@@ -82,6 +109,10 @@ public class TypeAPIRepository implements TypeRepository<Type> {
         return type;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.TypeAPIRepository#getAllTypes
+     */
     @Override
     public List<Type> getAllTypes(Order order) {
         List<Type> types;
@@ -96,6 +127,10 @@ public class TypeAPIRepository implements TypeRepository<Type> {
         return types;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.TypeAPIRepository#getTypeByValuableFields
+     */
     @Override
     public Optional<Type> getTypeByValuableFields(Type type) {
         Optional<Type> optionalType = Optional.ofNullable(type);
@@ -104,9 +139,5 @@ public class TypeAPIRepository implements TypeRepository<Type> {
         } else {
             return optionalType;
         }
-    }
-
-    public Session getSession() {
-        return session;
     }
 }

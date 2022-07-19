@@ -13,14 +13,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the by.it.academy.repositories.hiber.ProducerRepository interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class ProducerAPIRepository implements ProducerRepository<Producer> {
     Logger log = Logger.getLogger(ProducerAPIRepository.class);
     private final Session session;
 
+    /**
+     * Creates a new {@link ProducerAPIRepository} to manage objects of the given session.
+     *
+     * @param session must not be {@literal null}.
+     */
     public ProducerAPIRepository(Session session) {
         this.session = session;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProducerRepository#getProducerById
+     */
     @Override
     public Optional<Producer> getProducerById(int id) {
         Optional<Producer> producer = Optional.empty();
@@ -34,6 +48,10 @@ public class ProducerAPIRepository implements ProducerRepository<Producer> {
         return producer;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProducerRepository#saveProducer
+     */
     @Override
     public Optional<Producer> saveProducer(Producer producer) {
         Optional<Producer> optionalProducer = Optional.ofNullable(producer);
@@ -58,6 +76,10 @@ public class ProducerAPIRepository implements ProducerRepository<Producer> {
         return optionalProducer;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProducerRepository#deleteProducer
+     */
     @Override
     public void deleteProducer(Producer producer) {
         Transaction transaction = session.getTransaction();
@@ -72,6 +94,10 @@ public class ProducerAPIRepository implements ProducerRepository<Producer> {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProducerRepository#getProducerByName
+     */
     @Override
     public Optional<Producer> getProducerByName(String producerName) {
         Optional<Producer> producer = Optional.empty();
@@ -87,6 +113,10 @@ public class ProducerAPIRepository implements ProducerRepository<Producer> {
         return producer;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProducerRepository#getAllProducers
+     */
     @Override
     public List<Producer> getAllProducers(Order order) {
         List<Producer> producers;
@@ -101,6 +131,10 @@ public class ProducerAPIRepository implements ProducerRepository<Producer> {
         return producers;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProducerRepository#getProducerByValuableFields
+     */
     @Override
     public Optional<Producer> getProducerByValuableFields(Producer producer) {
         Optional<Producer> optionalProducer = Optional.ofNullable(producer);
@@ -109,10 +143,6 @@ public class ProducerAPIRepository implements ProducerRepository<Producer> {
         } else {
             return optionalProducer;
         }
-    }
-
-    public Session getSession() {
-        return session;
     }
 
 }

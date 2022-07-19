@@ -15,6 +15,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller perform search in products.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/search")
 public class SearchController extends DefaultController {
     Logger log = Logger.getLogger(SearchController.class);

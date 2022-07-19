@@ -3,6 +3,7 @@ package by.it.academy.repositories.hiber.user;
 import by.it.academy.contants.HQL;
 import by.it.academy.contants.Order;
 import by.it.academy.entities.User;
+import by.it.academy.repositories.hiber.category.CategoryAPIRepository;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
@@ -12,14 +13,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the by.it.academy.repositories.hiber.UserRepository interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class UserAPIRepository implements UserRepository<User> {
     Logger log = Logger.getLogger(UserAPIRepository.class);
     private final Session session;
 
+    /**
+     * Creates a new {@link UserRepository} to manage objects of the given session.
+     *
+     * @param session must not be {@literal null}.
+     */
     public UserAPIRepository(Session session) {
         this.session = session;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#getUserById
+     */
     @Override
     public Optional<User> getUserById(int id) {
         Optional<User> user = Optional.empty();
@@ -33,6 +48,10 @@ public class UserAPIRepository implements UserRepository<User> {
         return user;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#saveUser
+     */
     @Override
     public Optional<User> saveUser(User user) {
         Optional<User> optionalUser = Optional.ofNullable(user);
@@ -56,6 +75,10 @@ public class UserAPIRepository implements UserRepository<User> {
         return getUserByValuableFields(user);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#deleteUser
+     */
     @Override
     public void deleteUser(User user) {
         Optional<User> optionalUser = Optional.ofNullable(user);
@@ -68,6 +91,10 @@ public class UserAPIRepository implements UserRepository<User> {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#getAllUsers
+     */
     @Override
     public List<User> getAllUsers(Order order) {
         List<User> users;
@@ -82,6 +109,10 @@ public class UserAPIRepository implements UserRepository<User> {
         return users;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#getUserByLoginPassword
+     */
     @Override
     public Optional<User> getUserByLoginPassword(String login, String password) {
         Optional<User> user = Optional.empty();
@@ -98,6 +129,10 @@ public class UserAPIRepository implements UserRepository<User> {
         return user;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#getUserByLoginPassword
+     */
     @Override
     public Optional<User> getUserByLoginPassword(User user) {
         Optional<User> optionalUser = Optional.ofNullable(user);
@@ -117,6 +152,10 @@ public class UserAPIRepository implements UserRepository<User> {
         return Optional.empty();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#getUserByValuableFields
+     */
     @Override
     public Optional<User> getUserByValuableFields(User user) {
         Optional<User> optionalUser = Optional.ofNullable(user);
@@ -127,6 +166,10 @@ public class UserAPIRepository implements UserRepository<User> {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#checkUserLogin
+     */
     @Override
     public boolean checkUserLogin(String login) {
         Optional<User> optionalUser;
@@ -142,6 +185,10 @@ public class UserAPIRepository implements UserRepository<User> {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.UserRepository#checkUserId
+     */
     @Override
     public boolean checkUserId(User user) {
         Optional<User> optionalUser = Optional.ofNullable(user);

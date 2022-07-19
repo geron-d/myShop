@@ -20,6 +20,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Controller view start page.
+ * On the start page view 4 last added products/
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/start")
 public class StartPageController extends DefaultController {
     Logger log = Logger.getLogger(StartPageController.class);

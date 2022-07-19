@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Controller perform sort products by category or type.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = {"/sort"})
 public class SortController extends DefaultController {
     Logger log = Logger.getLogger(SortController.class);

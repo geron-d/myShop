@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Controller do registration user.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/user/create")
 public class UserRegisterController extends DefaultController {
     Logger log = Logger.getLogger(UserRegisterController.class);

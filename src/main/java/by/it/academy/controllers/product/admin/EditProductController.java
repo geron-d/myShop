@@ -20,6 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Controller perform editing product in to the store.
+ *
+ * @author Maxim Zhevnov
+ */
 @WebServlet(urlPatterns = "/products/edit")
 public class EditProductController extends DefaultController {
     Logger log = Logger.getLogger(EditProductController.class);

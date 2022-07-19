@@ -35,6 +35,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 
+/**
+ * Default controller which realized creating session, repositories, services and getting product by param
+ *
+ * @author Maxim Zhevnov
+ */
 public class DefaultController extends HttpServlet {
     private final SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
     private final Session session = sessionFactory.openSession();

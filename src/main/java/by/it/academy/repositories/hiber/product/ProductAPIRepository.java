@@ -19,6 +19,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the by.it.academy.repositories.hiber.ProductRepository interface.
+ *
+ * @author Maxim Zhevnov
+ */
 public class ProductAPIRepository implements ProductRepository<Product> {
     Logger log = Logger.getLogger(ProductAPIRepository.class);
     private final Session session;
@@ -26,6 +31,14 @@ public class ProductAPIRepository implements ProductRepository<Product> {
     private final TypeRepository<Type> typeRepository;
     private final ProducerRepository<Producer> producerRepository;
 
+    /**
+     * Creates a new {@link ProductAPIRepository} to manage objects of the given session.
+     *
+     * @param session must not be {@literal null}.
+     * @param categoryRepository must not be {@literal null}.
+     * @param typeRepository must not be {@literal null}.
+     * @param producerRepository must not be {@literal null}.
+     */
     public ProductAPIRepository(Session session, CategoryRepository<Category> categoryRepository,
                                 TypeRepository<Type> typeRepository, ProducerRepository<Producer> producerRepository) {
         this.session = session;
@@ -34,6 +47,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         this.producerRepository = producerRepository;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getProductById
+     */
     @Override
     public Optional<Product> getProductById(int id) {
         Optional<Product> product = Optional.empty();
@@ -47,6 +64,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return product;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#saveProduct
+     */
     @Override
     public Optional<Product> saveProduct(Product product) {
         Optional<Product> optionalProduct = setProduct(product);
@@ -70,6 +91,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return getProductByValuableFields(product);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#deleteProduct
+     */
     @Override
     public void deleteProduct(Product product) {
         Optional<Product> optionalProduct = Optional.ofNullable(product);
@@ -82,6 +107,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getAllProducts
+     */
     @Override
     public List<Product> getAllProducts(Order order) {
         List<Product> products;
@@ -96,6 +125,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return products;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getProductByCategoryTypeProducerName
+     */
     @Override
     public Optional<Product> getProductByCategoryTypeProducerName(Product product) {
         Optional<Product> optionalProduct = Optional.ofNullable(product);
@@ -113,7 +146,6 @@ public class ProductAPIRepository implements ProductRepository<Product> {
             log.info("ProductAPIRepository - method: getProductByCategoryTypeProducerName: product is null");
             return Optional.empty();
         }
-
         try {
             TypedQuery<Product> query = session.createQuery(HQL.GET_PRODUCT_BY_CATEGORY_TYPE_PRODUCER_NAME,
                     Product.class);
@@ -132,10 +164,13 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return optionalProduct;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#setProduct
+     */
     @Override
     public Optional<Product> setProduct(Product product) {
         Optional<Product> optionalProduct = Optional.ofNullable(product);
-
         if (optionalProduct.isPresent()) {
             Optional<Category> category = categoryRepository
                     .getCategoryByValuableFields(optionalProduct.get().getCategory());
@@ -154,10 +189,13 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                     .ifPresentOrElse(optionalProduct.get()::setProducer,
                             () -> producerRepository.saveProducer(optionalProduct.get().getProducer()));
         }
-
         return optionalProduct;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getProductByValuableFields
+     */
     @Override
     public Optional<Product> getProductByValuableFields(Product product) {
         Optional<Product> optionalProduct = Optional.ofNullable(product);
@@ -168,6 +206,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getLastProducts
+     */
     @Override
     public List<Product> getLastProducts(int amount, Order order) {
         List<Product> products;
@@ -184,6 +226,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return products;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getProductsByCategory
+     */
     @Override
     public List<Product> getProductsByCategory(Category category, Order order) {
         List<Product> products = new ArrayList<>();
@@ -205,6 +251,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return products;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#search
+     */
     @Override
     public List<Product> search(String search) {
         List<Product> products;
@@ -218,6 +268,10 @@ public class ProductAPIRepository implements ProductRepository<Product> {
         return products;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getProductsByType
+     */
     @Override
     public List<Product> getProductsByType(Type type, Order order) {
         List<Product> products = new ArrayList<>();
@@ -235,20 +289,31 @@ public class ProductAPIRepository implements ProductRepository<Product> {
                     : queryDesc.getResultList();
             log.info("ProductAPIRepository - method: getProductsByType: " + products);
         }
-
         return products;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getCategoryRepository
+     */
     @Override
     public CategoryRepository<Category> getCategoryRepository() {
         return categoryRepository;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getTypeRepository
+     */
     @Override
     public TypeRepository<Type> getTypeRepository() {
         return typeRepository;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.repositories.hiber.ProductRepository#getProducerRepository
+     */
     @Override
     public ProducerRepository<Producer> getProducerRepository() {
         return producerRepository;
