@@ -36,7 +36,7 @@ public class UserController {
         return userService.createUser(dto);
     }
 
-    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             path = "{id}")
     @ResponseStatus(HttpStatus.OK)

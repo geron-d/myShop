@@ -35,7 +35,7 @@ public class ProductController {
         return productService.createProduct(dto);
     }
 
-    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             path = "{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -91,7 +91,7 @@ public class ProductController {
         return productService.searchProducts(search);
     }
 
-    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             path = "decrease")
     @ResponseStatus(HttpStatus.OK)

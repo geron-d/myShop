@@ -33,7 +33,7 @@ public class TypeController {
         return typeService.createType(dto);
     }
 
-    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             path = "{id}")
     @ResponseStatus(HttpStatus.OK)
