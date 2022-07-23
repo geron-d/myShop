@@ -2,3 +2,4 @@
 /target
 /src/main/java/by/it/academy/Main.java
 /script.txt
+/src/test/java/by/it/academy/testingTools/common/CommonTest.java

@@ -49,7 +49,7 @@ public class TypeAPIService implements TypeService<Type> {
 
     @Override
     public Type findType(String name) {
-        return typeRepository.findTypeByName(name);
+        return typeRepository.findTypeByName(name).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

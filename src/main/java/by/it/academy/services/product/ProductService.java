@@ -29,20 +29,12 @@ public interface ProductService<T> {
 
     List<T> findProductsByCategoryName(String category);
 
-    List<T> findProducts(Category category);
-
-    List<T> findProducts(Type type);
-
     List<T> findProductsByTypeName(String type);
-
-    List<T> findProducts(Producer producer);
 
     List<T> findProductsByProducerName(String producer);
 
     List<T> searchProducts(String search);
 
     Long decreaseProductAmount(ProductDecreaseRequest request);
-
-    List<T> sortProducts(SortProductRequest request);
 
 }

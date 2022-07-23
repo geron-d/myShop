@@ -1,9 +1,7 @@
 package by.it.academy.services.product;
 
-import by.it.academy.comparators.product.ProductIdDescComparator;
 import by.it.academy.dtos.requests.product.ProductDTO;
 import by.it.academy.dtos.requests.product.ProductDecreaseRequest;
-import by.it.academy.dtos.requests.product.SortProductRequest;
 import by.it.academy.entities.Category;
 import by.it.academy.entities.Producer;
 import by.it.academy.entities.Product;
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -71,6 +68,8 @@ public class ProductAPIService implements ProductService<Product> {
     public Long updateProduct(Product product) {
         if (!checkProduct(product.getId())) {
             throw new NoSuchElementException();
+        } else if (checkProduct(product)) {
+            throw new EntityExistsException();
         }
         return productRepository.save(product).getId();
     }
@@ -103,13 +102,11 @@ public class ProductAPIService implements ProductService<Product> {
         return productRepository.findAllByCategory(categoryService.findCategory(category));
     }
 
-    @Override
-    public List<Product> findProducts(Category category) {
+    private List<Product> findProducts(Category category) {
         return productRepository.findAllByCategory(category);
     }
 
-    @Override
-    public List<Product> findProducts(Type type) {
+    private List<Product> findProducts(Type type) {
         return productRepository.findAllByType(type);
     }
 
@@ -118,8 +115,7 @@ public class ProductAPIService implements ProductService<Product> {
         return productRepository.findAllByType(typeService.findType(type));
     }
 
-    @Override
-    public List<Product> findProducts(Producer producer) {
+    private List<Product> findProducts(Producer producer) {
         return productRepository.findAllByProducer(producer);
     }
 
@@ -153,42 +149,6 @@ public class ProductAPIService implements ProductService<Product> {
         }
         product.setAmount(product.getAmount() - request.getAmount());
         return updateProduct(product);
-    }
-
-    @Override
-    @Transactional
-    public List<Product> sortProducts(SortProductRequest request) {
-        List<Product> products = findProductsByCategories(request.getCategories());
-        products.addAll(findProductsByTypes(request.getTypes()));
-        products.addAll(findProductsByProducers(request.getProducers()));
-        return products.stream()
-                .distinct()
-                .sorted(new ProductIdDescComparator())
-                .collect(Collectors.toList());
-    }
-
-    private List<Product> findProductsByCategories(List<String> categories) {
-        List<Product> products = new ArrayList<>();
-        for (String category : categories) {
-            products.addAll(findProductsByCategoryName(category));
-        }
-        return products;
-    }
-
-    private List<Product> findProductsByTypes(List<String> types) {
-        List<Product> products = new ArrayList<>();
-        for (String type : types) {
-            products.addAll(findProductsByTypeName(type));
-        }
-        return products;
-    }
-
-    private List<Product> findProductsByProducers(List<String> producers) {
-        List<Product> products = new ArrayList<>();
-        for (String producer : producers) {
-            products.addAll(findProductsByProducerName(producer));
-        }
-        return products;
     }
 
     private List<Product> searchProductsByCategories(List<Category> categories) {
@@ -234,6 +194,11 @@ public class ProductAPIService implements ProductService<Product> {
         return productRepository.existsByCategoryAndProducerAndTypeAndName(category, producer, type, dto.getName());
     }
 
+    private boolean checkProduct(Product product) {
+        return productRepository.existsByCategoryAndProducerAndTypeAndName(product.getCategory(), product.getProducer(),
+                product.getType(), product.getName());
+    }
+
     private boolean checkProduct(Long id) {
         return productRepository.existsById(id);
     }
@@ -244,7 +209,7 @@ public class ProductAPIService implements ProductService<Product> {
                 .type(typeService.findType(dto.getType()))
                 .name(dto.getName())
                 .imagePath(dto.getImagePath())
-                .dateInserting(LocalDate.now())
+                .dateInserting(dto.getDateInserting())
                 .producer(producerService.findProducer(dto.getProducer()))
                 .price(dto.getPrice())
                 .amount(dto.getAmount())

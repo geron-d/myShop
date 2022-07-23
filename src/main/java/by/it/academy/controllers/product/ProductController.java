@@ -99,12 +99,4 @@ public class ProductController {
         return productService.decreaseProductAmount(request);
     }
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            path = "sort")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Product> sort(@RequestBody @Valid SortProductRequest request) {
-        return productService.sortProducts(request);
-    }
-
 }

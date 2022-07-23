@@ -49,7 +49,7 @@ public class ProducerAPIService implements ProducerService<Producer> {
 
     @Override
     public Producer findProducer(String name) {
-        return producerRepository.findProducerByName(name);
+        return producerRepository.findProducerByName(name).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

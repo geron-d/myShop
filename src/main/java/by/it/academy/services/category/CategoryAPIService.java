@@ -25,7 +25,6 @@ public class CategoryAPIService implements CategoryService<Category> {
     }
 
     @Override
-    @Transactional
     public Long createCategory(CategoryDTO dto) {
         Category category = buildCategory(dto);
         return categoryRepository.save(category).getId();
@@ -49,7 +48,7 @@ public class CategoryAPIService implements CategoryService<Category> {
 
     @Override
     public Category findCategory(String name) {
-        return categoryRepository.findCategoryByName(name);
+        return categoryRepository.findCategoryByName(name).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
