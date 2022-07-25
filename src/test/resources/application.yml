@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database: h2
+  datasource:
+    url: jdbc:h2:mem:еуые;DB_CLOSE_DELAY=-1;
+    username:
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+  cloud:
+    config:
+      enabled: false
