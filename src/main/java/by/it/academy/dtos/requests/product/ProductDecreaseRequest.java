@@ -7,15 +7,27 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * The {@code ProductDecreaseRequest} request represents the {@code Product} class when it needs be decreased.
+ *
+ * @author Maxim Zhevnov
+ * @since 1.0
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDecreaseRequest {
 
+    /**
+     * An identifier of {@code Product}.
+     */
     @NotNull
-    Long productId;
+    private Long productId;
 
-    int amount;
+    /**
+     * Decreased amount of product.
+     */
+    private int amount;
 
 }

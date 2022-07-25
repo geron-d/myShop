@@ -9,7 +9,6 @@ import by.it.academy.entities.Type;
 import by.it.academy.repositories.product.ProductRepository;
 import by.it.academy.services.category.CategoryAPIService;
 import by.it.academy.services.producer.ProducerAPIService;
-import by.it.academy.services.product.ProductAPIService;
 import by.it.academy.services.type.TypeAPIService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,6 +151,7 @@ public class ProductAPIServiceTest {
     void checkFindProductWithArgIdWhenProductExistsReturnsNotNull() {
         Mockito.when(productRepository.findById(product.getId())).thenReturn(Optional.ofNullable(product));
         Assertions.assertNotNull(productAPIService.findProduct(product.getId()));
+        Mockito.verify(productRepository, Mockito.times(1)).findById(product.getId());
     }
 
     @Test
@@ -159,6 +159,7 @@ public class ProductAPIServiceTest {
     void checkFindProductWithArgIdWhenProductExists() {
         Mockito.when(productRepository.findById(product.getId())).thenReturn(Optional.ofNullable(product));
         Assertions.assertEquals(product, productAPIService.findProduct(product.getId()));
+        Mockito.verify(productRepository, Mockito.times(1)).findById(product.getId());
     }
 
 
@@ -167,6 +168,7 @@ public class ProductAPIServiceTest {
     void checkFindProductWithArgIdWhenProductDoesNotExist() {
         Mockito.when(productRepository.findById(product.getId())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class, () -> productAPIService.findProduct(product.getId()));
+        Mockito.verify(productRepository, Mockito.times(1)).findById(product.getId());
     }
 
     @Test
@@ -182,6 +184,13 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(savingProduct)).thenReturn(product);
         Assertions.assertNotNull(productAPIService.createProduct(dto));
+        Mockito.verify(categoryAPIService, Mockito.times(2)).findCategory(dto.getCategory());
+        Mockito.verify(typeAPIService, Mockito.times(2)).findType(dto.getType());
+        Mockito.verify(producerAPIService, Mockito.times(2)).findProducer(dto.getProducer());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(savingProduct);
     }
 
     @Test
@@ -197,6 +206,13 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(savingProduct)).thenReturn(product);
         Assertions.assertEquals(product.getId(), productAPIService.createProduct(dto));
+        Mockito.verify(categoryAPIService, Mockito.times(2)).findCategory(dto.getCategory());
+        Mockito.verify(typeAPIService, Mockito.times(2)).findType(dto.getType());
+        Mockito.verify(producerAPIService, Mockito.times(2)).findProducer(dto.getProducer());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(savingProduct);
     }
 
     @Test
@@ -212,6 +228,12 @@ public class ProductAPIServiceTest {
                 .thenReturn(true);
         Assertions.assertThrows(EntityExistsException.class, () ->
                 productAPIService.createProduct(dto));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).findCategory(dto.getCategory());
+        Mockito.verify(typeAPIService, Mockito.times(1)).findType(dto.getType());
+        Mockito.verify(producerAPIService, Mockito.times(1)).findProducer(dto.getProducer());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
     }
 
     @Test
@@ -228,6 +250,14 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(product)).thenReturn(product);
         Assertions.assertNotNull(productAPIService.updateProduct(product.getId(), dto));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
+        Mockito.verify(categoryAPIService, Mockito.times(2)).findCategory(dto.getCategory());
+        Mockito.verify(typeAPIService, Mockito.times(2)).findType(dto.getType());
+        Mockito.verify(producerAPIService, Mockito.times(2)).findProducer(dto.getProducer());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(product);
     }
 
     @Test
@@ -243,6 +273,14 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(product)).thenReturn(product);
         Assertions.assertEquals(product.getId(), productAPIService.updateProduct(product.getId(), dto));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
+        Mockito.verify(categoryAPIService, Mockito.times(2)).findCategory(dto.getCategory());
+        Mockito.verify(typeAPIService, Mockito.times(2)).findType(dto.getType());
+        Mockito.verify(producerAPIService, Mockito.times(2)).findProducer(dto.getProducer());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(product);
     }
 
     @Test
@@ -259,6 +297,13 @@ public class ProductAPIServiceTest {
                 .thenReturn(true);
         Assertions.assertThrows(EntityExistsException.class, () ->
                 productAPIService.updateProduct(product.getId(), dto));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
+        Mockito.verify(categoryAPIService, Mockito.times(1)).findCategory(dto.getCategory());
+        Mockito.verify(typeAPIService, Mockito.times(1)).findType(dto.getType());
+        Mockito.verify(producerAPIService, Mockito.times(1)).findProducer(dto.getProducer());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
     }
 
     @Test
@@ -269,6 +314,7 @@ public class ProductAPIServiceTest {
         Mockito.when(productRepository.existsById(product.getId())).thenReturn(false);
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productAPIService.updateProduct(product.getId(), dto));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
     }
 
     @Test
@@ -281,6 +327,11 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(product)).thenReturn(product);
         Assertions.assertNotNull(productAPIService.updateProduct(product));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(product);
     }
 
     @Test
@@ -292,6 +343,11 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(product)).thenReturn(product);
         Assertions.assertEquals(product.getId(), productAPIService.updateProduct(product));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(product);
     }
 
     @Test
@@ -304,6 +360,10 @@ public class ProductAPIServiceTest {
                 .thenReturn(true);
         Assertions.assertThrows(EntityExistsException.class, () ->
                 productAPIService.updateProduct(product));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
     }
 
     @Test
@@ -312,6 +372,7 @@ public class ProductAPIServiceTest {
         Mockito.when(productRepository.existsById(product.getId())).thenReturn(false);
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productAPIService.updateProduct(product));
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(product.getId());
     }
 
     @Test
@@ -329,6 +390,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product, anotherProduct);
         Mockito.when(productRepository.findAll()).thenReturn(products);
         Assertions.assertNotNull(productAPIService.findProducts());
+        Mockito.verify(productRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -336,6 +398,7 @@ public class ProductAPIServiceTest {
     void checkFindProductsWithoutArgsReturnsEmpty() {
         Mockito.when(productRepository.findAll()).thenReturn(List.of());
         Assertions.assertEquals(List.of(), productAPIService.findProducts());
+        Mockito.verify(productRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -345,6 +408,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product, anotherProduct);
         Mockito.when(productRepository.findAll()).thenReturn(products);
         Assertions.assertEquals(products, productAPIService.findProducts());
+        Mockito.verify(productRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -354,6 +418,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product, anotherProduct);
         Mockito.when(productRepository.findAll()).thenReturn(products);
         Assertions.assertEquals(products.size(), productAPIService.findProducts().size());
+        Mockito.verify(productRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -363,6 +428,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product, anotherProduct);
         Mockito.when(productRepository.findAll()).thenReturn(products);
         Assertions.assertEquals(products.get(0), productAPIService.findProducts().get(0));
+        Mockito.verify(productRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -372,6 +438,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product);
         Mockito.when(productRepository.findAllByName(name)).thenReturn(products);
         Assertions.assertNotNull(productAPIService.findProducts(name));
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByName(name);
     }
 
     @Test
@@ -380,6 +447,7 @@ public class ProductAPIServiceTest {
         String name = "some name";
         Mockito.when(productRepository.findAllByName(name)).thenReturn(List.of());
         Assertions.assertEquals(List.of(), productAPIService.findProducts(name));
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByName(name);
     }
 
     @Test
@@ -389,6 +457,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product);
         Mockito.when(productRepository.findAllByName(name)).thenReturn(products);
         Assertions.assertEquals(products, productAPIService.findProducts(name));
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByName(name);
     }
 
     @Test
@@ -398,6 +467,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product);
         Mockito.when(productRepository.findAllByName(name)).thenReturn(products);
         Assertions.assertEquals(products.size(), productAPIService.findProducts(name).size());
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByName(name);
     }
 
     @Test
@@ -407,6 +477,7 @@ public class ProductAPIServiceTest {
         List<Product> products = List.of(product);
         Mockito.when(productRepository.findAllByName(name)).thenReturn(products);
         Assertions.assertEquals(products.get(0), productAPIService.findProducts(name).get(0));
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByName(name);
     }
 
     @Test
@@ -419,6 +490,7 @@ public class ProductAPIServiceTest {
         Page<Product> productsPage = new PageImpl<>(products);
         Mockito.when(productRepository.findAll(lastProducts)).thenReturn(productsPage);
         Assertions.assertNotNull(productAPIService.findProducts(amountLastProducts));
+        Mockito.verify(productRepository, Mockito.times(1)).findAll(lastProducts);
     }
 
     @Test
@@ -431,6 +503,7 @@ public class ProductAPIServiceTest {
         Page<Product> productsPage = new PageImpl<>(products);
         Mockito.when(productRepository.findAll(lastProducts)).thenReturn(productsPage);
         Assertions.assertEquals(productsPage.getContent(), productAPIService.findProducts(amountLastProducts));
+        Mockito.verify(productRepository, Mockito.times(1)).findAll(lastProducts);
     }
 
     @Test
@@ -444,6 +517,7 @@ public class ProductAPIServiceTest {
         Mockito.when(productRepository.findAll(lastProducts)).thenReturn(productsPage);
         Assertions.assertEquals(productsPage.getContent().size(),
                 productAPIService.findProducts(amountLastProducts).size());
+        Mockito.verify(productRepository, Mockito.times(1)).findAll(lastProducts);
     }
 
     @Test
@@ -458,6 +532,7 @@ public class ProductAPIServiceTest {
         Mockito.when(productRepository.findAll(lastProducts)).thenReturn(productsPage);
         Assertions.assertEquals(productsPage.getContent().get(productsPage.getSize() - 1),
                 productAPIService.findProducts(amountLastProducts).get(products.size() - 1));
+        Mockito.verify(productRepository, Mockito.times(1)).findAll(lastProducts);
     }
 
     @Test
@@ -469,6 +544,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.findCategory(categoryName)).thenReturn(category);
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertNotNull(productAPIService.findProductsByCategoryName(categoryName));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).findCategory(categoryName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -479,6 +556,7 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.findCategory(categoryName)).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productAPIService.findProductsByCategoryName(categoryName));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).findCategory(categoryName);
     }
 
     @Test
@@ -490,6 +568,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.findCategory(categoryName)).thenReturn(category);
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertEquals(products, productAPIService.findProductsByCategoryName(categoryName));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).findCategory(categoryName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -502,6 +582,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.findCategory(categoryName)).thenReturn(category);
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertEquals(products.size(), productAPIService.findProductsByCategoryName(categoryName).size());
+        Mockito.verify(categoryAPIService, Mockito.times(1)).findCategory(categoryName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -514,6 +596,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.findCategory(categoryName)).thenReturn(category);
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertEquals(products.get(0), productAPIService.findProductsByCategoryName(categoryName).get(0));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).findCategory(categoryName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -524,6 +608,8 @@ public class ProductAPIServiceTest {
         Mockito.when(typeAPIService.findType(typeName)).thenReturn(type);
         Mockito.when(productRepository.findAllByType(type)).thenReturn(products);
         Assertions.assertNotNull(productAPIService.findProductsByTypeName(typeName));
+        Mockito.verify(typeAPIService, Mockito.times(1)).findType(typeName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByType(type);
     }
 
     @Test
@@ -534,6 +620,7 @@ public class ProductAPIServiceTest {
         Mockito.when(typeAPIService.findType(typeName)).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productAPIService.findProductsByTypeName(typeName));
+        Mockito.verify(typeAPIService, Mockito.times(1)).findType(typeName);
     }
 
     @Test
@@ -544,6 +631,8 @@ public class ProductAPIServiceTest {
         Mockito.when(typeAPIService.findType(typeName)).thenReturn(type);
         Mockito.when(productRepository.findAllByType(type)).thenReturn(products);
         Assertions.assertEquals(products, productAPIService.findProductsByTypeName(typeName));
+        Mockito.verify(typeAPIService, Mockito.times(1)).findType(typeName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByType(type);
     }
 
     @Test
@@ -555,6 +644,8 @@ public class ProductAPIServiceTest {
         Mockito.when(typeAPIService.findType(typeName)).thenReturn(type);
         Mockito.when(productRepository.findAllByType(type)).thenReturn(products);
         Assertions.assertEquals(products.size(), productAPIService.findProductsByTypeName(typeName).size());
+        Mockito.verify(typeAPIService, Mockito.times(1)).findType(typeName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByType(type);
     }
 
     @Test
@@ -566,6 +657,8 @@ public class ProductAPIServiceTest {
         Mockito.when(typeAPIService.findType(typeName)).thenReturn(type);
         Mockito.when(productRepository.findAllByType(type)).thenReturn(products);
         Assertions.assertEquals(products.get(0), productAPIService.findProductsByTypeName(typeName).get(0));
+        Mockito.verify(typeAPIService, Mockito.times(1)).findType(typeName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByType(type);
     }
 
     @Test
@@ -576,6 +669,8 @@ public class ProductAPIServiceTest {
         Mockito.when(producerAPIService.findProducer(producerName)).thenReturn(producer);
         Mockito.when(productRepository.findAllByProducer(producer)).thenReturn(products);
         Assertions.assertNotNull(productAPIService.findProductsByProducerName(producerName));
+        Mockito.verify(producerAPIService, Mockito.times(1)).findProducer(producerName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByProducer(producer);
     }
 
     @Test
@@ -586,6 +681,7 @@ public class ProductAPIServiceTest {
         Mockito.when(producerAPIService.findProducer(producerName)).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productAPIService.findProductsByProducerName(producerName));
+        Mockito.verify(producerAPIService, Mockito.times(1)).findProducer(producerName);
     }
 
     @Test
@@ -596,6 +692,8 @@ public class ProductAPIServiceTest {
         Mockito.when(producerAPIService.findProducer(producerName)).thenReturn(producer);
         Mockito.when(productRepository.findAllByProducer(producer)).thenReturn(products);
         Assertions.assertEquals(products, productAPIService.findProductsByProducerName(producerName));
+        Mockito.verify(producerAPIService, Mockito.times(1)).findProducer(producerName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByProducer(producer);
     }
 
     @Test
@@ -607,6 +705,8 @@ public class ProductAPIServiceTest {
         Mockito.when(producerAPIService.findProducer(producerName)).thenReturn(producer);
         Mockito.when(productRepository.findAllByProducer(producer)).thenReturn(products);
         Assertions.assertEquals(products.size(), productAPIService.findProductsByProducerName(producerName).size());
+        Mockito.verify(producerAPIService, Mockito.times(1)).findProducer(producerName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByProducer(producer);
     }
 
     @Test
@@ -618,6 +718,8 @@ public class ProductAPIServiceTest {
         Mockito.when(producerAPIService.findProducer(producerName)).thenReturn(producer);
         Mockito.when(productRepository.findAllByProducer(producer)).thenReturn(products);
         Assertions.assertEquals(products.get(0), productAPIService.findProductsByProducerName(producerName).get(0));
+        Mockito.verify(producerAPIService, Mockito.times(1)).findProducer(producerName);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByProducer(producer);
     }
 
     @Test
@@ -629,6 +731,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.searchCategories(search)).thenReturn(List.of(category));
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertNotNull(productAPIService.searchProducts(search));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).searchCategories(search);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -648,6 +752,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.searchCategories(search)).thenReturn(List.of(category));
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertEquals(products, productAPIService.searchProducts(search));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).searchCategories(search);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -659,6 +765,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.searchCategories(search)).thenReturn(List.of(category));
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertEquals(products.size(), productAPIService.searchProducts(search).size());
+        Mockito.verify(categoryAPIService, Mockito.times(1)).searchCategories(search);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -670,6 +778,8 @@ public class ProductAPIServiceTest {
         Mockito.when(categoryAPIService.searchCategories(search)).thenReturn(List.of(category));
         Mockito.when(productRepository.findAllByCategory(category)).thenReturn(products);
         Assertions.assertEquals(products.get(0), productAPIService.searchProducts(search).get(0));
+        Mockito.verify(categoryAPIService, Mockito.times(1)).searchCategories(search);
+        Mockito.verify(productRepository, Mockito.times(1)).findAllByCategory(category);
     }
 
     @Test
@@ -684,6 +794,12 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(product)).thenReturn(product);
         Assertions.assertNotNull(productAPIService.decreaseProductAmount(request));
+        Mockito.verify(productRepository, Mockito.times(1)).findById(request.getProductId());
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(request.getProductId());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(product);
     }
 
     @Test
@@ -698,6 +814,12 @@ public class ProductAPIServiceTest {
                 .thenReturn(false);
         Mockito.when(productRepository.save(product)).thenReturn(product);
         Assertions.assertEquals(product.getId(), productAPIService.decreaseProductAmount(request));
+        Mockito.verify(productRepository, Mockito.times(1)).findById(request.getProductId());
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(request.getProductId());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
+        Mockito.verify(productRepository, Mockito.times(1)).save(product);
     }
 
     @Test
@@ -712,6 +834,11 @@ public class ProductAPIServiceTest {
                 .thenReturn(true);
         Assertions.assertThrows(EntityExistsException.class, () ->
                 productAPIService.decreaseProductAmount(request));
+        Mockito.verify(productRepository, Mockito.times(1)).findById(request.getProductId());
+        Mockito.verify(productRepository, Mockito.times(1)).existsById(request.getProductId());
+        Mockito.verify(productRepository, Mockito.times(1))
+                .existsByCategoryAndProducerAndTypeAndName(product.getCategory(),product.getProducer(),
+                        product.getType(), product.getName());
     }
 
     @Test
@@ -722,5 +849,6 @@ public class ProductAPIServiceTest {
         Mockito.when(productRepository.findById(request.getProductId())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productAPIService.decreaseProductAmount(request));
+        Mockito.verify(productRepository, Mockito.times(1)).findById(request.getProductId());
     }
 }

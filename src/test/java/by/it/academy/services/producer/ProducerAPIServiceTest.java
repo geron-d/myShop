@@ -63,6 +63,7 @@ public class ProducerAPIServiceTest {
     void checkFindProducerWithArgIdWhenProducerExistsReturnsNotNull() {
         Mockito.when(producerRepository.findById(producer.getId())).thenReturn(Optional.ofNullable(producer));
         Assertions.assertNotNull(producerAPIService.findProducer(producer.getId()));
+        Mockito.verify(producerRepository, Mockito.times(1)).findById(producer.getId());
     }
 
     @Test
@@ -70,6 +71,7 @@ public class ProducerAPIServiceTest {
     void checkFindProducerWithArgIdWhenProducerExists() {
         Mockito.when(producerRepository.findById(producer.getId())).thenReturn(Optional.ofNullable(producer));
         Assertions.assertEquals(producer, producerAPIService.findProducer(producer.getId()));
+        Mockito.verify(producerRepository, Mockito.times(1)).findById(producer.getId());
     }
 
 
@@ -78,6 +80,7 @@ public class ProducerAPIServiceTest {
     void checkFindProducerWithArgIdWhenProducerDoesNotExist() {
         Mockito.when(producerRepository.findById(producer.getId())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class, () -> producerAPIService.findProducer(producer.getId()));
+        Mockito.verify(producerRepository, Mockito.times(1)).findById(producer.getId());
     }
 
     @Test
@@ -87,6 +90,7 @@ public class ProducerAPIServiceTest {
         ProducerDTO dto = getProducerDTO();
         Mockito.when(producerRepository.save(savingProducer)).thenReturn(producer);
         Assertions.assertNotNull(producerAPIService.createProducer(dto));
+        Mockito.verify(producerRepository, Mockito.times(1)).save(savingProducer);
     }
 
     @Test
@@ -96,6 +100,7 @@ public class ProducerAPIServiceTest {
         ProducerDTO dto = getProducerDTO();
         Mockito.when(producerRepository.save(savingProducer)).thenReturn(producer);
         Assertions.assertEquals(producer.getId(), producerAPIService.createProducer(dto));
+        Mockito.verify(producerRepository, Mockito.times(1)).save(savingProducer);
     }
 
     @Test
@@ -109,6 +114,7 @@ public class ProducerAPIServiceTest {
         });
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
                 producerAPIService.createProducer(dto));
+        Mockito.verify(producerRepository, Mockito.times(1)).save(savingProducer);
     }
 
     @Test
@@ -119,6 +125,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.existsById(producer.getId())).thenReturn(true);
         Mockito.when(producerRepository.save(producer)).thenReturn(producer);
         Assertions.assertNotNull(producerAPIService.updateProducer(producer.getId(), dto));
+        Mockito.verify(producerRepository, Mockito.times(1)).existsById(producer.getId());
+        Mockito.verify(producerRepository, Mockito.times(1)).save(producer);
     }
 
     @Test
@@ -128,6 +136,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.existsById(producer.getId())).thenReturn(true);
         Mockito.when(producerRepository.save(producer)).thenReturn(producer);
         Assertions.assertEquals(producer.getId(), producerAPIService.updateProducer(producer.getId(), dto));
+        Mockito.verify(producerRepository, Mockito.times(1)).existsById(producer.getId());
+        Mockito.verify(producerRepository, Mockito.times(1)).save(producer);
     }
 
     @Test
@@ -141,6 +151,8 @@ public class ProducerAPIServiceTest {
         });
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
                 producerAPIService.updateProducer(producer.getId(), dto));
+        Mockito.verify(producerRepository, Mockito.times(1)).existsById(producer.getId());
+        Mockito.verify(producerRepository, Mockito.times(1)).save(producer);
     }
 
     @Test
@@ -151,6 +163,7 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.existsById(producer.getId())).thenReturn(false);
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> producerAPIService.updateProducer(producer.getId(), dto));
+        Mockito.verify(producerRepository, Mockito.times(1)).existsById(producer.getId());
     }
 
     @Test
@@ -168,6 +181,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producer.getName()))
                 .thenReturn(Optional.ofNullable(producer));
         Assertions.assertNotNull(producerAPIService.findProducer(producer.getName()));
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producer.getName());
     }
 
     @Test
@@ -176,6 +191,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producer.getName()))
                 .thenReturn(Optional.ofNullable(producer));
         Assertions.assertEquals(producer, producerAPIService.findProducer(producer.getName()));
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producer.getName());
     }
 
 
@@ -185,6 +202,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producer.getName())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> producerAPIService.findProducer(producer.getName()));
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producer.getName());
     }
 
     @Test
@@ -194,6 +213,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer, anotherProducer);
         Mockito.when(producerRepository.findAll()).thenReturn(producers);
         Assertions.assertNotNull(producerAPIService.findProducers());
+        Mockito.verify(producerRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -201,6 +221,7 @@ public class ProducerAPIServiceTest {
     void checkFindProducersWithoutArgsReturnsEmpty() {
         Mockito.when(producerRepository.findAll()).thenReturn(List.of());
         Assertions.assertEquals(List.of(), producerAPIService.findProducers());
+        Mockito.verify(producerRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -210,6 +231,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer, anotherProducer);
         Mockito.when(producerRepository.findAll()).thenReturn(producers);
         Assertions.assertEquals(producers, producerAPIService.findProducers());
+        Mockito.verify(producerRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -219,6 +241,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer, anotherProducer);
         Mockito.when(producerRepository.findAll()).thenReturn(producers);
         Assertions.assertEquals(producers.size(), producerAPIService.findProducers().size());
+        Mockito.verify(producerRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -228,6 +251,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer, anotherProducer);
         Mockito.when(producerRepository.findAll()).thenReturn(producers);
         Assertions.assertEquals(producers.get(0), producerAPIService.findProducers().get(0));
+        Mockito.verify(producerRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -238,6 +262,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer);
         Mockito.when(producerRepository.searchAllByNameContains(search)).thenReturn(producers);
         Assertions.assertNotNull(producerAPIService.searchProducers(search));
+        Mockito.verify(producerRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -246,6 +271,7 @@ public class ProducerAPIServiceTest {
         String search = "asdasdsdasd";
         Mockito.when(producerRepository.searchAllByNameContains(search)).thenReturn(List.of());
         Assertions.assertEquals(List.of(), producerAPIService.searchProducers(search));
+        Mockito.verify(producerRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -256,6 +282,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer, anotherProducer);
         Mockito.when(producerRepository.searchAllByNameContains(search)).thenReturn(producers);
         Assertions.assertEquals(producers, producerAPIService.searchProducers(search));
+        Mockito.verify(producerRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -266,6 +293,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer, anotherProducer);
         Mockito.when(producerRepository.searchAllByNameContains(search)).thenReturn(producers);
         Assertions.assertEquals(producers.size(), producerAPIService.searchProducers(search).size());
+        Mockito.verify(producerRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -277,6 +305,7 @@ public class ProducerAPIServiceTest {
         List<Producer> producers = List.of(producer, anotherProducer);
         Mockito.when(producerRepository.searchAllByNameContains(search)).thenReturn(producers);
         Assertions.assertEquals(producers.get(0), producerAPIService.searchProducers(search).get(0));
+        Mockito.verify(producerRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -286,6 +315,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producerNames.get(0)))
                 .thenReturn(Optional.ofNullable(producer));
         Assertions.assertNotNull(producerAPIService.findProducers(producerNames));
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producerNames.get(0));
     }
 
     @Test
@@ -296,6 +327,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producerNames.get(0)))
                 .thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class, () -> producerAPIService.findProducers(producerNames));
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producerNames.get(0));
     }
 
     @Test
@@ -306,6 +339,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producerNames.get(0)))
                 .thenReturn(Optional.ofNullable(producer));
         Assertions.assertEquals(producers, producerAPIService.findProducers(producerNames));
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producerNames.get(0));
     }
 
     @Test
@@ -317,6 +352,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producerNames.get(0)))
                 .thenReturn(Optional.ofNullable(producer));
         Assertions.assertEquals(producers.size(), producerAPIService.findProducers(producerNames).size());
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producerNames.get(0));
     }
 
     @Test
@@ -328,6 +365,8 @@ public class ProducerAPIServiceTest {
         Mockito.when(producerRepository.findProducerByName(producerNames.get(0)))
                 .thenReturn(Optional.ofNullable(producer));
         Assertions.assertEquals(producers.get(0), producerAPIService.findProducers(producerNames).get(0));
+        Mockito.verify(producerRepository, Mockito.times(1))
+                .findProducerByName(producerNames.get(0));
     }
 
 }

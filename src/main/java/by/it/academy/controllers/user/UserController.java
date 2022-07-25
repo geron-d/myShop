@@ -15,109 +15,193 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Controller for performing operations with a user.
+ *
+ * @author Maxim Zhevnov
+ */
 @Slf4j
 @RequestMapping("/users")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService<User> userService;
+    private final UserService userService;
 
+    /**
+     * Find user by its id.
+     *
+     * @return the user with the given id. Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user none found.
+     */
     @GetMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
     public User findUser(@PathVariable Long id) {
         return userService.findUser(id);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    /**
+     * Save a user by given UserDTO.
+     *
+     * @return the id of saved user. Return HttpStatus.CREATED when request passed without exceptions.
+     * Throw SQLIntegrityConstraintViolationException when user with such login exists.
+     */
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long createUser(@RequestBody @Valid UserDTO dto) {
         return userService.createUser(dto);
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            path = "{id}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Update a user by given id and UserDTO.
+     *
+     * @return the id of updated user. Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user none found. Throw SQLIntegrityConstraintViolationException
+     * when user with such login exists.
+     */
+    @PutMapping("{id}")
     public Long updateUser(@PathVariable Long id, @RequestBody @Valid UserDTO dto) {
         return userService.updateUser(id, dto);
     }
 
+    /**
+     * Delete a user by given id.
+     *
+     * Return HttpStatus.OK when request passed without exceptions. Throw NoSUchElementException if user not found.
+     */
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 
-    @GetMapping(path = "login/{login}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Find user by its login.
+     *
+     * @return the user with the given login. Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user none found.
+     */
+    @GetMapping("login/{login}")
     public User findUser(@PathVariable String login) {
         return userService.findUser(login);
     }
 
+    /**
+     * Find all users.
+     *
+     * @return all users. Return HttpStatus.OK when request passed without exceptions.
+     */
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<User> findUsers() {
         return userService.findUsers();
     }
 
-    @GetMapping(path = "user")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Find user by its UserDTO.
+     *
+     * @return the user with the given UserDTO. Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user not found.
+     */
+    @GetMapping("user")
     public User findUser(@RequestBody @Valid UserDTO dto) {
         return userService.findUser(dto);
     }
 
-    @GetMapping(path = "exist/login/{login}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Check existing of user by its login.
+     *
+     * @return true when such user exists and false when does not. Return HttpStatus.OK when request passed
+     * without exceptions.
+     */
+    @GetMapping("exist/login/{login}")
     public boolean checkUser(@PathVariable String login) {
         return userService.checkUser(login);
     }
 
-    @GetMapping(path = "exist/id/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Check existing of user by its id.
+     *
+     * @return true when such user exists and false when does not. Return HttpStatus.OK when request passed
+     * without exceptions.
+     */
+    @GetMapping("exist/id/{id}")
     public boolean checkUser(@PathVariable Long id) {
         return userService.checkUser(id);
     }
 
-    @GetMapping(path = "bucket/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Get products in user bucket by user id.
+     *
+     * @return products in user bucket by user id. Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user not found.
+     */
+    @GetMapping("bucket/{id}")
     public List<ProductInBucket> getProductsInBucket(@PathVariable Long id) {
         return userService.getProductsInBucket(id);
     }
 
-    @PutMapping(path = "bucket")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Add product in user bucket by ProductInBucketWithIdDTO.
+     *
+     * @return id of added productInBucket. Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user or product not found.
+     */
+    @PutMapping("bucket")
     public Long addProductInBucket(@RequestBody @Valid ProductInBucketWithIdDTO dto) {
         return userService.addProductInBucket(dto);
     }
 
-    @DeleteMapping(path = "bucket")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Delete product in user bucket by ProductInBucketWithIdDTO.
+     *
+     * Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user or product not found.
+     */
+    @DeleteMapping("bucket")
     public void deleteProductInBucket(@RequestBody @Valid ProductInBucketDeleteDTO dto) {
         userService.deleteProductInBucket(dto);
     }
 
-    @PutMapping(path = "bucket/decrease")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Decrease product amount in user bucket by ProductInBucketWithIdDTO.
+     *
+     * @return id of decreased productInBucket. Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user or product not found. Throw NotEnoughProductException if product amount
+     * not enough in the bucket.
+     */
+    @PutMapping("bucket/decrease")
     public Long decreaseProductInBucket(@RequestBody @Valid ProductInBucketWithIdDTO dto) {
         return userService.decreaseProductInBucket(dto);
     }
 
-    @DeleteMapping(path = "bucket/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Delete all products in user bucket by user id.
+     *
+     * Return HttpStatus.OK when request passed without exceptions.
+     * Throw NoSUchElementException if user or product not found.
+     */
+    @DeleteMapping("bucket/{id}")
     public void deleteProductsInBucket(@PathVariable Long id) {
         userService.deleteProductsInBucket(id);
     }
 
-    @GetMapping(path = "bucket/cost/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Get cost of all products in user bucket by user id.
+     *
+     * @return ost of all products in user bucket by user id. Return HttpStatus.OK when request passed
+     * without exceptions.
+     * Throw NoSUchElementException if user not found.
+     */
+    @GetMapping("bucket/cost/{id}")
     public double getCostProductsInBucket(@PathVariable Long id) {
         return userService.getCostProductsInBucket(id);
     }
 
-    @DeleteMapping(path = "bucket/buy/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Delete all products from user bucket by user id. Decrease product amount on the store.
+     *
+     * Return HttpStatus.OK when request passed without exceptions. Throw NoSUchElementException if user not found.
+     * Throw NotEnoughProductException if product amount not enough on the store.
+     */
+    @DeleteMapping("bucket/buy/{id}")
     public void buyProductsInBucket(@PathVariable Long id) {
         userService.buyProductsInBucket(id);
     }

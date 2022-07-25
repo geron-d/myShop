@@ -28,7 +28,7 @@ public class CategoryAPIServiceTest {
     @InjectMocks
     private CategoryAPIService categoryAPIService;
 
-    Category category;
+    private Category category;
 
     @BeforeEach
     public void setCategory() {
@@ -63,6 +63,7 @@ public class CategoryAPIServiceTest {
     void checkFindCategoryWithArgIdWhenCategoryExistsReturnsNotNull() {
         Mockito.when(categoryRepository.findById(category.getId())).thenReturn(Optional.ofNullable(category));
         Assertions.assertNotNull(categoryAPIService.findCategory(category.getId()));
+        Mockito.verify(categoryRepository, Mockito.times(1)).findById(category.getId());
     }
 
     @Test
@@ -70,6 +71,7 @@ public class CategoryAPIServiceTest {
     void checkFindCategoryWithArgIdWhenCategoryExists() {
         Mockito.when(categoryRepository.findById(category.getId())).thenReturn(Optional.ofNullable(category));
         Assertions.assertEquals(category, categoryAPIService.findCategory(category.getId()));
+        Mockito.verify(categoryRepository, Mockito.times(1)).findById(category.getId());
     }
 
 
@@ -78,6 +80,7 @@ public class CategoryAPIServiceTest {
     void checkFindCategoryWithArgIdWhenCategoryDoesNotExist() {
         Mockito.when(categoryRepository.findById(category.getId())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class, () -> categoryAPIService.findCategory(category.getId()));
+        Mockito.verify(categoryRepository, Mockito.times(1)).findById(category.getId());
     }
 
     @Test
@@ -87,6 +90,7 @@ public class CategoryAPIServiceTest {
         CategoryDTO dto = getCategoryDTO();
         Mockito.when(categoryRepository.save(savingCategory)).thenReturn(category);
         Assertions.assertNotNull(categoryAPIService.createCategory(dto));
+        Mockito.verify(categoryRepository, Mockito.times(1)).save(savingCategory);
     }
 
     @Test
@@ -96,6 +100,7 @@ public class CategoryAPIServiceTest {
         CategoryDTO dto = getCategoryDTO();
         Mockito.when(categoryRepository.save(savingCategory)).thenReturn(category);
         Assertions.assertEquals(category.getId(), categoryAPIService.createCategory(dto));
+        Mockito.verify(categoryRepository, Mockito.times(1)).save(savingCategory);
     }
 
     @Test
@@ -109,6 +114,7 @@ public class CategoryAPIServiceTest {
         });
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
                 categoryAPIService.createCategory(dto));
+        Mockito.verify(categoryRepository, Mockito.times(1)).save(savingCategory);
     }
 
     @Test
@@ -119,6 +125,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.existsById(category.getId())).thenReturn(true);
         Mockito.when(categoryRepository.save(category)).thenReturn(category);
         Assertions.assertNotNull(categoryAPIService.updateCategory(category.getId(), dto));
+        Mockito.verify(categoryRepository, Mockito.times(1)).existsById(category.getId());
+        Mockito.verify(categoryRepository, Mockito.times(1)).save(category);
     }
 
     @Test
@@ -128,6 +136,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.existsById(category.getId())).thenReturn(true);
         Mockito.when(categoryRepository.save(category)).thenReturn(category);
         Assertions.assertEquals(category.getId(), categoryAPIService.updateCategory(category.getId(), dto));
+        Mockito.verify(categoryRepository, Mockito.times(1)).existsById(category.getId());
+        Mockito.verify(categoryRepository, Mockito.times(1)).save(category);
     }
 
     @Test
@@ -141,6 +151,8 @@ public class CategoryAPIServiceTest {
         });
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
                 categoryAPIService.updateCategory(category.getId(), dto));
+        Mockito.verify(categoryRepository, Mockito.times(1)).existsById(category.getId());
+        Mockito.verify(categoryRepository, Mockito.times(1)).save(category);
     }
 
     @Test
@@ -151,6 +163,7 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.existsById(category.getId())).thenReturn(false);
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> categoryAPIService.updateCategory(category.getId(), dto));
+        Mockito.verify(categoryRepository, Mockito.times(1)).existsById(category.getId());
     }
 
     @Test
@@ -168,6 +181,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(category.getName()))
                 .thenReturn(Optional.ofNullable(category));
         Assertions.assertNotNull(categoryAPIService.findCategory(category.getName()));
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(category.getName());
     }
 
     @Test
@@ -176,6 +191,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(category.getName()))
                 .thenReturn(Optional.ofNullable(category));
         Assertions.assertEquals(category, categoryAPIService.findCategory(category.getName()));
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(category.getName());
     }
 
 
@@ -185,6 +202,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(category.getName())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> categoryAPIService.findCategory(category.getName()));
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(category.getName());
     }
 
     @Test
@@ -194,6 +213,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category, anotherCategory);
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);
         Assertions.assertNotNull(categoryAPIService.findCategories());
+        Mockito.verify(categoryRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -201,6 +221,7 @@ public class CategoryAPIServiceTest {
     void checkFindCategoriesWithoutArgsReturnsEmpty() {
         Mockito.when(categoryRepository.findAll()).thenReturn(List.of());
         Assertions.assertEquals(List.of(), categoryAPIService.findCategories());
+        Mockito.verify(categoryRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -210,6 +231,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category, anotherCategory);
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);
         Assertions.assertEquals(categories, categoryAPIService.findCategories());
+        Mockito.verify(categoryRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -219,6 +241,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category, anotherCategory);
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);
         Assertions.assertEquals(categories.size(), categoryAPIService.findCategories().size());
+        Mockito.verify(categoryRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -228,6 +251,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category, anotherCategory);
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);
         Assertions.assertEquals(categories.get(0), categoryAPIService.findCategories().get(0));
+        Mockito.verify(categoryRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -238,6 +262,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category);
         Mockito.when(categoryRepository.searchAllByNameContains(search)).thenReturn(categories);
         Assertions.assertNotNull(categoryAPIService.searchCategories(search));
+        Mockito.verify(categoryRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -246,6 +271,7 @@ public class CategoryAPIServiceTest {
         String search = "asdasdsdasd";
         Mockito.when(categoryRepository.searchAllByNameContains(search)).thenReturn(List.of());
         Assertions.assertEquals(List.of(), categoryAPIService.searchCategories(search));
+        Mockito.verify(categoryRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -256,6 +282,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category, anotherCategory);
         Mockito.when(categoryRepository.searchAllByNameContains(search)).thenReturn(categories);
         Assertions.assertEquals(categories, categoryAPIService.searchCategories(search));
+        Mockito.verify(categoryRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -266,6 +293,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category, anotherCategory);
         Mockito.when(categoryRepository.searchAllByNameContains(search)).thenReturn(categories);
         Assertions.assertEquals(categories.size(), categoryAPIService.searchCategories(search).size());
+        Mockito.verify(categoryRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -277,6 +305,7 @@ public class CategoryAPIServiceTest {
         List<Category> categories = List.of(category, anotherCategory);
         Mockito.when(categoryRepository.searchAllByNameContains(search)).thenReturn(categories);
         Assertions.assertEquals(categories.get(0), categoryAPIService.searchCategories(search).get(0));
+        Mockito.verify(categoryRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -286,6 +315,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(categoryNames.get(0)))
                 .thenReturn(Optional.ofNullable(category));
         Assertions.assertNotNull(categoryAPIService.findCategories(categoryNames));
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(categoryNames.get(0));
     }
 
     @Test
@@ -296,6 +327,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(categoryNames.get(0)))
                 .thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class, () -> categoryAPIService.findCategories(categoryNames));
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(categoryNames.get(0));
     }
 
     @Test
@@ -306,6 +339,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(categoryNames.get(0)))
                 .thenReturn(Optional.ofNullable(category));
         Assertions.assertEquals(categories, categoryAPIService.findCategories(categoryNames));
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(categoryNames.get(0));
     }
 
     @Test
@@ -317,6 +352,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(categoryNames.get(0)))
                 .thenReturn(Optional.ofNullable(category));
         Assertions.assertEquals(categories.size(), categoryAPIService.findCategories(categoryNames).size());
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(categoryNames.get(0));
     }
 
     @Test
@@ -328,6 +365,8 @@ public class CategoryAPIServiceTest {
         Mockito.when(categoryRepository.findCategoryByName(categoryNames.get(0)))
                 .thenReturn(Optional.ofNullable(category));
         Assertions.assertEquals(categories.get(0), categoryAPIService.findCategories(categoryNames).get(0));
+        Mockito.verify(categoryRepository, Mockito.times(1))
+                .findCategoryByName(categoryNames.get(0));
     }
 
 }

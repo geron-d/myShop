@@ -12,18 +12,31 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the by.it.academy.services.TypeService interface.
+ *
+ * @author Maxim Zhevnov
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TypeAPIService implements TypeService<Type> {
+public class TypeAPIService implements TypeService {
 
     private final TypeRepository typeRepository;
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.TypeService#findType(Long id)
+     */
     @Override
     public Type findType(Long id) {
         return typeRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.createType(TypeDTO dto)
+     */
     @Override
     @Transactional
     public Long createType(TypeDTO dto) {
@@ -31,6 +44,10 @@ public class TypeAPIService implements TypeService<Type> {
         return typeRepository.save(type).getId();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.updateType(Long id, TypeDTO dto)
+     */
     @Override
     @Transactional
     public Long updateType(Long id, TypeDTO dto) {
@@ -42,26 +59,46 @@ public class TypeAPIService implements TypeService<Type> {
         return typeRepository.save(type).getId();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.deleteType(Long id)
+     */
     @Override
     public void deleteType(Long id) {
         typeRepository.deleteById(id);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.findType(String name)
+     */
     @Override
     public Type findType(String name) {
         return typeRepository.findTypeByName(name).orElseThrow(NoSuchElementException::new);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.findTypes()
+     */
     @Override
     public List<Type> findTypes() {
         return typeRepository.findAll();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.searchTypes(String search)
+     */
     @Override
     public List<Type> searchTypes(String search) {
         return typeRepository.searchAllByNameContains(search);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see by.it.academy.services.findTypes(List<String> typeNames)
+     */
     @Override
     @Transactional
     public List<Type> findTypes(List<String> typeNames) {
@@ -70,10 +107,20 @@ public class TypeAPIService implements TypeService<Type> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Check type by its id.
+     *
+     * @return true if such type exists and false when does not.
+     */
     private boolean checkType(Long id) {
         return typeRepository.existsById(id);
     }
 
+    /**
+     * Build type by TypeDTO.
+     *
+     * @return type by TypeDTO.
+     */
     private Type buildType(TypeDTO dto) {
         return Type.builder()
                 .name(dto.getName())

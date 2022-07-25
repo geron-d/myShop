@@ -63,6 +63,7 @@ public class TypeAPIServiceTest {
     void checkFindTypeWithArgIdWhenTypeExistsReturnsNotNull() {
         Mockito.when(typeRepository.findById(type.getId())).thenReturn(Optional.ofNullable(type));
         Assertions.assertNotNull(typeAPIService.findType(type.getId()));
+        Mockito.verify(typeRepository, Mockito.times(1)).findById(type.getId());
     }
 
     @Test
@@ -70,6 +71,7 @@ public class TypeAPIServiceTest {
     void checkFindTypeWithArgIdWhenTypeExists() {
         Mockito.when(typeRepository.findById(type.getId())).thenReturn(Optional.ofNullable(type));
         Assertions.assertEquals(type, typeAPIService.findType(type.getId()));
+        Mockito.verify(typeRepository, Mockito.times(1)).findById(type.getId());
     }
 
 
@@ -78,6 +80,7 @@ public class TypeAPIServiceTest {
     void checkFindTypeWithArgIdWhenTypeDoesNotExist() {
         Mockito.when(typeRepository.findById(type.getId())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class, () -> typeAPIService.findType(type.getId()));
+        Mockito.verify(typeRepository, Mockito.times(1)).findById(type.getId());
     }
 
     @Test
@@ -87,6 +90,7 @@ public class TypeAPIServiceTest {
         TypeDTO dto = getTypeDTO();
         Mockito.when(typeRepository.save(savingType)).thenReturn(type);
         Assertions.assertNotNull(typeAPIService.createType(dto));
+        Mockito.verify(typeRepository, Mockito.times(1)).save(savingType);
     }
 
     @Test
@@ -96,6 +100,7 @@ public class TypeAPIServiceTest {
         TypeDTO dto = getTypeDTO();
         Mockito.when(typeRepository.save(savingType)).thenReturn(type);
         Assertions.assertEquals(type.getId(), typeAPIService.createType(dto));
+        Mockito.verify(typeRepository, Mockito.times(1)).save(savingType);
     }
 
     @Test
@@ -109,6 +114,7 @@ public class TypeAPIServiceTest {
         });
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
                 typeAPIService.createType(dto));
+        Mockito.verify(typeRepository, Mockito.times(1)).save(savingType);
     }
 
     @Test
@@ -119,6 +125,8 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.existsById(type.getId())).thenReturn(true);
         Mockito.when(typeRepository.save(type)).thenReturn(type);
         Assertions.assertNotNull(typeAPIService.updateType(type.getId(), dto));
+        Mockito.verify(typeRepository, Mockito.times(1)).existsById(type.getId());
+        Mockito.verify(typeRepository, Mockito.times(1)).save(type);
     }
 
     @Test
@@ -128,6 +136,8 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.existsById(type.getId())).thenReturn(true);
         Mockito.when(typeRepository.save(type)).thenReturn(type);
         Assertions.assertEquals(type.getId(), typeAPIService.updateType(type.getId(), dto));
+        Mockito.verify(typeRepository, Mockito.times(1)).existsById(type.getId());
+        Mockito.verify(typeRepository, Mockito.times(1)).save(type);
     }
 
     @Test
@@ -141,6 +151,8 @@ public class TypeAPIServiceTest {
         });
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
                 typeAPIService.updateType(type.getId(), dto));
+        Mockito.verify(typeRepository, Mockito.times(1)).existsById(type.getId());
+        Mockito.verify(typeRepository, Mockito.times(1)).save(type);
     }
 
     @Test
@@ -151,6 +163,7 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.existsById(type.getId())).thenReturn(false);
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> typeAPIService.updateType(type.getId(), dto));
+        Mockito.verify(typeRepository, Mockito.times(1)).existsById(type.getId());
     }
 
     @Test
@@ -168,6 +181,7 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.findTypeByName(type.getName()))
                 .thenReturn(Optional.ofNullable(type));
         Assertions.assertNotNull(typeAPIService.findType(type.getName()));
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(type.getName());
     }
 
     @Test
@@ -176,6 +190,7 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.findTypeByName(type.getName()))
                 .thenReturn(Optional.ofNullable(type));
         Assertions.assertEquals(type, typeAPIService.findType(type.getName()));
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(type.getName());
     }
 
 
@@ -185,6 +200,7 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.findTypeByName(type.getName())).thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> typeAPIService.findType(type.getName()));
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(type.getName());
     }
 
     @Test
@@ -194,6 +210,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type, anotherType);
         Mockito.when(typeRepository.findAll()).thenReturn(types);
         Assertions.assertNotNull(typeAPIService.findTypes());
+        Mockito.verify(typeRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -201,6 +218,7 @@ public class TypeAPIServiceTest {
     void checkFindTypesWithoutArgsReturnsEmpty() {
         Mockito.when(typeRepository.findAll()).thenReturn(List.of());
         Assertions.assertEquals(List.of(), typeAPIService.findTypes());
+        Mockito.verify(typeRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -210,6 +228,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type, anotherType);
         Mockito.when(typeRepository.findAll()).thenReturn(types);
         Assertions.assertEquals(types, typeAPIService.findTypes());
+        Mockito.verify(typeRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -219,6 +238,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type, anotherType);
         Mockito.when(typeRepository.findAll()).thenReturn(types);
         Assertions.assertEquals(types.size(), typeAPIService.findTypes().size());
+        Mockito.verify(typeRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -228,6 +248,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type, anotherType);
         Mockito.when(typeRepository.findAll()).thenReturn(types);
         Assertions.assertEquals(types.get(0), typeAPIService.findTypes().get(0));
+        Mockito.verify(typeRepository, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -238,6 +259,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type);
         Mockito.when(typeRepository.searchAllByNameContains(search)).thenReturn(types);
         Assertions.assertNotNull(typeAPIService.searchTypes(search));
+        Mockito.verify(typeRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -246,6 +268,7 @@ public class TypeAPIServiceTest {
         String search = "asdasdsdasd";
         Mockito.when(typeRepository.searchAllByNameContains(search)).thenReturn(List.of());
         Assertions.assertEquals(List.of(), typeAPIService.searchTypes(search));
+        Mockito.verify(typeRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -256,6 +279,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type, anotherType);
         Mockito.when(typeRepository.searchAllByNameContains(search)).thenReturn(types);
         Assertions.assertEquals(types, typeAPIService.searchTypes(search));
+        Mockito.verify(typeRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -266,6 +290,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type, anotherType);
         Mockito.when(typeRepository.searchAllByNameContains(search)).thenReturn(types);
         Assertions.assertEquals(types.size(), typeAPIService.searchTypes(search).size());
+        Mockito.verify(typeRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -277,6 +302,7 @@ public class TypeAPIServiceTest {
         List<Type> types = List.of(type, anotherType);
         Mockito.when(typeRepository.searchAllByNameContains(search)).thenReturn(types);
         Assertions.assertEquals(types.get(0), typeAPIService.searchTypes(search).get(0));
+        Mockito.verify(typeRepository, Mockito.times(1)).searchAllByNameContains(search);
     }
 
     @Test
@@ -286,6 +312,7 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.findTypeByName(typeNames.get(0)))
                 .thenReturn(Optional.ofNullable(type));
         Assertions.assertNotNull(typeAPIService.findTypes(typeNames));
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(typeNames.get(0));
     }
 
     @Test
@@ -296,6 +323,7 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.findTypeByName(typeNames.get(0)))
                 .thenThrow(new NoSuchElementException());
         Assertions.assertThrows(NoSuchElementException.class, () -> typeAPIService.findTypes(typeNames));
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(typeNames.get(0));
     }
 
     @Test
@@ -306,28 +334,31 @@ public class TypeAPIServiceTest {
         Mockito.when(typeRepository.findTypeByName(typeNames.get(0)))
                 .thenReturn(Optional.ofNullable(type));
         Assertions.assertEquals(types, typeAPIService.findTypes(typeNames));
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(typeNames.get(0));
     }
 
     @Test
     @DisplayName("JUnit test for findTypes method with argument List String typeNames " +
             "when types exist for size")
     void checkFindTypesWithoutArgStringListTypeNamesWhenTypesExistForSize() {
-        List<String> typeName = List.of(type.getName());
+        List<String> typeNames = List.of(type.getName());
         List<Type> types = List.of(type);
-        Mockito.when(typeRepository.findTypeByName(typeName.get(0)))
+        Mockito.when(typeRepository.findTypeByName(typeNames.get(0)))
                 .thenReturn(Optional.ofNullable(type));
-        Assertions.assertEquals(types.size(), typeAPIService.findTypes(typeName).size());
+        Assertions.assertEquals(types.size(), typeAPIService.findTypes(typeNames).size());
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(typeNames.get(0));
     }
 
     @Test
     @DisplayName("JUnit test for findTypes method with argument List String typeNames " +
             "when types exist for first type")
     void checkFindTypesWithoutArgStringListTypeNamesWhenTypesExistForFirstType() {
-        List<String> typeName = List.of(type.getName());
+        List<String> typeNames = List.of(type.getName());
         List<Type> types = List.of(type);
-        Mockito.when(typeRepository.findTypeByName(typeName.get(0)))
+        Mockito.when(typeRepository.findTypeByName(typeNames.get(0)))
                 .thenReturn(Optional.ofNullable(type));
-        Assertions.assertEquals(types.get(0), typeAPIService.findTypes(typeName).get(0));
+        Assertions.assertEquals(types.get(0), typeAPIService.findTypes(typeNames).get(0));
+        Mockito.verify(typeRepository, Mockito.times(1)).findTypeByName(typeNames.get(0));
     }
 
 }

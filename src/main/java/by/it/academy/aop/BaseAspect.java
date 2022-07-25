@@ -2,6 +2,7 @@ package by.it.academy.aop;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class BaseAspect {
 
     public static final String ARGS = " ARGUMENTS is ";
